@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Sipar Browser — Reklamları engelle. Gizliliğini koru.</title>
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
   <meta name="description" content="Reklam yok. Takip yok. Veri satışı yok. Sadece internet.">
   <style>
     *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
@@ -246,9 +247,9 @@
     <div class="shield-wrap">
       <div class="shield-glow"></div>
       <img src="assets/logo.png" class="shield-logo" alt="Sipar">
-      <div class="shield-badge badge1"><span class="dot"></span> Tracker engellendi</div>
-      <div class="shield-badge badge2"><span class="dot"></span> DNS: Quad9</div>
-      <div class="shield-badge badge3"><span class="dot"></span> Sıfır telemetry</div>
+      <div class="shield-badge badge1"><i data-lucide="shield-off" style="width:12px;height:12px;color:var(--green)"></i> Tracker engellendi</div>
+      <div class="shield-badge badge2"><i data-lucide="lock" style="width:12px;height:12px;color:var(--green)"></i> DNS: Quad9</div>
+      <div class="shield-badge badge3"><i data-lucide="eye-off" style="width:12px;height:12px;color:var(--green)"></i> Sıfır telemetry</div>
     </div>
   </div>
 </div>
@@ -486,6 +487,8 @@ window.addEventListener('DOMContentLoaded', () => {
   const saved = localStorage.getItem('sipar-lang') || (navigator.language.startsWith('tr') ? 'tr' : 'en');
   setLang(saved);
 });
+
+lucide.createIcons();
 
 async function submit(e) {
   e.preventDefault();
