@@ -4,102 +4,89 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Sipar — Yeni Sekme</title>
-  <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-
-    body {
-      background: #0d1117;
-      color: #e6edf3;
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .logo {
-      font-size: 48px;
-      margin-bottom: 8px;
-    }
-
-    .brand {
-      font-size: 28px;
-      font-weight: 700;
-      color: #58a6ff;
-      letter-spacing: 2px;
-      margin-bottom: 4px;
-    }
-
-    .tagline {
-      font-size: 14px;
-      color: #8b949e;
-      margin-bottom: 40px;
-    }
-
-    .search-box {
-      display: flex;
-      align-items: center;
-      background: #161b22;
-      border: 1px solid #30363d;
-      border-radius: 12px;
-      padding: 12px 20px;
-      width: 600px;
-      max-width: 90vw;
-      gap: 12px;
-      transition: border-color 0.2s;
-    }
-
-    .search-box:focus-within {
-      border-color: #58a6ff;
-    }
-
-    .search-box input {
-      flex: 1;
-      background: none;
-      border: none;
-      outline: none;
-      color: #e6edf3;
-      font-size: 16px;
-    }
-
-    .shield-status {
-      margin-top: 32px;
-      display: flex;
-      gap: 20px;
-      font-size: 13px;
-      color: #8b949e;
-    }
-
-    .shield-item {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background: #3fb950;
-    }
-  </style>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div class="logo">🛡️</div>
-  <div class="brand">SİPAR</div>
-  <div class="tagline">Kalkanın arkasında sörf yap</div>
 
-  <div class="search-box">
-    <span>🔍</span>
-    <input type="text" placeholder="Ara veya adres gir..." autofocus
-      onkeydown="if(event.key==='Enter') window.location.href='https://search.brave.com/search?q='+encodeURIComponent(this.value)">
+  <!-- Saat -->
+  <div class="clock" id="clock"></div>
+
+  <!-- Logo -->
+  <div class="hero">
+    <div class="logo-icon">🛡️</div>
+    <div class="brand-name">Sipar</div>
+    <div class="tagline">Kalkanın arkasında sörf yap</div>
   </div>
 
+  <!-- Arama -->
+  <div class="search-container">
+    <div class="search-box">
+      <span class="search-icon">🔍</span>
+      <input
+        type="text"
+        class="search-input"
+        id="searchInput"
+        placeholder="Ara veya adres gir..."
+        autofocus
+      >
+    </div>
+  </div>
+
+  <!-- Gizlilik durumu -->
   <div class="shield-status">
-    <div class="shield-item"><div class="dot"></div> Tracker engelleme aktif</div>
-    <div class="shield-item"><div class="dot"></div> DNS: Quad9</div>
-    <div class="shield-item"><div class="dot"></div> Telemetry kapalı</div>
+    <div class="shield-item">
+      <div class="status-dot" id="tracker-dot"></div>
+      <span id="tracker-text">Tracker engelleme aktif</span>
+    </div>
+    <div class="shield-item">
+      <div class="status-dot"></div>
+      <span>DNS: Quad9</span>
+    </div>
+    <div class="shield-item">
+      <div class="status-dot"></div>
+      <span>Telemetry kapalı</span>
+    </div>
   </div>
+
+  <!-- Kısayollar (Faz 2) -->
+  <!--
+  <div class="shortcuts">
+    <a class="shortcut" href="https://github.com">
+      <span class="shortcut-icon">🐙</span>
+      <span class="shortcut-name">GitHub</span>
+    </a>
+  </div>
+  -->
+
+  <script>
+    // Arama
+    document.getElementById('searchInput').addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        const query = e.target.value.trim();
+        if (!query) return;
+        
+        // URL mi yoksa arama mı?
+        const isUrl = /^https?:\/\//.test(query) || /^[a-zA-Z0-9-]+\.[a-zA-Z]{2,}/.test(query);
+        
+        if (isUrl) {
+          window.location.href = query.startsWith('http') ? query : 'https://' + query;
+        } else {
+          // Brave Search — gizlilik odaklı
+          window.location.href = 'https://search.brave.com/search?q=' + encodeURIComponent(query);
+        }
+      }
+    });
+
+    // Saat
+    function updateClock() {
+      const now = new Date();
+      const h = String(now.getHours()).padStart(2, '0');
+      const m = String(now.getMinutes()).padStart(2, '0');
+      document.getElementById('clock').textContent = `${h}:${m}`;
+    }
+    updateClock();
+    setInterval(updateClock, 1000);
+  </script>
+
 </body>
 </html>

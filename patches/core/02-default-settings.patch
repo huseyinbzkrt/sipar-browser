@@ -1,0 +1,36 @@
+Description: Sipar default privacy settings — hardened defaults
+Author: Sipar Browser Team
+---
+
+--- a/chrome/browser/prefs/browser_prefs.cc
++++ b/chrome/browser/prefs/browser_prefs.cc
+@@ Privacy defaults for Sipar @@
+
+# Çerezler: 3rd party kapalı
+-  prefs->SetDefaultPrefValue(prefs::kCookieControlsMode, 0);
++  prefs->SetDefaultPrefValue(prefs::kCookieControlsMode, 1); // 3rd party blocked
+
+# DNS: Quad9
+-  prefs->SetDefaultPrefValue(prefs::kBuiltInDnsClientEnabled, true);
++  prefs->SetDefaultPrefValue(prefs::kBuiltInDnsClientEnabled, true);
++  prefs->SetDefaultPrefValue(prefs::kDnsOverHttpsMode, "secure");
++  prefs->SetDefaultPrefValue(prefs::kDnsOverHttpsTemplates, "https://dns.quad9.net/dns-query");
+
+# Do Not Track: açık
+-  prefs->SetDefaultPrefValue(prefs::kEnableDoNotTrack, false);
++  prefs->SetDefaultPrefValue(prefs::kEnableDoNotTrack, true);
+
+# Şifre kaydetme: kapalı varsayılan (kullanıcı açabilir)
+-  prefs->SetDefaultPrefValue(prefs::kCredentialsEnableService, true);
++  prefs->SetDefaultPrefValue(prefs::kCredentialsEnableService, false);
+
+# Arama motoru: Brave Search (Google değil)
+-  // default: google.com
++  // default: search.brave.com (gizlilik odaklı)
+
+# Arka planda çalışma: kapalı
+-  prefs->SetDefaultPrefValue(prefs::kBackgroundModeEnabled, true);
++  prefs->SetDefaultPrefValue(prefs::kBackgroundModeEnabled, false);
+
+# Not: Bu patch sembolik bir örnektir.
+# Gerçek değerler Chromium versiyonuna göre güncellenmeli.

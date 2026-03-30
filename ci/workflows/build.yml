@@ -1,0 +1,94 @@
+name: 🛡️ Sipar Browser Build
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+    inputs:
+      platform:
+        description: 'Build platform'
+        required: true
+        default: 'windows'
+        type: choice
+        options:
+          - windows
+          - linux
+
+jobs:
+  build-windows:
+    if: github.event.inputs.platform == 'windows' || startsWith(github.ref, 'refs/tags/')
+    runs-on: windows-latest
+    
+    steps:
+      - name: 📥 Checkout Sipar
+        uses: actions/checkout@v4
+
+      - name: 🐍 Python kurulum
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: 📦 Ungoogled-Chromium indir
+        run: python scripts/setup.py
+
+      - name: 🛡️ Sipar patch'leri uygula
+        run: python scripts/apply_patches.py
+
+      - name: 🔨 Build
+        run: python scripts/build.py --platform windows --package
+
+      - name: 📤 Release yükle
+        uses: actions/upload-artifact@v4
+        with:
+          name: sipar-windows-x64
+          path: dist/
+
+  build-linux:
+    if: github.event.inputs.platform == 'linux' || startsWith(github.ref, 'refs/tags/')
+    runs-on: ubuntu-22.04
+    
+    steps:
+      - name: 📥 Checkout Sipar
+        uses: actions/checkout@v4
+
+      - name: 📦 Bağımlılıklar
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            clang ninja-build python3 \
+            libgtk-3-dev libglib2.0-dev \
+            libnss3-dev libatk-bridge2.0-dev
+
+      - name: 📦 Ungoogled-Chromium indir
+        run: python3 scripts/setup.py
+
+      - name: 🛡️ Sipar patch'leri uygula
+        run: python3 scripts/apply_patches.py
+
+      - name: 🔨 Build
+        run: python3 scripts/build.py --platform linux --package
+
+      - name: 📤 Release yükle
+        uses: actions/upload-artifact@v4
+        with:
+          name: sipar-linux-x64
+          path: dist/
+
+  release:
+    needs: [build-windows, build-linux]
+    runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/tags/')
+    
+    steps:
+      - name: 📥 Artifactları indir
+        uses: actions/download-artifact@v4
+
+      - name: 🚀 GitHub Release oluştur
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            sipar-windows-x64/**
+            sipar-linux-x64/**
+          generate_release_notes: true
+          draft: false

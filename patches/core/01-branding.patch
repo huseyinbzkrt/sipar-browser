@@ -1,0 +1,39 @@
+Description: Sipar Browser branding — replaces Chromium/Chrome references
+Author: Sipar Browser Team
+---
+
+--- a/chrome/app/chromium_strings.grd
++++ b/chrome/app/chromium_strings.grd
+@@ -1,6 +1,6 @@
+-  <message name="IDS_PRODUCT_NAME" desc="The name of the product">
+-    Chromium
++  <message name="IDS_PRODUCT_NAME" desc="The name of the product">
++    Sipar
+   </message>
+-  <message name="IDS_SHORT_PRODUCT_NAME" desc="The short name of the product">
+-    Chromium
++  <message name="IDS_SHORT_PRODUCT_NAME" desc="The short name of the product">
++    Sipar
+   </message>
+
+--- a/chrome/app/generated_resources.grd
++++ b/chrome/app/generated_resources.grd
+@@ -1,4 +1,4 @@
+-  <message name="IDS_BROWSER_NAME">Chrome</message>
++  <message name="IDS_BROWSER_NAME">Sipar</message>
+
+--- a/chrome/common/chrome_constants.cc
++++ b/chrome/common/chrome_constants.cc
+@@ -1,3 +1,3 @@
+-const char kBrowserProcessExecutableName[] = "chrome";
++const char kBrowserProcessExecutableName[] = "sipar";
+
+--- a/chrome/installer/util/browser_distribution.cc
++++ b/chrome/installer/util/browser_distribution.cc
+@@ -1,5 +1,5 @@
+-  return "Chromium";
++  return "Sipar Browser";
+
+# Not: Bu patch sembolik bir örnektir.
+# Gerçek patch'ler Chromium kaynak koduna göre güncellenmeli.
+# Tam branding için: chrome/app/theme/chromium/ klasöründeki ikonlar değiştirilmeli
