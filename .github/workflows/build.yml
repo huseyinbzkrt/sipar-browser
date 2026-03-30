@@ -9,17 +9,22 @@ on:
       platform:
         description: 'Build platform'
         required: true
-        default: 'windows'
+        default: 'linux'
         type: choice
         options:
           - windows
           - linux
+          - both
 
 jobs:
-  build-windows:
-    if: github.event.inputs.platform == 'windows' || startsWith(github.ref, 'refs/tags/')
-    runs-on: windows-latest
-    
+  build-linux:
+    if: >
+      github.event_name == 'push' ||
+      github.event.inputs.platform == 'linux' ||
+      github.event.inputs.platform == 'both'
+    runs-on: ubuntu-22.04
+    timeout-minutes: 30
+
     steps:
       - name: 📥 Checkout Sipar
         uses: actions/checkout@v4
@@ -29,66 +34,101 @@ jobs:
         with:
           python-version: '3.11'
 
-      - name: 📦 Ungoogled-Chromium indir
-        run: python scripts/setup.py
+      - name: 💾 Cache ungoogled-chromium
+        uses: actions/cache@v4
+        with:
+          path: build/cache
+          key: uc-linux-${{ hashFiles('scripts/setup.py') }}
+          restore-keys: uc-linux-
 
-      - name: 🛡️ Sipar patch'leri uygula
-        run: python scripts/apply_patches.py
+      - name: 📦 Setup — Ungoogled-Chromium + Sipar
+        run: python3 scripts/setup.py --platform linux
 
-      - name: 🔨 Build
-        run: python scripts/build.py --platform windows --package
+      - name: 🔨 Build & Package
+        run: python3 scripts/build.py --platform linux --package
 
-      - name: 📤 Release yükle
+      - name: 📤 Artifact yükle
         uses: actions/upload-artifact@v4
         with:
-          name: sipar-windows-x64
-          path: dist/
+          name: sipar-linux-x64
+          path: dist/*.tar.xz
+          retention-days: 30
 
-  build-linux:
-    if: github.event.inputs.platform == 'linux' || startsWith(github.ref, 'refs/tags/')
-    runs-on: ubuntu-22.04
-    
+  build-windows:
+    if: >
+      github.event_name == 'push' ||
+      github.event.inputs.platform == 'windows' ||
+      github.event.inputs.platform == 'both'
+    runs-on: windows-latest
+    timeout-minutes: 30
+
     steps:
       - name: 📥 Checkout Sipar
         uses: actions/checkout@v4
 
-      - name: 📦 Bağımlılıklar
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y \
-            clang ninja-build python3 \
-            libgtk-3-dev libglib2.0-dev \
-            libnss3-dev libatk-bridge2.0-dev
+      - name: 🐍 Python kurulum
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
 
-      - name: 📦 Ungoogled-Chromium indir
-        run: python3 scripts/setup.py
+      - name: 💾 Cache ungoogled-chromium
+        uses: actions/cache@v4
+        with:
+          path: build/cache
+          key: uc-windows-${{ hashFiles('scripts/setup.py') }}
+          restore-keys: uc-windows-
 
-      - name: 🛡️ Sipar patch'leri uygula
-        run: python3 scripts/apply_patches.py
+      - name: 📦 Setup — Ungoogled-Chromium + Sipar
+        run: python3 scripts/setup.py --platform windows
 
-      - name: 🔨 Build
-        run: python3 scripts/build.py --platform linux --package
+      - name: 🔨 Build & Package
+        run: python3 scripts/build.py --platform windows --package
 
-      - name: 📤 Release yükle
+      - name: 📤 Artifact yükle
         uses: actions/upload-artifact@v4
         with:
-          name: sipar-linux-x64
-          path: dist/
+          name: sipar-windows-x64
+          path: dist/*.zip
+          retention-days: 30
 
   release:
-    needs: [build-windows, build-linux]
+    needs: [build-linux, build-windows]
     runs-on: ubuntu-latest
     if: startsWith(github.ref, 'refs/tags/')
-    
+    permissions:
+      contents: write
+
     steps:
-      - name: 📥 Artifactları indir
+      - name: 📥 Artifact'ları indir
         uses: actions/download-artifact@v4
+        with:
+          path: artifacts
 
       - name: 🚀 GitHub Release oluştur
         uses: softprops/action-gh-release@v2
         with:
           files: |
-            sipar-windows-x64/**
-            sipar-linux-x64/**
+            artifacts/sipar-linux-x64/*
+            artifacts/sipar-windows-x64/*
           generate_release_notes: true
           draft: false
+          prerelease: ${{ contains(github.ref, 'alpha') || contains(github.ref, 'beta') }}
+          body: |
+            ## 🛡️ Sipar Browser ${{ github.ref_name }}
+
+            Gizlilik odaklı, açık kaynak, sıfır telemetri tarayıcı.
+
+            ### 📥 İndirme
+            - **Windows**: `sipar-browser-*-windows-x64.zip` indir, çıkart, `chrome.exe` çalıştır
+            - **Linux**: `sipar-browser-*-linux-x64.tar.xz` indir, çıkart, `./sipar` çalıştır
+
+            ### 🔒 Dahili Özellikler
+            - ✅ Sıfır telemetri (Ungoogled-Chromium base)
+            - ✅ Yerleşik uBlock Origin
+            - ✅ DNS-over-HTTPS (Quad9)
+            - ✅ 3rd party cookie engelleme
+            - ✅ Özel New Tab sayfası
+            - ✅ Brave Search varsayılan
+
+            ---
+            [sipar.io](https://sipar.huseyinbozkurt.com) · [Kaynak Kod](https://github.com/huseyinbzkrt/sipar-browser)

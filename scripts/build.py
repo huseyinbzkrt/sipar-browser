@@ -1,150 +1,182 @@
 #!/usr/bin/env python3
 """
-Sipar Browser — Build Scripti
-Kullanım: python3 scripts/build.py --platform [windows|linux|mac]
+Sipar Browser — Build & Package Script
+Setup sonrası çalışır: chrome_dir içindeki Ungoogled-Chromium'u
+Sipar olarak paketler.
 """
 
 import os
 import sys
-import subprocess
-import argparse
 import shutil
-import platform as _platform
+import zipfile
+import platform
+import json
 
-BUILD_DIR = "build"
-SRC_DIR = os.path.join(BUILD_DIR, "src")
-OUT_DIR = os.path.join(SRC_DIR, "out", "Sipar")
-UNGOOGLED_DIR = os.path.join(BUILD_DIR, "ungoogled-chromium")
+ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+BUILD_DIR = os.path.join(ROOT, "build")
+CHROME_DIR = os.path.join(BUILD_DIR, "chrome")
+DIST_DIR = os.path.join(ROOT, "dist")
 
-SIPAR_VERSION = "1.0.0"
 
-# GN build flags — gizlilik ve performans için optimize
-GN_FLAGS = """
-# Sipar Browser Build Flags
+def detect_platform():
+    if "--platform" in sys.argv:
+        idx = sys.argv.index("--platform")
+        if idx + 1 < len(sys.argv):
+            return sys.argv[idx + 1]
+    system = platform.system().lower()
+    return "windows" if system == "windows" else "linux"
 
-# Branding
-chromium_branding_path = "//sipar/branding"
 
-# Google servisleri kapat
-google_api_key = "no"
-google_default_client_id = "no"
-google_default_client_secret = "no"
+def apply_branding_windows(chrome_dir):
+    """Windows binary'sine Sipar branding uygula."""
+    print("🎨 Windows branding uygulanıyor...")
 
-# Telemetry kapat
-enable_reporting = false
-enable_background_mode = false
+    # Windows'da exe ikonunu değiştirmek için rcedit gerekir
+    # GitHub Actions'da bunu otomatik yaparız
+    rcedit_url = "https://github.com/nicedoc/nicedoc.io/raw/refs/heads/master/assets/rcedit-x64.exe"
 
-# Performans
-is_official_build = true
-is_debug = false
-symbol_level = 0
-enable_nacl = false
-blink_symbol_level = 0
+    icon_path = os.path.join(ROOT, "branding", "logo.png")
 
-# Güvenlik
-enable_linux_installer = true
+    # Şimdilik branding bilgilerini bir dosyaya yazalım
+    branding_info = {
+        "name": "Sipar Browser",
+        "company": "Sipar Project",
+        "description": "Gizlilik odaklı açık kaynak tarayıcı",
+        "version": get_version(),
+        "copyright": "© 2026 Sipar Project. MIT License.",
+    }
+
+    with open(os.path.join(chrome_dir, "sipar_branding.json"), "w") as f:
+        json.dump(branding_info, f, indent=2)
+
+    print("  ✅ Branding bilgileri yazıldı")
+
+
+def apply_branding_linux(chrome_dir):
+    """Linux binary'sine Sipar branding uygula."""
+    print("🎨 Linux branding uygulanıyor...")
+
+    # .desktop dosyası
+    desktop = f"""[Desktop Entry]
+Name=Sipar Browser
+Comment=Gizlilik odaklı açık kaynak tarayıcı
+Exec={chrome_dir}/chrome --no-default-browser-check %U
+Terminal=false
+Icon={os.path.join(ROOT, "branding", "logo.png")}
+Type=Application
+Categories=Network;WebBrowser;
+MimeType=text/html;text/xml;application/xhtml+xml;x-scheme-handler/http;x-scheme-handler/https;
+StartupWMClass=chromium-browser
 """
 
+    desktop_path = os.path.join(chrome_dir, "sipar-browser.desktop")
+    with open(desktop_path, "w") as f:
+        f.write(desktop)
 
-def run(cmd, cwd=None, check=True):
-    print(f"  $ {cmd[:80]}...")
-    result = subprocess.run(cmd, shell=True, cwd=cwd)
-    if check and result.returncode != 0:
-        print(f"  ❌ Build hatası!")
-        sys.exit(1)
-    return result
-
-
-def check_setup():
-    if not os.path.exists(SRC_DIR):
-        print("❌ Build ortamı kurulmamış!")
-        print("   Önce: python3 scripts/setup.py")
-        sys.exit(1)
-
-
-def write_gn_flags(extra_flags=""):
-    gn_path = os.path.join(SRC_DIR, "out", "Sipar", "args.gn")
-    os.makedirs(os.path.dirname(gn_path), exist_ok=True)
-    
-    with open(gn_path, "w") as f:
-        f.write(GN_FLAGS)
-        if extra_flags:
-            f.write(extra_flags)
-    
-    print(f"  ✅ args.gn yazıldı")
-
-
-def build_windows():
-    print("\n🪟 Windows build başlıyor...")
-    
-    extra_flags = """
-target_os = "win"
-target_cpu = "x64"
+    # Wrapper script
+    wrapper = f"""#!/bin/bash
+# Sipar Browser Launcher
+SIPAR_DIR="$(dirname "$(readlink -f "$0")")"
+exec "$SIPAR_DIR/chrome" \\
+    --no-default-browser-check \\
+    --no-first-run \\
+    --flag-switches-begin \\
+    --disable-features=MediaRouter \\
+    --enable-features=GlobalPrivacyControl \\
+    --flag-switches-end \\
+    "$@"
 """
-    write_gn_flags(extra_flags)
-    run("gn gen out/Sipar", cwd=SRC_DIR)
-    run("ninja -C out/Sipar chrome", cwd=SRC_DIR)
+
+    wrapper_path = os.path.join(chrome_dir, "sipar")
+    with open(wrapper_path, "w") as f:
+        f.write(wrapper)
+    os.chmod(wrapper_path, 0o755)
+
+    print("  ✅ .desktop + launcher yazıldı")
 
 
-def build_linux():
-    print("\n🐧 Linux build başlıyor...")
-    
-    extra_flags = """
-target_os = "linux"
-target_cpu = "x64"
-"""
-    write_gn_flags(extra_flags)
-    run("gn gen out/Sipar", cwd=SRC_DIR)
-    run("ninja -C out/Sipar chrome", cwd=SRC_DIR)
+def get_version():
+    version_file = os.path.join(ROOT, "VERSION")
+    if os.path.exists(version_file):
+        with open(version_file) as f:
+            return f.read().strip()
+    return "0.1.0-alpha"
 
 
-def package(platform_name):
-    print(f"\n📦 {platform_name} paketi oluşturuluyor...")
-    
-    dist_dir = f"dist/sipar-{SIPAR_VERSION}-{platform_name}"
-    os.makedirs(dist_dir, exist_ok=True)
-    
-    if platform_name == "windows":
-        # NSIS installer
-        print("  NSIS installer oluşturuluyor...")
-        # TODO: NSIS script
-    elif platform_name == "linux":
-        # tar.xz + .deb
-        print("  Linux paketi oluşturuluyor...")
-        # TODO: deb packaging
-    
-    print(f"  ✅ Paket hazır: {dist_dir}/")
+def package_windows(chrome_dir, dist_dir):
+    """Windows için zip paketle."""
+    print("\n📦 Windows paketi oluşturuluyor...")
+
+    version = get_version()
+    zip_name = f"sipar-browser-{version}-windows-x64.zip"
+    zip_path = os.path.join(dist_dir, zip_name)
+
+    with zipfile.ZipFile(zip_path, 'w', zipfile.ZIP_DEFLATED) as zf:
+        for root, dirs, files in os.walk(chrome_dir):
+            for file in files:
+                file_path = os.path.join(root, file)
+                arcname = os.path.join("sipar-browser", os.path.relpath(file_path, chrome_dir))
+                zf.write(file_path, arcname)
+
+    size_mb = os.path.getsize(zip_path) / 1024 / 1024
+    print(f"  ✅ {zip_name} ({size_mb:.0f} MB)")
+    return zip_path
+
+
+def package_linux(chrome_dir, dist_dir):
+    """Linux için tar.xz paketle."""
+    print("\n📦 Linux paketi oluşturuluyor...")
+
+    version = get_version()
+    tar_name = f"sipar-browser-{version}-linux-x64.tar.xz"
+    tar_path = os.path.join(dist_dir, tar_name)
+
+    import subprocess
+    subprocess.run([
+        "tar", "cJf", tar_path,
+        "-C", BUILD_DIR,
+        "--transform", "s/^chrome/sipar-browser/",
+        "chrome"
+    ], check=True)
+
+    size_mb = os.path.getsize(tar_path) / 1024 / 1024
+    print(f"  ✅ {tar_name} ({size_mb:.0f} MB)")
+    return tar_path
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Sipar Browser Build Scripti")
-    parser.add_argument("--platform", choices=["windows", "linux", "mac"], 
-                       default=_platform.system().lower())
-    parser.add_argument("--package", action="store_true", help="Build sonrası paket oluştur")
-    parser.add_argument("--clean", action="store_true", help="Build klasörünü temizle")
-    args = parser.parse_args()
-    
-    print(f"🛡️ Sipar Browser v{SIPAR_VERSION} — {args.platform} build")
-    print("=" * 50)
-    
-    if args.clean:
-        print("🧹 Temizleniyor...")
-        shutil.rmtree(OUT_DIR, ignore_errors=True)
-    
-    check_setup()
-    
-    if args.platform == "windows":
-        build_windows()
-    elif args.platform == "linux":
-        build_linux()
-    elif args.platform == "mac":
-        print("❌ macOS build henüz hazır değil (Faz 3)")
+    plat = detect_platform()
+    version = get_version()
+    print(f"🛡️  Sipar Browser Build — v{version}")
+    print(f"📦 Platform: {plat}")
+    print("=" * 55)
+
+    if not os.path.exists(CHROME_DIR):
+        print("❌ Build klasörü bulunamadı. Önce setup.py çalıştırın:")
+        print("   python3 scripts/setup.py")
         sys.exit(1)
-    
-    if args.package:
-        package(args.platform)
-    
-    print(f"\n✅ Build tamamlandı! → {OUT_DIR}/chrome")
+
+    os.makedirs(DIST_DIR, exist_ok=True)
+
+    # Branding
+    if plat == "windows":
+        apply_branding_windows(CHROME_DIR)
+    else:
+        apply_branding_linux(CHROME_DIR)
+
+    # Package
+    if "--package" in sys.argv:
+        if plat == "windows":
+            pkg = package_windows(CHROME_DIR, DIST_DIR)
+        else:
+            pkg = package_linux(CHROME_DIR, DIST_DIR)
+
+        print(f"\n{'=' * 55}")
+        print(f"✅ Sipar Browser v{version} paketlendi!")
+        print(f"📁 Çıktı: {pkg}")
+    else:
+        print(f"\n✅ Branding uygulandı. Paketlemek için:")
+        print(f"   python3 scripts/build.py --platform {plat} --package")
 
 
 if __name__ == "__main__":
