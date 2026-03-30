@@ -3,118 +3,248 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Sipar Browser — Reklamları engelle. Gizliliğini koru.</title>
+  <title>Sipar Browser — Reklam yok. Takip yok. Kripto yok.</title>
   <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
-  <meta name="description" content="Reklam yok. Takip yok. Veri satışı yok. Sadece internet.">
+  <meta name="description" content="Brave'den daha saf. Chrome'dan özgür. Sıfır telemetry, sıfır reklam geliri, sıfır kripto dayatması.">
+  <meta property="og:title" content="Sipar Browser — Tarayıcın sana çalışsın.">
+  <meta property="og:description" content="Sıfır telemetry. Sıfır BAT. Sıfır veri satışı. Sadece hızlı ve güvenli internet.">
+  <meta property="og:image" content="assets/logo.png">
   <style>
     *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
     html { scroll-behavior:smooth; }
     :root {
-      --bg: #0a0d14;
-      --bg2: #111520;
+      --bg: #090c13;
+      --bg2: #0f1320;
+      --bg3: #141928;
       --border: #1e2535;
       --text: #eef2ff;
       --muted: #6b7a99;
       --accent: #4f8ef7;
       --accent2: #3d7ef0;
       --green: #22c55e;
+      --red: #ef4444;
       --orange: #f97316;
+      --yellow: #eab308;
     }
     body {
       background: var(--bg);
       color: var(--text);
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Inter', sans-serif;
       line-height: 1.6;
+    }
+
+    /* ALPHA BANNER */
+    .alpha-banner {
+      background: linear-gradient(90deg, rgba(79,142,247,0.12), rgba(34,197,94,0.12));
+      border-bottom: 1px solid rgba(79,142,247,0.2);
+      padding: 10px 20px;
+      text-align: center;
+      font-size: 13px;
+      color: var(--text);
+      position: relative;
+      z-index: 100;
+    }
+    .alpha-banner a { color: var(--green); text-decoration: none; font-weight: 700; }
+    .alpha-banner a:hover { text-decoration: underline; }
+    .alpha-pill {
+      display: inline-block;
+      background: var(--green);
+      color: #000;
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: 1px;
+      padding: 2px 8px;
+      border-radius: 4px;
+      margin-right: 8px;
+      vertical-align: middle;
     }
 
     /* NAV */
     nav {
-      position: fixed; top:0; left:0; right:0; z-index:99;
-      padding: 20px 64px;
+      position: sticky; top:0; left:0; right:0; z-index:99;
+      padding: 18px 64px;
       display: flex; align-items:center; justify-content:space-between;
-      background: rgba(10,13,20,0.8);
+      background: rgba(9,12,19,0.9);
       backdrop-filter: blur(20px);
-      border-bottom: 1px solid rgba(255,255,255,0.04);
+      border-bottom: 1px solid rgba(255,255,255,0.05);
     }
-    .nav-logo { display:flex; align-items:center; gap:8px; font-weight:800; font-size:18px; letter-spacing:2px; }
-    .nav-logo img { width:30px; height:30px; object-fit:contain; filter:drop-shadow(0 0 6px rgba(79,142,247,0.4)); }
-    nav a.nav-link { color:var(--muted); text-decoration:none; font-size:14px; margin-left:36px; transition:color .2s; }
+    .nav-logo { display:flex; align-items:center; gap:10px; font-weight:900; font-size:18px; letter-spacing:2px; text-decoration:none; color:var(--text); }
+    .nav-logo img { width:30px; height:30px; object-fit:contain; filter:drop-shadow(0 0 8px rgba(79,142,247,0.5)); }
+    nav a.nav-link { color:var(--muted); text-decoration:none; font-size:14px; margin-left:32px; transition:color .2s; }
     nav a.nav-link:hover { color:var(--text); }
     .nav-right { display:flex; align-items:center; }
-    .btn-nav { background:var(--accent); color:#fff; padding:9px 22px; border-radius:8px; font-size:14px; font-weight:600; text-decoration:none; margin-left:36px; transition:background .2s; }
-    .btn-nav:hover { background:var(--accent2); }
+    .btn-nav {
+      background: linear-gradient(135deg, var(--accent), #6ea8fa);
+      color:#fff; padding:9px 22px; border-radius:8px; font-size:14px; font-weight:700;
+      text-decoration:none; margin-left:32px;
+      transition:opacity .2s, transform .15s;
+      box-shadow: 0 0 20px rgba(79,142,247,0.25);
+    }
+    .btn-nav:hover { opacity:.9; transform:translateY(-1px); }
+
+    /* Lang toggle */
+    .lang-toggle { display:flex; gap:4px; margin-left:16px; }
+    .lang-btn { background:none; border:1px solid var(--border); color:var(--muted); padding:5px 11px; border-radius:6px; font-size:12px; font-weight:600; cursor:pointer; transition:all .15s; }
+    .lang-btn.active { border-color:var(--accent); color:var(--accent); background:rgba(79,142,247,0.08); }
+    .lang-btn:hover { border-color:var(--accent); color:var(--text); }
 
     /* HERO */
     .hero {
-      padding: 180px 64px 120px;
-      max-width: 1100px; margin: 0 auto;
+      padding: 100px 64px 80px;
+      max-width: 1200px; margin: 0 auto;
       display: grid; grid-template-columns: 1fr 1fr;
       gap: 80px; align-items: center;
     }
+    .hero-eyebrow {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: rgba(34,197,94,0.1); border: 1px solid rgba(34,197,94,0.25);
+      border-radius: 100px; padding: 6px 14px;
+      font-size: 12px; font-weight: 700; color: var(--green);
+      margin-bottom: 24px; letter-spacing: 0.5px;
+    }
+    .hero-eyebrow .dot { width:6px; height:6px; border-radius:50%; background:var(--green); animation: pulse 2s infinite; }
+    @keyframes pulse { 0%,100%{opacity:1;} 50%{opacity:.4;} }
     .hero-left h1 {
-      font-size: clamp(38px, 4.5vw, 58px);
-      font-weight: 900; line-height: 1.1;
-      letter-spacing: -1.5px; margin-bottom: 20px;
+      font-size: clamp(36px, 4.5vw, 60px);
+      font-weight: 900; line-height: 1.05;
+      letter-spacing: -2px; margin-bottom: 24px;
     }
-    .hero-left h1 span { color:var(--accent); }
-    .hero-left p {
-      font-size: 18px; color:var(--muted);
-      margin-bottom: 40px; line-height: 1.75; max-width: 440px;
+    .hero-left h1 .line-accent { color: var(--accent); }
+    .hero-left h1 .line-green { color: var(--green); }
+    .hero-left p.hero-sub {
+      font-size: 18px; color: var(--muted);
+      margin-bottom: 40px; line-height: 1.75; max-width: 480px;
     }
-    .hero-btns { display:flex; gap:14px; flex-wrap:wrap; }
-    .btn-primary { background:var(--accent); color:#fff; padding:14px 30px; border-radius:10px; font-size:16px; font-weight:700; text-decoration:none; transition:background .2s, transform .15s; }
-    .btn-primary:hover { background:var(--accent2); transform:translateY(-2px); }
-    .btn-outline { border:1.5px solid var(--border); color:var(--text); padding:14px 30px; border-radius:10px; font-size:16px; font-weight:600; text-decoration:none; transition:border-color .2s; }
-    .btn-outline:hover { border-color:var(--accent); }
-    .hero-note { margin-top: 20px; font-size: 13px; color: var(--muted); }
-    .hero-note a { color:var(--accent); text-decoration:none; }
+    /* Hero download buttons */
+    .hero-dl-label {
+      font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase;
+      color: var(--muted); margin-bottom: 14px;
+    }
+    .dl-buttons { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 20px; }
+    .btn-dl {
+      display: flex; align-items: center; gap: 10px;
+      background: var(--bg3); border: 1px solid var(--border);
+      color: var(--text); padding: 14px 22px; border-radius: 10px;
+      font-size: 14px; font-weight: 600; text-decoration: none;
+      transition: all .2s;
+    }
+    .btn-dl:hover { border-color: var(--accent); background: rgba(79,142,247,0.06); transform: translateY(-2px); }
+    .btn-dl-icon { font-size: 18px; line-height: 1; }
+    .btn-dl-text { display: flex; flex-direction: column; gap: 1px; }
+    .btn-dl-os { font-size: 13px; font-weight: 700; }
+    .btn-dl-ver { font-size: 11px; color: var(--muted); }
+    .btn-dl.linux { border-color: rgba(34,197,94,0.3); }
+    .btn-dl.linux:hover { border-color: var(--green); background: rgba(34,197,94,0.06); }
+    .hero-secondary { display: flex; align-items: center; gap: 20px; }
+    .btn-outline-sm {
+      display: flex; align-items: center; gap: 8px;
+      border: 1px solid var(--border); color: var(--muted);
+      padding: 12px 20px; border-radius: 10px; font-size: 14px; font-weight: 600;
+      text-decoration: none; transition: all .2s;
+    }
+    .btn-outline-sm:hover { border-color: var(--accent); color: var(--text); }
+    .hero-social-proof {
+      margin-top: 28px;
+      display: flex; align-items: center; gap: 20px;
+      flex-wrap: wrap;
+    }
+    .proof-item {
+      display: flex; align-items: center; gap: 8px;
+      font-size: 13px; color: var(--muted);
+    }
+    .proof-item strong { color: var(--text); }
+    .proof-sep { color: var(--border); }
+    .gh-stars {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: var(--bg3); border: 1px solid var(--border);
+      border-radius: 6px; padding: 4px 10px; font-size: 12px;
+      text-decoration: none; color: var(--text); transition: all .2s;
+    }
+    .gh-stars:hover { border-color: var(--accent); }
+    .gh-stars .star-count { font-weight: 700; color: var(--yellow); }
 
     /* Hero sağ — shield visual */
-    .hero-right {
-      position: relative; display:flex; align-items:center; justify-content:center;
-    }
-    .shield-wrap {
-      position: relative; width:360px; height:360px;
-      display:flex; align-items:center; justify-content:center;
-    }
+    .hero-right { position: relative; display:flex; align-items:center; justify-content:center; }
+    .shield-wrap { position: relative; width:380px; height:380px; display:flex; align-items:center; justify-content:center; }
     .shield-glow {
-      position:absolute; inset:-60px;
-      background: radial-gradient(circle, rgba(79,142,247,0.18) 0%, transparent 65%);
-      border-radius:50%;
+      position:absolute; inset:-80px;
+      background: radial-gradient(circle, rgba(79,142,247,0.15) 0%, rgba(34,197,94,0.05) 40%, transparent 70%);
+      border-radius:50%; animation: glow-pulse 4s ease-in-out infinite;
     }
+    @keyframes glow-pulse { 0%,100%{opacity:1;} 50%{opacity:.6;} }
     .shield-logo {
-      width:280px; height:280px; object-fit:contain;
+      width:300px; height:300px; object-fit:contain;
       position:relative; z-index:1;
-      filter: drop-shadow(0 0 40px rgba(79,142,247,0.6)) drop-shadow(0 0 80px rgba(79,142,247,0.2));
+      filter: drop-shadow(0 0 40px rgba(79,142,247,0.5)) drop-shadow(0 0 80px rgba(79,142,247,0.15));
     }
     .shield-badge {
       position:absolute; background:var(--bg2); border:1px solid var(--border);
       border-radius:12px; padding:10px 16px; font-size:13px; font-weight:600;
       display:flex; align-items:center; gap:8px; white-space:nowrap;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.4);
+      animation: float 3s ease-in-out infinite;
     }
     .shield-badge .dot { width:8px; height:8px; border-radius:50%; background:var(--green); flex-shrink:0; }
-    .badge1 { top:10px; right:-20px; }
-    .badge2 { bottom:40px; left:-30px; }
-    .badge3 { top:50%; right:-40px; transform:translateY(-50%); }
+    .badge1 { top:20px; right:-10px; animation-delay:0s; }
+    .badge2 { bottom:50px; left:-20px; animation-delay:1s; }
+    .badge3 { top:50%; right:-50px; transform:translateY(-50%); animation-delay:.5s; }
+    @keyframes float { 0%,100%{transform:translateY(0);} 50%{transform:translateY(-6px);} }
+    .badge3 { animation: float3 3s ease-in-out .5s infinite; }
+    @keyframes float3 { 0%,100%{transform:translateY(-50%);} 50%{transform:translateY(calc(-50% - 6px));} }
+
+    /* TRUST STRIP */
+    .trust-strip {
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      background: var(--bg2);
+      padding: 24px 64px;
+    }
+    .trust-inner {
+      max-width: 1200px; margin: 0 auto;
+      display: flex; align-items: center; justify-content: center;
+      gap: 48px; flex-wrap: wrap;
+    }
+    .trust-item {
+      display: flex; align-items: center; gap: 10px;
+      font-size: 14px; font-weight: 600; color: var(--muted);
+    }
+    .trust-item svg { color: var(--green); }
 
     /* SEPARATOR */
-    .sep { height:1px; background:var(--border); max-width:1100px; margin:0 auto; }
+    .sep { height:1px; background:var(--border); max-width:1200px; margin:0 auto; }
+
+    /* NUMBERS */
+    .numbers-section {
+      background: var(--bg2);
+      border-top:1px solid var(--border); border-bottom:1px solid var(--border);
+      padding: 72px 64px;
+    }
+    .numbers-inner { max-width:1100px; margin:0 auto; display:grid; grid-template-columns:repeat(4,1fr); gap:48px; text-align:center; }
+    .num-val { font-size:48px; font-weight:900; color:var(--accent); line-height:1; letter-spacing:-1px; }
+    .num-val.green { color:var(--green); }
+    .num-label { font-size:15px; color:var(--muted); margin-top:8px; line-height:1.4; }
 
     /* FEATURES */
     .feature-block {
-      max-width: 1100px; margin: 0 auto;
+      max-width: 1200px; margin: 0 auto;
       padding: 100px 64px;
       display: grid; grid-template-columns: 1fr 1fr;
-      gap: 100px; align-items:center;
+      gap: 80px; align-items:center;
     }
     .feature-block.reverse { direction:rtl; }
     .feature-block.reverse > * { direction:ltr; }
-    .feat-tag { font-size:12px; font-weight:700; letter-spacing:3px; text-transform:uppercase; color:var(--accent); margin-bottom:16px; }
-    .feat-title { font-size: clamp(26px,3vw,38px); font-weight:800; line-height:1.2; margin-bottom:20px; }
-    .feat-desc { font-size:17px; color:var(--muted); line-height:1.8; }
+    .feat-tag { font-size:11px; font-weight:800; letter-spacing:3px; text-transform:uppercase; color:var(--accent); margin-bottom:16px; }
+    .feat-title { font-size: clamp(24px,3vw,36px); font-weight:800; line-height:1.2; margin-bottom:20px; }
+    .feat-desc { font-size:16px; color:var(--muted); line-height:1.85; }
+    .feat-bullets { list-style:none; margin-top:24px; display:flex; flex-direction:column; gap:12px; }
+    .feat-bullets li { display:flex; align-items:center; gap:10px; font-size:15px; color:var(--muted); }
+    .feat-bullets li::before { content:"✓"; color:var(--green); font-weight:800; flex-shrink:0; }
     .feat-visual {
       border-radius:20px; overflow:hidden;
       aspect-ratio:4/3; position:relative;
+      background: linear-gradient(135deg, var(--bg3), var(--bg2));
+      border: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: center;
     }
     .feat-visual img {
       width:100%; height:100%; object-fit:cover;
@@ -122,109 +252,222 @@
       transition: transform .4s ease;
     }
     .feat-visual:hover img { transform: scale(1.03); }
-
-    /* NUMBERS */
-    .numbers-section {
-      background: var(--bg2); border-top:1px solid var(--border); border-bottom:1px solid var(--border);
-      padding: 80px 64px;
+    .feat-mockup {
+      width:100%; height:100%; display:flex; align-items:center; justify-content:center;
+      font-size: 80px; opacity: .15;
     }
-    .numbers-inner { max-width:1100px; margin:0 auto; display:grid; grid-template-columns:repeat(3,1fr); gap:48px; text-align:center; }
-    .num-val { font-size:52px; font-weight:900; color:var(--accent); line-height:1; }
-    .num-label { font-size:16px; color:var(--muted); margin-top:8px; }
 
     /* COMPARE */
-    .compare-section { max-width:900px; margin:0 auto; padding:100px 64px; }
+    .compare-section { max-width:1000px; margin:0 auto; padding:100px 64px; }
     .section-header { text-align:center; margin-bottom:56px; }
-    .section-header h2 { font-size:clamp(28px,3.5vw,42px); font-weight:900; margin-bottom:12px; }
+    .section-header h2 { font-size:clamp(28px,3.5vw,44px); font-weight:900; margin-bottom:12px; letter-spacing:-1px; }
     .section-header p { font-size:17px; color:var(--muted); }
+    .section-header .brave-note {
+      display: inline-block; margin-top: 16px;
+      background: rgba(79,142,247,0.08); border: 1px solid rgba(79,142,247,0.2);
+      border-radius: 8px; padding: 10px 20px;
+      font-size: 14px; color: var(--accent);
+    }
+    .compare-table-wrap {
+      border: 1px solid var(--border); border-radius: 16px; overflow: hidden;
+    }
     table { width:100%; border-collapse:collapse; }
-    thead th { padding:14px 20px; font-size:14px; color:var(--muted); font-weight:600; border-bottom:2px solid var(--border); text-align:center; }
+    thead th {
+      padding:16px 20px; font-size:13px; color:var(--muted);
+      font-weight:600; background: var(--bg3);
+      border-bottom:1px solid var(--border); text-align:center;
+    }
     thead th:first-child { text-align:left; }
-    thead th.hl { color:var(--accent); font-size:16px; font-weight:800; }
-    tbody td { padding:16px 20px; text-align:center; border-bottom:1px solid rgba(30,37,53,0.8); font-size:15px; }
-    tbody td:first-child { text-align:left; color:var(--muted); font-size:14px; }
-    tbody tr:hover td { background:rgba(255,255,255,0.02); }
-    .y { color:var(--green); font-weight:700; }
-    .n { color:#ef4444; }
-    .p { color:var(--accent); font-size:12px; }
+    thead th.hl {
+      color:#fff; font-size:15px; font-weight:900;
+      background: rgba(79,142,247,0.1);
+    }
+    thead th.hl::after { content:" ⭐"; }
+    tbody td {
+      padding:15px 20px; text-align:center;
+      border-bottom:1px solid rgba(30,37,53,0.6); font-size:14px;
+    }
+    tbody td:first-child { text-align:left; font-size:14px; color:var(--muted); }
+    tbody tr:last-child td { border-bottom: none; }
+    tbody tr:hover td { background:rgba(255,255,255,0.015); }
+    tbody td.hl-col { background: rgba(79,142,247,0.04); }
+    .y { color:var(--green); font-weight:800; font-size:16px; }
+    .n { color:var(--red); font-weight:800; font-size:16px; }
+    .p { color:var(--yellow); font-size:13px; font-weight:600; }
+    .row-label { font-size:13px !important; }
+    .row-label small { display:block; font-size:11px; color:var(--muted); margin-top:2px; opacity:.7; }
 
-    /* DOWNLOAD / WAITLIST */
+    /* DOWNLOAD SECTION */
     .dl-section {
-      padding: 120px 64px; text-align:center;
+      padding: 100px 64px;
       position:relative; overflow:hidden;
     }
     .dl-section::before {
       content:''; position:absolute; top:0; left:50%; transform:translateX(-50%);
-      width:800px; height:400px;
-      background: radial-gradient(ellipse, rgba(79,142,247,0.07) 0%, transparent 65%);
+      width:900px; height:500px;
+      background: radial-gradient(ellipse, rgba(79,142,247,0.06) 0%, transparent 65%);
       pointer-events:none;
     }
-    .dl-inner { max-width:620px; margin:0 auto; position:relative; }
-    .dl-inner h2 { font-size:clamp(32px,4vw,52px); font-weight:900; margin-bottom:16px; letter-spacing:-1px; }
-    .dl-inner p { font-size:18px; color:var(--muted); margin-bottom:48px; line-height:1.7; }
-    .wl-form { display:flex; gap:12px; max-width:500px; margin:0 auto; }
+    .dl-inner { max-width:700px; margin:0 auto; position:relative; text-align: center; }
+    .dl-inner h2 { font-size:clamp(30px,4vw,50px); font-weight:900; margin-bottom:16px; letter-spacing:-1.5px; }
+    .dl-inner p { font-size:17px; color:var(--muted); margin-bottom:48px; line-height:1.75; }
+    .dl-os-buttons {
+      display: flex; gap: 16px; justify-content: center;
+      flex-wrap: wrap; margin-bottom: 40px;
+    }
+    .btn-os {
+      display: flex; align-items: center; gap: 14px;
+      background: var(--bg3); border: 1px solid var(--border);
+      color: var(--text); padding: 18px 28px; border-radius: 12px;
+      font-size: 15px; font-weight: 700; text-decoration: none;
+      transition: all .2s; min-width: 200px;
+    }
+    .btn-os:hover { border-color: var(--accent); background: rgba(79,142,247,0.08); transform: translateY(-3px); box-shadow: 0 8px 30px rgba(79,142,247,0.15); }
+    .btn-os .os-icon { font-size: 26px; }
+    .btn-os .os-info { display: flex; flex-direction: column; gap: 2px; text-align: left; }
+    .btn-os .os-name { font-size: 15px; font-weight: 800; }
+    .btn-os .os-ver { font-size: 12px; color: var(--muted); font-weight: 500; }
+    .btn-os.linux-btn { border-color: rgba(34,197,94,0.3); }
+    .btn-os.linux-btn:hover { border-color: var(--green); background: rgba(34,197,94,0.08); box-shadow: 0 8px 30px rgba(34,197,94,0.1); }
+    .dl-divider { display: flex; align-items: center; gap: 16px; margin: 32px 0; color: var(--muted); font-size: 13px; }
+    .dl-divider::before, .dl-divider::after { content:''; flex:1; height:1px; background:var(--border); }
+
+    /* WAITLIST */
+    .wl-section-inner {
+      max-width: 560px; margin: 0 auto;
+      background: var(--bg2); border: 1px solid var(--border);
+      border-radius: 20px; padding: 40px;
+    }
+    .wl-section-inner h3 { font-size: 22px; font-weight: 800; margin-bottom: 8px; }
+    .wl-section-inner p { font-size: 14px; color: var(--muted); margin-bottom: 24px; line-height: 1.6; }
+    .wl-count {
+      display: flex; align-items: center; gap: 8px;
+      font-size: 13px; color: var(--muted); margin-bottom: 20px;
+    }
+    .wl-count .avatars { display:flex; }
+    .wl-count .av {
+      width: 26px; height: 26px; border-radius: 50%;
+      background: linear-gradient(135deg, var(--accent), #6ea8fa);
+      border: 2px solid var(--bg2); margin-left: -6px; font-size: 11px;
+      display:flex; align-items:center; justify-content:center;
+    }
+    .wl-count .av:first-child { margin-left:0; }
+    .wl-form { display:flex; gap:10px; }
     .wl-form input {
-      flex:1; background:var(--bg2); border:1.5px solid var(--border);
-      color:var(--text); padding:16px 20px; border-radius:10px; font-size:15px; outline:none;
+      flex:1; background:var(--bg); border:1.5px solid var(--border);
+      color:var(--text); padding:14px 18px; border-radius:10px; font-size:14px; outline:none;
       transition:border-color .2s;
     }
     .wl-form input:focus { border-color:var(--accent); }
     .wl-form button {
-      background:var(--accent); color:#fff; padding:16px 28px; border-radius:10px;
-      border:none; font-size:15px; font-weight:700; cursor:pointer;
-      transition:background .2s, transform .15s; white-space:nowrap;
+      background: linear-gradient(135deg, var(--accent), #6ea8fa);
+      color:#fff; padding:14px 24px; border-radius:10px;
+      border:none; font-size:14px; font-weight:700; cursor:pointer;
+      transition:opacity .2s, transform .15s; white-space:nowrap;
+      box-shadow: 0 0 20px rgba(79,142,247,0.3);
     }
-    .wl-form button:hover { background:var(--accent2); transform:translateY(-2px); }
-    .wl-note { margin-top:16px; font-size:13px; color:var(--muted); }
+    .wl-form button:hover { opacity:.9; transform:translateY(-2px); }
+    .wl-note { margin-top:12px; font-size:12px; color:var(--muted); text-align:center; }
 
     /* FAQ */
     .faq-section { max-width:740px; margin:0 auto; padding:80px 64px 100px; }
-    .faq-section h2 { font-size:32px; font-weight:800; margin-bottom:40px; }
-    .faq-item { border-top:1px solid var(--border); padding:24px 0; }
-    .faq-q { font-size:17px; font-weight:700; margin-bottom:12px; cursor:pointer; display:flex; justify-content:space-between; align-items:center; }
+    .faq-section h2 { font-size:36px; font-weight:900; margin-bottom:12px; letter-spacing:-1px; }
+    .faq-section .faq-sub { font-size:17px; color:var(--muted); margin-bottom:40px; }
+    .faq-item { border-top:1px solid var(--border); }
+    .faq-q {
+      font-size:16px; font-weight:700; padding:22px 0;
+      cursor:pointer; display:flex; justify-content:space-between; align-items:center;
+      transition: color .2s; user-select: none;
+    }
     .faq-q:hover { color:var(--accent); }
-    .faq-a { font-size:15px; color:var(--muted); line-height:1.8; }
+    .faq-q .faq-icon { color:var(--muted); transition:transform .3s; font-size:20px; line-height:1; }
+    .faq-q.open .faq-icon { transform: rotate(45deg); color:var(--accent); }
+    .faq-a { font-size:15px; color:var(--muted); line-height:1.85; padding-bottom:22px; display:none; }
+    .faq-a.visible { display:block; }
 
     /* FOOTER */
-    footer { border-top:1px solid var(--border); padding:40px 64px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:16px; }
-    .footer-brand { font-size:14px; font-weight:800; letter-spacing:3px; }
-    .footer-links { display:flex; gap:28px; }
-    .footer-links a { color:var(--muted); text-decoration:none; font-size:13px; transition:color .2s; }
-    .footer-links a:hover { color:var(--text); }
-    .footer-copy { font-size:12px; color:var(--muted); }
+    footer {
+      border-top:1px solid var(--border);
+      padding: 48px 64px 32px;
+    }
+    .footer-top {
+      max-width: 1200px; margin: 0 auto;
+      display: grid; grid-template-columns: 2fr 1fr 1fr 1fr;
+      gap: 48px; padding-bottom: 48px;
+    }
+    .footer-brand-col .footer-logo {
+      display: flex; align-items: center; gap: 10px;
+      font-weight: 900; font-size: 18px; letter-spacing: 2px;
+      text-decoration: none; color: var(--text); margin-bottom: 16px;
+    }
+    .footer-brand-col .footer-logo img { width:28px; height:28px; object-fit:contain; }
+    .footer-brand-col p { font-size:14px; color:var(--muted); line-height:1.7; max-width:280px; }
+    .footer-social { display:flex; gap:12px; margin-top:20px; }
+    .social-btn {
+      width: 36px; height: 36px;
+      background: var(--bg3); border: 1px solid var(--border);
+      border-radius: 8px; display: flex; align-items: center; justify-content: center;
+      text-decoration: none; color: var(--muted); font-size: 16px;
+      transition: all .2s;
+    }
+    .social-btn:hover { border-color: var(--accent); color: var(--text); background: rgba(79,142,247,0.08); }
+    .footer-col h4 { font-size: 13px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: var(--muted); margin-bottom: 16px; }
+    .footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+    .footer-col ul li a { color: var(--muted); text-decoration: none; font-size: 14px; transition: color .2s; }
+    .footer-col ul li a:hover { color: var(--text); }
+    .footer-bottom {
+      max-width: 1200px; margin: 0 auto;
+      border-top: 1px solid var(--border); padding-top: 24px;
+      display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px;
+    }
+    .footer-bottom .copy { font-size: 13px; color: var(--muted); }
+    .footer-bottom .mit { font-size: 13px; color: var(--muted); }
+    .footer-bottom .mit a { color: var(--accent); text-decoration: none; }
 
-    /* Lang toggle */
-    .lang-toggle { display:flex; gap:4px; margin-left:20px; }
-    .lang-btn { background:none; border:1px solid var(--border); color:var(--muted); padding:5px 11px; border-radius:6px; font-size:12px; font-weight:600; cursor:pointer; transition:all .15s; }
-    .lang-btn.active { border-color:var(--accent); color:var(--accent); background:rgba(79,142,247,0.08); }
-    .lang-btn:hover { border-color:var(--accent); color:var(--text); }
-
+    /* Responsive */
+    @media(max-width:1024px) {
+      .numbers-inner { grid-template-columns: repeat(2,1fr); }
+      .footer-top { grid-template-columns: 1fr 1fr; }
+    }
     @media(max-width:900px) {
-      nav { padding:16px 20px; }
+      nav { padding:14px 20px; }
       nav a.nav-link { display:none; }
-      .hero, .feature-block { grid-template-columns:1fr; gap:48px; padding:100px 24px 60px; }
+      .hero, .feature-block { grid-template-columns:1fr; gap:40px; padding:80px 24px 60px; }
       .feature-block.reverse { direction:ltr; }
       .hero-right { display:none; }
-      .numbers-inner { grid-template-columns:1fr; }
+      .trust-strip, .numbers-section { padding:40px 24px; }
+      .trust-inner { gap:24px; }
       .compare-section, .faq-section, .dl-section { padding-left:24px; padding-right:24px; }
-      .numbers-section { padding:60px 24px; }
-      footer { padding:32px 24px; }
+      .numbers-inner { grid-template-columns:repeat(2,1fr); gap:32px; }
+      .wl-section-inner { padding:28px 20px; }
+      .wl-form { flex-direction: column; }
+      footer { padding:40px 24px 24px; }
+      .footer-top { grid-template-columns: 1fr; gap:32px; }
+      .footer-bottom { flex-direction:column; text-align:center; }
+      .dl-os-buttons { flex-direction: column; align-items: center; }
     }
   </style>
 </head>
 <body>
 
+<!-- ALPHA BANNER -->
+<div class="alpha-banner" id="alpha-banner">
+  <span class="alpha-pill">YENİ</span>
+  <strong>v0.1.1-alpha çıktı!</strong> Linux ve Windows için indirin —
+  <a href="https://github.com/huseyinbzkrt/sipar-browser/releases/tag/v0.1.1-alpha" target="_blank">Sürüm notlarını gör ↗</a>
+</div>
+
 <!-- NAV -->
 <nav>
-  <div class="nav-logo">
-    <img src="assets/logo.png" alt="Sipar" style="width:30px;height:30px;object-fit:contain;">
+  <a href="#" class="nav-logo">
+    <img src="assets/logo.png" alt="Sipar">
     SİPAR
-  </div>
+  </a>
   <div class="nav-right">
-    <a href="#features" class="nav-link">Özellikler</a>
-    <a href="#compare" class="nav-link">Karşılaştırma</a>
+    <a href="#features" class="nav-link" data-i18n="nav-features">Özellikler</a>
+    <a href="#compare" class="nav-link" data-i18n="nav-compare">Karşılaştırma</a>
     <a href="https://github.com/huseyinbzkrt/sipar-browser" class="nav-link" target="_blank">GitHub</a>
-    <a href="#waitlist" class="btn-nav" id="nav-early">Erken Erişim →</a>
+    <a href="#download" class="btn-nav" id="nav-download" data-i18n="nav-download">İndir →</a>
     <div class="lang-toggle">
       <button class="lang-btn active" onclick="setLang('tr')">TR</button>
       <button class="lang-btn" onclick="setLang('en')">EN</button>
@@ -235,26 +478,107 @@
 <!-- HERO -->
 <div class="hero">
   <div class="hero-left">
-    <h1 id="hero-h1">Reklamları engelle.<br>Verini koru.<br><span>Sadece sörf yap.</span></h1>
-    <p id="hero-p">Sipar, seni izlemeyen, verini satmayan ve ne yaptığını kimseye söylemeyen bir tarayıcıdır. Sadece tarayıcı değiştirerek.</p>
-    <div class="hero-btns">
-      <a href="#waitlist" class="btn-primary" id="hero-btn1">Erken Erişime Katıl</a>
-      <a href="https://github.com/huseyinbzkrt/sipar-browser" target="_blank" class="btn-outline">GitHub ↗</a>
+    <div class="hero-eyebrow">
+      <span class="dot"></span>
+      <span id="eyebrow-text">v0.1.1-alpha — İndir, hemen başla</span>
     </div>
-    <p class="hero-note" id="hero-note">Açık kaynak · MIT Lisansı · <a href="https://github.com/huseyinbzkrt/sipar-browser">Kaynak kodunu incele</a></p>
+    <h1 id="hero-h1">
+      Brave'den saf.<br>
+      Chrome'dan <span class="line-accent">özgür.</span><br>
+      <span class="line-green">Sadece tarayıcı.</span>
+    </h1>
+    <p class="hero-sub" id="hero-sub">Sıfır telemetry. Sıfır BAT kripto dayatması. Sıfır veri satışı. Sadece hızlı, temiz, gizli internet.</p>
+
+    <p class="hero-dl-label" id="hero-dl-label">ŞİMDİ İNDİR — ÜCRETSİZ</p>
+    <div class="dl-buttons">
+      <a href="https://github.com/huseyinbzkrt/sipar-browser/releases/tag/v0.1.1-alpha"
+         target="_blank" class="btn-dl linux" id="hero-dl-linux">
+        <span class="btn-dl-icon">🐧</span>
+        <div class="btn-dl-text">
+          <span class="btn-dl-os">Linux</span>
+          <span class="btn-dl-ver">v0.1.1-alpha</span>
+        </div>
+      </a>
+      <a href="https://github.com/huseyinbzkrt/sipar-browser/releases/tag/v0.1.1-alpha"
+         target="_blank" class="btn-dl" id="hero-dl-win">
+        <span class="btn-dl-icon">🪟</span>
+        <div class="btn-dl-text">
+          <span class="btn-dl-os">Windows</span>
+          <span class="btn-dl-ver">v0.1.1-alpha</span>
+        </div>
+      </a>
+    </div>
+    <div class="hero-secondary">
+      <a href="https://github.com/huseyinbzkrt/sipar-browser" target="_blank" class="btn-outline-sm">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+        GitHub
+      </a>
+      <a href="https://github.com/huseyinbzkrt/sipar-browser" target="_blank" class="gh-stars" id="gh-stars">
+        ⭐ <span class="star-count" id="star-count">...</span> stars
+      </a>
+    </div>
+    <div class="hero-social-proof">
+      <div class="proof-item">
+        <span>🛡️</span>
+        <span id="proof-opensource">100% Açık kaynak</span>
+      </div>
+      <span class="proof-sep">·</span>
+      <div class="proof-item">
+        <span>⚡</span>
+        <span id="proof-speed">2× daha hızlı</span>
+      </div>
+      <span class="proof-sep">·</span>
+      <div class="proof-item">
+        <span>🔒</span>
+        <span id="proof-zero">Sıfır telemetry</span>
+      </div>
+    </div>
   </div>
   <div class="hero-right">
     <div class="shield-wrap">
       <div class="shield-glow"></div>
       <img src="assets/logo.png" class="shield-logo" alt="Sipar">
-      <div class="shield-badge badge1"><i data-lucide="shield-off" style="width:12px;height:12px;color:var(--green)"></i> Tracker engellendi</div>
-      <div class="shield-badge badge2"><i data-lucide="lock" style="width:12px;height:12px;color:var(--green)"></i> DNS: Quad9</div>
-      <div class="shield-badge badge3"><i data-lucide="eye-off" style="width:12px;height:12px;color:var(--green)"></i> Sıfır telemetry</div>
+      <div class="shield-badge badge1">
+        <span class="dot"></span>
+        <span id="badge1-text">Tracker engellendi</span>
+      </div>
+      <div class="shield-badge badge2">
+        <i data-lucide="lock" style="width:13px;height:13px;color:var(--green)"></i>
+        <span id="badge2-text">DNS: Quad9</span>
+      </div>
+      <div class="shield-badge badge3">
+        <i data-lucide="eye-off" style="width:13px;height:13px;color:var(--green)"></i>
+        <span id="badge3-text">Sıfır telemetry</span>
+      </div>
     </div>
   </div>
 </div>
 
-<div class="sep"></div>
+<!-- TRUST STRIP -->
+<div class="trust-strip">
+  <div class="trust-inner">
+    <div class="trust-item">
+      <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+      <span id="trust1">Sıfır reklam geliri</span>
+    </div>
+    <div class="trust-item">
+      <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+      <span id="trust2">Kripto yok</span>
+    </div>
+    <div class="trust-item">
+      <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+      <span id="trust3">uBlock Origin dahil</span>
+    </div>
+    <div class="trust-item">
+      <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+      <span id="trust4">MIT Lisansı</span>
+    </div>
+    <div class="trust-item">
+      <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+      <span id="trust5">Chrome uzantıları çalışır</span>
+    </div>
+  </div>
+</div>
 
 <!-- NUMBERS -->
 <div class="numbers-section">
@@ -264,12 +588,16 @@
       <div class="num-label" id="num1-label">Telemetry — hiç, hiçbir zaman</div>
     </div>
     <div>
+      <div class="num-val green">0</div>
+      <div class="num-label" id="num2-label">Kripto / BAT dayatması</div>
+    </div>
+    <div>
       <div class="num-val">100%</div>
-      <div class="num-label">Open source</div>
+      <div class="num-label" id="num3-label">Açık kaynak — MIT</div>
     </div>
     <div>
       <div class="num-val">2×</div>
-      <div class="num-label" id="num3-label">Daha hızlı sayfa yüklemesi</div>
+      <div class="num-label" id="num4-label">Daha hızlı sayfa yüklemesi</div>
     </div>
   </div>
 </div>
@@ -281,9 +609,17 @@
     <div>
       <p class="feat-tag" id="feat1-tag">Gizlilik</p>
       <h2 class="feat-title" id="feat1-title">Reklamlar. İzleyiciler. Hepsi engellendi.</h2>
-      <p class="feat-desc" id="feat1-desc">uBlock Origin fabrikadan kurulu gelir. Kurmana, ayarlamana gerek yok. İlk açılıştan itibaren her reklam, her tracker, her parmak izi denemesi engellenir.<br><br>Ve o sinir bozucu "çerezleri kabul et" pop-up'ları? Evet, onlar da.</p>
+      <p class="feat-desc" id="feat1-desc">uBlock Origin fabrikadan kurulu gelir. Kurmana, ayarlamana gerek yok. İlk açılıştan itibaren her reklam, her tracker, her parmak izi denemesi engellenir.</p>
+      <ul class="feat-bullets" id="feat1-bullets">
+        <li>Reklam engelleme — açık kutudan itibaren</li>
+        <li>Parmak izi koruması aktif</li>
+        <li>Çerez pop-up'ları otomatik kapatılır</li>
+      </ul>
     </div>
-    <div class="feat-visual"><img src="assets/features/feat1-ads.jpg" alt="Reklam engelleme"></div>
+    <div class="feat-visual">
+      <img src="assets/features/feat1-ads.jpg" alt="Reklam engelleme" onerror="this.style.display='none';this.parentNode.querySelector('.feat-mockup').style.display='flex'">
+      <div class="feat-mockup">🛡️</div>
+    </div>
   </div>
 
   <div class="sep"></div>
@@ -292,9 +628,17 @@
     <div>
       <p class="feat-tag" id="feat2-tag">Performans</p>
       <h2 class="feat-title" id="feat2-title">Gereksiz her şeyi attık. Sadece hız kaldı.</h2>
-      <p class="feat-desc" id="feat2-desc">Reklam yüklenmeyince veri harcamıyorsun. Tracker çalışmayınca CPU'n rahat ediyor. Siteler 2 kat daha hızlı açılıyor.<br><br>Daha az bekleme = daha çok zaman.</p>
+      <p class="feat-desc" id="feat2-desc">Reklam yüklenmeyince veri harcamıyorsun. Tracker çalışmayınca CPU'n rahat ediyor. Siteler ortalama 2× daha hızlı açılıyor.</p>
+      <ul class="feat-bullets" id="feat2-bullets">
+        <li>Daha az veri tüketimi</li>
+        <li>Daha uzun pil ömrü</li>
+        <li>Daha soğuk çalışan bilgisayar</li>
+      </ul>
     </div>
-    <div class="feat-visual"><img src="assets/features/feat2-speed.jpg" alt="Performans"></div>
+    <div class="feat-visual">
+      <img src="assets/features/feat2-speed.jpg" alt="Performans" onerror="this.style.display='none';this.parentNode.querySelector('.feat-mockup').style.display='flex'">
+      <div class="feat-mockup">⚡</div>
+    </div>
   </div>
 
   <div class="sep"></div>
@@ -303,9 +647,17 @@
     <div>
       <p class="feat-tag" id="feat3-tag">Şeffaflık</p>
       <h2 class="feat-title" id="feat3-title">"Sizi izlemiyoruz" demek kolay. Biz bunu kanıtlıyoruz.</h2>
-      <p class="feat-desc" id="feat3-desc">Her satır kod GitHub'da. İstediğin zaman aç, oku, denetle. Gizleyecek bir şeyimiz yok çünkü hiçbir şey toplamıyoruz.<br><br>Bağımsız güvenlik auditi desteği. MIT lisansı.</p>
+      <p class="feat-desc" id="feat3-desc">Her satır kod GitHub'da. İstediğin zaman aç, oku, denetle. Gizleyecek bir şeyimiz yok çünkü hiçbir şey toplamıyoruz. Bağımsız güvenlik auditi desteği.</p>
+      <ul class="feat-bullets" id="feat3-bullets">
+        <li>Tam açık kaynak — her satır denetlenebilir</li>
+        <li>MIT Lisansı — fork'layabilirsin</li>
+        <li>Bağımsız güvenlik auditi desteği</li>
+      </ul>
     </div>
-    <div class="feat-visual"><img src="assets/features/feat3-code.jpg" alt="Şeffaflık"></div>
+    <div class="feat-visual">
+      <img src="assets/features/feat3-code.jpg" alt="Şeffaflık" onerror="this.style.display='none';this.parentNode.querySelector('.feat-mockup').style.display='flex'">
+      <div class="feat-mockup">🔍</div>
+    </div>
   </div>
 
   <div class="sep"></div>
@@ -313,10 +665,18 @@
   <div class="feature-block reverse">
     <div>
       <p class="feat-tag" id="feat4-tag">Kurulum</p>
-      <h2 class="feat-title" id="feat4-title">Hiç diyalı yok. Hiç uzantı kurman gerekmiyor.</h2>
-      <p class="feat-desc" id="feat4-desc">Sipar kutusundan çıkar çıkmaz çalışır. Her şey varsayılan olarak güvenli ve hızlıdır. Eski tarayıcından favori sayfalarını import et ve hazırsın.<br><br>60 saniyeden az sürer.</p>
+      <h2 class="feat-title" id="feat4-title">60 saniyede hazır. PhD gerekmez.</h2>
+      <p class="feat-desc" id="feat4-desc">Sipar kutusundan çıkar çıkmaz çalışır. Her şey varsayılan olarak güvenli ve hızlıdır. Eski tarayıcından favori sayfalarını import et — hazırsın.</p>
+      <ul class="feat-bullets" id="feat4-bullets">
+        <li>Uzantı kurma zorunluluğu yok</li>
+        <li>Varsayılan olarak güvenli DNS (Quad9)</li>
+        <li>Chrome/Firefox'tan kolay geçiş</li>
+      </ul>
     </div>
-    <div class="feat-visual"><img src="assets/features/feat4-setup.jpg" alt="Kurulum"></div>
+    <div class="feat-visual">
+      <img src="assets/features/feat4-setup.jpg" alt="Kurulum" onerror="this.style.display='none';this.parentNode.querySelector('.feat-mockup').style.display='flex'">
+      <div class="feat-mockup">🚀</div>
+    </div>
   </div>
 
 </div>
@@ -325,41 +685,131 @@
 <div class="sep"></div>
 <div class="compare-section" id="compare">
   <div class="section-header">
-    <h2 id="cmp-title">Rakamlar konuşsun.</h2>
-    <p id="cmp-sub">Sipar'ı diğer tarayıcılarla karşılaştırın.</p>
+    <h2 id="cmp-title">Brave'den ne farkı var?</h2>
+    <p id="cmp-sub">Rakamlar konuşsun — Sipar'ı diğer tarayıcılarla karşılaştırın.</p>
+    <div class="brave-note" id="cmp-brave-note">
+      💡 Brave iyi bir tarayıcı — ama kripto reklamları, BAT sistemi ve telemetry içeriyor. Sipar bunların hiçbirini yapmıyor.
+    </div>
   </div>
-  <table>
-    <thead>
-      <tr>
-        <th></th>
-        <th class="hl">Sipar</th>
-        <th>Chrome</th>
-        <th>Brave</th>
-        <th>Firefox</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr><td id="cmp-r1">Sıfır telemetry</td><td><span class="y">✓</span></td><td><span class="n">✗</span></td><td><span class="n">✗</span></td><td><span class="p">Kısmi</span></td></tr>
-      <tr><td id="cmp-r2">Yerleşik reklam engelleme</td><td><span class="y">✓</span></td><td><span class="n">✗</span></td><td><span class="y">✓</span></td><td><span class="n">✗</span></td></tr>
-      <tr><td id="cmp-r3">Kendi kripto/reklam sistemi</td><td><span class="y">Yok</span></td><td><span class="y">Yok</span></td><td><span class="n" id="cmp-brave-no">BAT var</span></td><td><span class="y">Yok</span></td></tr>
-      <tr><td id="cmp-r4">Varsayılan güvenli DNS</td><td><span class="y">✓</span></td><td><span class="n">✗</span></td><td><span class="p">Kısmi</span></td><td><span class="p">Kısmi</span></td></tr>
-      <tr><td id="cmp-r5">Tam açık kaynak</td><td><span class="y">✓</span></td><td><span class="n">✗</span></td><td><span class="y">✓</span></td><td><span class="y">✓</span></td></tr>
-      <tr><td id="cmp-r6">Google hesabı gerektirmez</td><td><span class="y">✓</span></td><td><span class="n">✗</span></td><td><span class="y">✓</span></td><td><span class="y">✓</span></td></tr>
-    </tbody>
-  </table>
+  <div class="compare-table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th></th>
+          <th class="hl">Sipar</th>
+          <th>Brave</th>
+          <th>Chrome</th>
+          <th>Firefox</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="row-label" id="cmp-r1">Sıfır telemetry<small>Hiç veri gönderilmez</small></td>
+          <td class="hl-col"><span class="y">✓</span></td>
+          <td><span class="n">✗</span></td>
+          <td><span class="n">✗</span></td>
+          <td><span class="p">Kısmi</span></td>
+        </tr>
+        <tr>
+          <td class="row-label" id="cmp-r2">Yerleşik reklam engelleme<small>Kutu açıldı, reklam bitti</small></td>
+          <td class="hl-col"><span class="y">✓</span></td>
+          <td><span class="y">✓</span></td>
+          <td><span class="n">✗</span></td>
+          <td><span class="n">✗</span></td>
+        </tr>
+        <tr>
+          <td class="row-label" id="cmp-r3">Kripto / BAT sistemi yok<small>Reklam izle, BAT kazan zorlamaz</small></td>
+          <td class="hl-col"><span class="y">✓</span></td>
+          <td><span class="n" id="cmp-brave-bat">BAT var</span></td>
+          <td><span class="y">✓</span></td>
+          <td><span class="y">✓</span></td>
+        </tr>
+        <tr>
+          <td class="row-label" id="cmp-r4">Kendi reklam ağı yok<small>Kullanıcıya reklam satmaz</small></td>
+          <td class="hl-col"><span class="y">✓</span></td>
+          <td><span class="n">Brave Ads</span></td>
+          <td><span class="n">Google Ads</span></td>
+          <td><span class="y">✓</span></td>
+        </tr>
+        <tr>
+          <td class="row-label" id="cmp-r5">Varsayılan güvenli DNS<small>Quad9 ile DNS şifreleme</small></td>
+          <td class="hl-col"><span class="y">✓</span></td>
+          <td><span class="p">Kısmi</span></td>
+          <td><span class="n">✗</span></td>
+          <td><span class="p">Kısmi</span></td>
+        </tr>
+        <tr>
+          <td class="row-label" id="cmp-r6">Tam açık kaynak<small>Her satır kod denetlenebilir</small></td>
+          <td class="hl-col"><span class="y">✓</span></td>
+          <td><span class="y">✓</span></td>
+          <td><span class="n">✗</span></td>
+          <td><span class="y">✓</span></td>
+        </tr>
+        <tr>
+          <td class="row-label" id="cmp-r7">Haber / içerik akışı yok<small>Dikkat dağıtıcı içerik yok</small></td>
+          <td class="hl-col"><span class="y">✓</span></td>
+          <td><span class="n">Brave News</span></td>
+          <td><span class="n">✗</span></td>
+          <td><span class="y">✓</span></td>
+        </tr>
+        <tr>
+          <td class="row-label" id="cmp-r8">Google hesabı gerekmez</td>
+          <td class="hl-col"><span class="y">✓</span></td>
+          <td><span class="y">✓</span></td>
+          <td><span class="n">✗</span></td>
+          <td><span class="y">✓</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 </div>
 
-<!-- WAITLIST -->
+<!-- DOWNLOAD & WAITLIST -->
 <div class="sep"></div>
-<div class="dl-section" id="waitlist">
+<div class="dl-section" id="download">
   <div class="dl-inner">
-    <h2 id="dl-title">Beta'ya ilk sen gir.</h2>
-    <p id="dl-sub">Sipar hazır olduğunda ilk haber alan sen ol. Başka bir şey göndermiyoruz — söz.</p>
-    <form class="wl-form" onsubmit="submit(event)">
-      <input type="email" id="emailInput" placeholder="eposta@adresin.com" required>
-      <button type="submit" id="wl-btn">Katıl →</button>
-    </form>
-    <p class="wl-note" id="wl-msg">E-posta adresin asla üçüncü taraflarla paylaşılmaz.</p>
+    <h2 id="dl-title">Şimdi indir. Hemen başla.</h2>
+    <p id="dl-sub">v0.1.1-alpha yayında. Linux ve Windows için ücretsiz indir.</p>
+
+    <div class="dl-os-buttons">
+      <a href="https://github.com/huseyinbzkrt/sipar-browser/releases/tag/v0.1.1-alpha"
+         target="_blank" class="btn-os linux-btn" id="dl-linux">
+        <span class="os-icon">🐧</span>
+        <div class="os-info">
+          <span class="os-name">Linux için İndir</span>
+          <span class="os-ver">v0.1.1-alpha · GitHub Releases</span>
+        </div>
+      </a>
+      <a href="https://github.com/huseyinbzkrt/sipar-browser/releases/tag/v0.1.1-alpha"
+         target="_blank" class="btn-os" id="dl-windows">
+        <span class="os-icon">🪟</span>
+        <div class="os-info">
+          <span class="os-name">Windows için İndir</span>
+          <span class="os-ver">v0.1.1-alpha · GitHub Releases</span>
+        </div>
+      </a>
+    </div>
+
+    <div class="dl-divider" id="dl-divider-text">veya beta bildirimlerine kaydol</div>
+
+    <!-- WAITLIST -->
+    <div class="wl-section-inner" id="waitlist">
+      <h3 id="wl-title">🚀 Beta listesine katıl</h3>
+      <p id="wl-desc">Yeni sürümler çıktığında ilk haber alan sen ol. Spam yok — söz.</p>
+      <div class="wl-count" id="wl-count-wrap">
+        <div class="avatars">
+          <div class="av">H</div>
+          <div class="av">A</div>
+          <div class="av">M</div>
+        </div>
+        <span id="wl-count-text">İlk katılanlar arasına gir</span>
+      </div>
+      <form class="wl-form" onsubmit="submitWaitlist(event)">
+        <input type="email" id="emailInput" placeholder="eposta@adresin.com" required>
+        <button type="submit" id="wl-btn">Katıl →</button>
+      </form>
+      <p class="wl-note" id="wl-msg">🔒 E-posta adresin asla üçüncü taraflarla paylaşılmaz.</p>
+    </div>
   </div>
 </div>
 
@@ -367,130 +817,138 @@
 <div class="sep"></div>
 <div class="faq-section">
   <h2 id="faq-title">Sıkça sorulanlar</h2>
+  <p class="faq-sub" id="faq-sub">Merak ettiklerini bulamadın mı? <a href="https://github.com/huseyinbzkrt/sipar-browser/issues" style="color:var(--accent);text-decoration:none;">GitHub'da sor.</a></p>
 
   <div class="faq-item">
-    <div class="faq-q" id="faq-q1">Sipar güvenli mi?</div>
-    <div class="faq-a" id="faq-a1">Evet. Sipar, Google bağımlılıkları temizlenmiş Chromium'un üzerine inşa edilmiştir. Tüm kaynak kodu açık ve denetlenebilir. Varsayılan olarak tracker engelleme, güvenli DNS ve sıfır telemetry ile gelir.</div>
+    <div class="faq-q" onclick="toggleFaq(this)">
+      <span id="faq-q1">Brave varken neden Sipar?</span>
+      <span class="faq-icon">+</span>
+    </div>
+    <div class="faq-a" id="faq-a1">Brave harika bir tarayıcı — ama kendi kripto sistemi (BAT), kendi reklam ağı (Brave Ads), haber akışı (Brave News) ve telemetry içeriyor. Sipar bunların hiçbirini yapmıyor. Sadece bloke eder, takip etmez, sana reklam satmaz. Tam anlamıyla tarayıcı.</div>
   </div>
   <div class="faq-item">
-    <div class="faq-q" id="faq-q2">Hangi platformlarda çalışacak?</div>
-    <div class="faq-a" id="faq-a2">İlk sürümde Windows ve Linux. Ardından macOS. Mobil (Android) ise daha sonra gelecek.</div>
+    <div class="faq-q" onclick="toggleFaq(this)">
+      <span id="faq-q2">Sipar güvenli mi?</span>
+      <span class="faq-icon">+</span>
+    </div>
+    <div class="faq-a" id="faq-a2">Evet. Sipar, Google bağımlılıkları temizlenmiş Chromium üzerine inşa edilmiştir. Tüm kaynak kodu GitHub'da açık ve denetlenebilir. Varsayılan olarak tracker engelleme, güvenli DNS (Quad9) ve sıfır telemetry ile gelir.</div>
   </div>
   <div class="faq-item">
-    <div class="faq-q" id="faq-q3">Ücretsiz mi?</div>
-    <div class="faq-a" id="faq-a3">Temel tarayıcı tamamen ücretsiz ve açık kaynak olacak. İleride senkronizasyon ve VPN gibi premium özellikler için isteğe bağlı ücretli planlar gelebilir.</div>
+    <div class="faq-q" onclick="toggleFaq(this)">
+      <span id="faq-q3">Hangi platformlarda çalışacak?</span>
+      <span class="faq-icon">+</span>
+    </div>
+    <div class="faq-a" id="faq-a3">v0.1.1-alpha'da Windows ve Linux mevcut. macOS desteği geliştiriliyor. Mobil (Android) ise ilerleyen versiyonlarda gelecek.</div>
   </div>
   <div class="faq-item">
-    <div class="faq-q" id="faq-q4">Chrome uzantılarımı kullanabilir miyim?</div>
-    <div class="faq-a" id="faq-a4">Evet. Sipar Chromium tabanlı olduğu için Chrome Web Store uzantılarının büyük çoğunluğu çalışır.</div>
+    <div class="faq-q" onclick="toggleFaq(this)">
+      <span id="faq-q4">Ücretsiz mi?</span>
+      <span class="faq-icon">+</span>
+    </div>
+    <div class="faq-a" id="faq-a4">Temel tarayıcı tamamen ücretsiz ve açık kaynak. İleride senkronizasyon ve VPN gibi premium özellikler için isteğe bağlı ücretli planlar gelebilir — ama asıl tarayıcı her zaman ücretsiz kalacak.</div>
   </div>
   <div class="faq-item">
-    <div class="faq-q" id="faq-q5">Ne zaman çıkacak?</div>
-    <div class="faq-a" id="faq-a5">Aktif geliştirme devam ediyor. Erken erişim listesine katıl, beta hazır olunca ilk sen haber alırsın.</div>
+    <div class="faq-q" onclick="toggleFaq(this)">
+      <span id="faq-q5">Chrome uzantılarımı kullanabilir miyim?</span>
+      <span class="faq-icon">+</span>
+    </div>
+    <div class="faq-a" id="faq-a5">Evet. Sipar Chromium tabanlı olduğu için Chrome Web Store uzantılarının büyük çoğunluğu çalışır.</div>
+  </div>
+  <div class="faq-item">
+    <div class="faq-q" onclick="toggleFaq(this)">
+      <span id="faq-q6">Alpha sürüm ne kadar kararlı?</span>
+      <span class="faq-icon">+</span>
+    </div>
+    <div class="faq-a" id="faq-a6">v0.1.1-alpha günlük kullanım için yeterince kararlı. Ancak alpha olduğu için beklenmedik hatalar olabilir. Karşılaştığın sorunları GitHub Issues'dan bildirirsen çok yardımcı olursun!</div>
   </div>
 </div>
 
 <!-- FOOTER -->
 <footer>
-  <div class="footer-brand">SİPAR</div>
-  <div class="footer-links">
-    <a href="https://github.com/huseyinbzkrt/sipar-browser">GitHub</a>
-    <a href="https://github.com/huseyinbzkrt/sipar-browser/blob/main/docs/ROADMAP.md">Roadmap</a>
-    <a href="https://github.com/huseyinbzkrt/sipar-browser/issues">Geri Bildirim</a>
+  <div class="footer-top">
+    <div class="footer-brand-col">
+      <a href="#" class="footer-logo">
+        <img src="assets/logo.png" alt="Sipar">
+        SİPAR
+      </a>
+      <p>Reklam yok. Takip yok. Kripto dayatması yok. Sadece hızlı ve güvenli internet.</p>
+      <div class="footer-social">
+        <a href="https://github.com/huseyinbzkrt/sipar-browser" target="_blank" class="social-btn" title="GitHub">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+        </a>
+        <a href="https://twitter.com/siparbrowser" target="_blank" class="social-btn" title="Twitter/X">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+        </a>
+        <a href="https://github.com/huseyinbzkrt/sipar-browser/releases/tag/v0.1.1-alpha" target="_blank" class="social-btn" title="İndir">
+          <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
+        </a>
+      </div>
+    </div>
+    <div class="footer-col">
+      <h4 id="footer-col1-title">Ürün</h4>
+      <ul>
+        <li><a href="#features" data-i18n="footer-features">Özellikler</a></li>
+        <li><a href="#compare" data-i18n="footer-compare">Karşılaştırma</a></li>
+        <li><a href="#download" data-i18n="footer-download">İndir</a></li>
+        <li><a href="https://github.com/huseyinbzkrt/sipar-browser/blob/main/docs/ROADMAP.md" target="_blank">Roadmap</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4 id="footer-col2-title">Geliştiriciler</h4>
+      <ul>
+        <li><a href="https://github.com/huseyinbzkrt/sipar-browser" target="_blank">GitHub</a></li>
+        <li><a href="https://github.com/huseyinbzkrt/sipar-browser/releases" target="_blank">Sürümler</a></li>
+        <li><a href="https://github.com/huseyinbzkrt/sipar-browser/issues" target="_blank">Issues</a></li>
+        <li><a href="https://github.com/huseyinbzkrt/sipar-browser/blob/main/CONTRIBUTING.md" target="_blank">Katkıda Bulun</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4 id="footer-col3-title">Topluluk</h4>
+      <ul>
+        <li><a href="https://twitter.com/siparbrowser" target="_blank">Twitter / X</a></li>
+        <li><a href="https://github.com/huseyinbzkrt/sipar-browser/discussions" target="_blank">Tartışmalar</a></li>
+        <li><a href="#waitlist" data-i18n="footer-waitlist">Waitlist</a></li>
+      </ul>
+    </div>
   </div>
-  <div class="footer-copy">© 2026 Sipar Browser — MIT Lisansı</div>
+  <div class="footer-bottom">
+    <div class="copy" id="footer-copy">© 2026 Sipar Browser</div>
+    <div class="mit" id="footer-mit"><a href="https://github.com/huseyinbzkrt/sipar-browser/blob/main/LICENSE" target="_blank">MIT Lisansı</a> — Açık kaynak, özgür yazılım</div>
+  </div>
 </footer>
 
 <script>
-// ── DİL DESTEĞİ ──
-const translations = {
-  tr: {
-    'hero-h1': 'Reklamları engelle.<br>Verini koru.<br><span style="color:var(--accent)">Sadece sörf yap.</span>',
-    'hero-p': 'Sipar, seni izlemeyen, verini satmayan ve ne yaptığını kimseye söylemeyen bir tarayıcıdır. Sadece tarayıcı değiştirerek.',
-    'hero-btn1': 'Erken Erişime Katıl',
-    'hero-note': 'Açık kaynak · MIT Lisansı · <a href="https://github.com/huseyinbzkrt/sipar-browser">Kaynak kodunu incele</a>',
-    'num1-label': 'Telemetry — hiç, hiçbir zaman',
-    'num3-label': 'Daha hızlı sayfa yüklemesi',
-    'feat1-tag': 'Gizlilik', 'feat1-title': 'Reklamlar. İzleyiciler. Hepsi engellendi.', 'feat1-desc': 'uBlock Origin fabrikadan kurulu gelir. Kurmana, ayarlamana gerek yok. İlk açılıştan itibaren her reklam, her tracker, her parmak izi denemesi engellenir.<br><br>Ve o sinir bozucu "çerezleri kabul et" pop-up\'ları? Evet, onlar da.',
-    'feat2-tag': 'Performans', 'feat2-title': 'Gereksiz her şeyi attık. Sadece hız kaldı.', 'feat2-desc': 'Reklam yüklenmeyince veri harcamıyorsun. Tracker çalışmayınca CPU\'n rahat ediyor. Siteler 2 kat daha hızlı açılıyor.<br><br>Daha az bekleme = daha çok zaman.',
-    'feat3-tag': 'Şeffaflık', 'feat3-title': '"Sizi izlemiyoruz" demek kolay. Biz bunu kanıtlıyoruz.', 'feat3-desc': 'Her satır kod GitHub\'da. İstediğin zaman aç, oku, denetle. Gizleyecek bir şeyimiz yok çünkü hiçbir şey toplamıyoruz.<br><br>Bağımsız güvenlik auditi desteği. MIT lisansı.',
-    'feat4-tag': 'Kurulum', 'feat4-title': 'Hiç diyalı yok. Hiç uzantı kurman gerekmiyor.', 'feat4-desc': 'Sipar kutusundan çıkar çıkmaz çalışır. Her şey varsayılan olarak güvenli ve hızlıdır. Eski tarayıcından favori sayfalarını import et ve hazırsın.<br><br>60 saniyeden az sürer.',
-    'cmp-title': 'Rakamlar konuşsun.', 'cmp-sub': 'Sipar\'ı diğer tarayıcılarla karşılaştırın.',
-    'cmp-r1': 'Sıfır telemetry', 'cmp-r2': 'Yerleşik reklam engelleme', 'cmp-r3': 'Kendi kripto/reklam sistemi', 'cmp-r4': 'Varsayılan güvenli DNS', 'cmp-r5': 'Tam açık kaynak', 'cmp-r6': 'Google hesabı gerektirmez',
-    'cmp-brave-no': 'BAT var',
-    'dl-title': 'Beta\'ya ilk sen gir.', 'dl-sub': 'Sipar hazır olduğunda ilk haber alan sen ol. Başka bir şey göndermiyoruz — söz.',
-    'wl-placeholder': 'eposta@adresin.com', 'wl-btn': 'Katıl →', 'wl-note': 'E-posta adresin asla üçüncü taraflarla paylaşılmaz.',
-    'faq-title': 'Sıkça sorulanlar',
-    'faq-q1': 'Sipar güvenli mi?', 'faq-a1': 'Evet. Sipar, Google bağımlılıkları temizlenmiş Chromium\'un üzerine inşa edilmiştir. Tüm kaynak kodu açık ve denetlenebilir. Varsayılan olarak tracker engelleme, güvenli DNS ve sıfır telemetry ile gelir.',
-    'faq-q2': 'Hangi platformlarda çalışacak?', 'faq-a2': 'İlk sürümde Windows ve Linux. Ardından macOS. Mobil (Android) ise daha sonra gelecek.',
-    'faq-q3': 'Ücretsiz mi?', 'faq-a3': 'Temel tarayıcı tamamen ücretsiz ve açık kaynak olacak. İleride senkronizasyon ve VPN gibi premium özellikler için isteğe bağlı ücretli planlar gelebilir.',
-    'faq-q4': 'Chrome uzantılarımı kullanabilir miyim?', 'faq-a4': 'Evet. Sipar Chromium tabanlı olduğu için Chrome Web Store uzantılarının büyük çoğunluğu çalışır.',
-    'faq-q5': 'Ne zaman çıkacak?', 'faq-a5': 'Aktif geliştirme devam ediyor. Erken erişim listesine katıl, beta hazır olunca ilk sen haber alırsın.',
-    'nav-early': 'Erken Erişim →',
-  },
-  en: {
-    'hero-h1': 'Block ads.<br>Protect your data.<br><span style="color:var(--accent)">Just browse.</span>',
-    'hero-p': 'Sipar is a browser that doesn\'t track you, doesn\'t sell your data, and doesn\'t tell anyone what you\'re doing. Just by switching browsers.',
-    'hero-btn1': 'Join Early Access',
-    'hero-note': 'Open source · MIT License · <a href="https://github.com/huseyinbzkrt/sipar-browser">View source code</a>',
-    'num1-label': 'Telemetry — none, ever',
-    'num3-label': 'Faster page loading',
-    'feat1-tag': 'Privacy', 'feat1-title': 'Ads. Trackers. All blocked.', 'feat1-desc': 'uBlock Origin comes pre-installed. No setup, no configuration needed. From the very first launch, every ad, every tracker, every fingerprinting attempt is blocked.<br><br>And those annoying "accept cookies" pop-ups? Yeah, those too.',
-    'feat2-tag': 'Performance', 'feat2-title': 'We stripped everything unnecessary. Only speed remains.', 'feat2-desc': 'No ads loading means no data wasted. No trackers running means your CPU is happy. Pages load 2x faster.<br><br>Less waiting = more time.',
-    'feat3-tag': 'Transparency', 'feat3-title': 'Saying "we don\'t track you" is easy. We prove it.', 'feat3-desc': 'Every line of code is on GitHub. Open it, read it, audit it anytime. We have nothing to hide because we collect nothing.<br><br>Independent security audit support. MIT license.',
-    'feat4-tag': 'Setup', 'feat4-title': 'No dials to turn. No extensions to install.', 'feat4-desc': 'Sipar works right out of the box. Everything is secure and fast by default. Import your bookmarks from your old browser and you\'re done.<br><br>Takes less than 60 seconds.',
-    'cmp-title': 'Let the numbers speak.', 'cmp-sub': 'Compare Sipar to other browsers.',
-    'cmp-r1': 'Zero telemetry', 'cmp-r2': 'Built-in ad blocking', 'cmp-r3': 'Own crypto/ad system', 'cmp-r4': 'Secure DNS by default', 'cmp-r5': 'Fully open source', 'cmp-r6': 'No Google account needed',
-    'cmp-brave-no': 'Has BAT',
-    'dl-title': 'Be the first in beta.', 'dl-sub': 'Get notified when Sipar is ready. We won\'t send anything else — promise.',
-    'wl-placeholder': 'your@email.com', 'wl-btn': 'Join →', 'wl-note': 'Your email will never be shared with third parties.',
-    'faq-title': 'Frequently asked questions',
-    'faq-q1': 'Is Sipar safe?', 'faq-a1': 'Yes. Sipar is built on top of Chromium with all Google dependencies removed. All source code is open and auditable. It comes with tracker blocking, secure DNS and zero telemetry by default.',
-    'faq-q2': 'Which platforms will it support?', 'faq-a2': 'Windows and Linux in the first release. macOS next. Mobile (Android) will come later.',
-    'faq-q3': 'Is it free?', 'faq-a3': 'The core browser will be completely free and open source. Optional paid plans for premium features like sync and VPN may come later.',
-    'faq-q4': 'Can I use my Chrome extensions?', 'faq-a4': 'Yes. Since Sipar is Chromium-based, the vast majority of Chrome Web Store extensions will work.',
-    'faq-q5': 'When will it be released?', 'faq-a5': 'Active development is ongoing. Join the early access list and you\'ll be the first to know when beta is ready.',
-    'nav-early': 'Early Access →',
-  }
-};
-
-function setLang(lang) {
-  document.querySelectorAll('.lang-btn').forEach(b => b.classList.toggle('active', b.textContent === lang.toUpperCase()));
-  const t = translations[lang];
-  const set = (id, html) => { const el = document.getElementById(id); if (el) el.innerHTML = html; };
-  const setAttr = (id, attr, val) => { const el = document.getElementById(id); if (el) el[attr] = val; };
-
-  set('hero-h1', t['hero-h1']);
-  set('hero-p', t['hero-p']);
-  set('hero-btn1', t['hero-btn1']);
-  set('hero-note', t['hero-note']);
-  set('num1-label', t['num1-label']);
-  set('num3-label', t['num3-label']);
-  ['feat1','feat2','feat3','feat4'].forEach(f => {
-    set(f+'-tag', t[f+'-tag']); set(f+'-title', t[f+'-title']); set(f+'-desc', t[f+'-desc']);
-  });
-  set('cmp-title', t['cmp-title']); set('cmp-sub', t['cmp-sub']);
-  ['cmp-r1','cmp-r2','cmp-r3','cmp-r4','cmp-r5','cmp-r6'].forEach(r => set(r, t[r]));
-  set('cmp-brave-no', t['cmp-brave-no']);
-  set('dl-title', t['dl-title']); set('dl-sub', t['dl-sub']);
-  setAttr('emailInput', 'placeholder', t['wl-placeholder']);
-  set('wl-btn', t['wl-btn']); set('wl-note', t['wl-note']);
-  set('faq-title', t['faq-title']);
-  ['1','2','3','4','5'].forEach(i => { set('faq-q'+i, t['faq-q'+i]); set('faq-a'+i, t['faq-a'+i]); });
-  set('nav-early', t['nav-early']);
-  document.documentElement.lang = lang;
-  localStorage.setItem('sipar-lang', lang);
+// ── FAQ TOGGLE ──
+function toggleFaq(el) {
+  el.classList.toggle('open');
+  const ans = el.nextElementSibling;
+  ans.classList.toggle('visible');
 }
 
-// Sayfa açılınca dil tercihini uygula
-window.addEventListener('DOMContentLoaded', () => {
-  const saved = localStorage.getItem('sipar-lang') || (navigator.language.startsWith('tr') ? 'tr' : 'en');
-  setLang(saved);
-});
+// ── GITHUB STARS ──
+async function loadGithubStars() {
+  try {
+    const r = await fetch('https://api.github.com/repos/huseyinbzkrt/sipar-browser');
+    const d = await r.json();
+    const stars = d.stargazers_count ?? 0;
+    document.getElementById('star-count').textContent = stars;
+  } catch { document.getElementById('star-count').textContent = '0'; }
+}
 
-lucide.createIcons();
+// ── WAITLIST COUNT ──
+async function loadWaitlistCount() {
+  try {
+    const r = await fetch('/waitlist-count.php');
+    const d = await r.json();
+    const count = d.count ?? 0;
+    if (count > 0) {
+      document.getElementById('wl-count-text').textContent = count + ' kişi zaten listede';
+    }
+  } catch {}
+}
 
-async function submit(e) {
+// ── WAITLIST SUBMIT ──
+async function submitWaitlist(e) {
   e.preventDefault();
   const email = document.getElementById('emailInput').value;
   const btn = document.getElementById('wl-btn');
@@ -506,14 +964,156 @@ async function submit(e) {
       msg.textContent = '✅ Kaydedildi! Beta hazır olunca haber vereceğiz.';
       msg.style.color = '#22c55e';
       document.getElementById('emailInput').value = '';
+      loadWaitlistCount();
     } else {
       msg.textContent = '❌ ' + (data.error || 'Bir hata oluştu.');
       msg.style.color = '#ef4444';
     }
   } catch { msg.textContent = '❌ Bağlantı hatası.'; msg.style.color = '#ef4444'; }
-  btn.textContent = 'Katıl →';
+  btn.textContent = currentLang === 'en' ? 'Join →' : 'Katıl →';
   btn.disabled = false;
 }
+
+// ── DİL DESTEĞİ ──
+let currentLang = 'tr';
+const translations = {
+  tr: {
+    'eyebrow-text': 'v0.1.1-alpha — İndir, hemen başla',
+    'hero-h1': 'Brave\'den saf.<br>Chrome\'dan <span class="line-accent">özgür.</span><br><span class="line-green">Sadece tarayıcı.</span>',
+    'hero-sub': 'Sıfır telemetry. Sıfır BAT kripto dayatması. Sıfır veri satışı. Sadece hızlı, temiz, gizli internet.',
+    'hero-dl-label': 'ŞİMDİ İNDİR — ÜCRETSİZ',
+    'hero-dl-linux': '🐧 Linux',
+    'hero-dl-win': '🪟 Windows',
+    'trust1': 'Sıfır reklam geliri', 'trust2': 'Kripto yok', 'trust3': 'uBlock Origin dahil', 'trust4': 'MIT Lisansı', 'trust5': 'Chrome uzantıları çalışır',
+    'num1-label': 'Telemetry — hiç, hiçbir zaman',
+    'num2-label': 'Kripto / BAT dayatması',
+    'num3-label': 'Açık kaynak — MIT',
+    'num4-label': 'Daha hızlı sayfa yüklemesi',
+    'feat1-tag': 'Gizlilik', 'feat1-title': 'Reklamlar. İzleyiciler. Hepsi engellendi.',
+    'feat1-desc': 'uBlock Origin fabrikadan kurulu gelir. Kurmana, ayarlamana gerek yok. İlk açılıştan itibaren her reklam, her tracker, her parmak izi denemesi engellenir.',
+    'feat2-tag': 'Performans', 'feat2-title': 'Gereksiz her şeyi attık. Sadece hız kaldı.',
+    'feat2-desc': 'Reklam yüklenmeyince veri harcamıyorsun. Tracker çalışmayınca CPU\'n rahat ediyor. Siteler ortalama 2× daha hızlı açılıyor.',
+    'feat3-tag': 'Şeffaflık', 'feat3-title': '"Sizi izlemiyoruz" demek kolay. Biz bunu kanıtlıyoruz.',
+    'feat3-desc': 'Her satır kod GitHub\'da. İstediğin zaman aç, oku, denetle. Gizleyecek bir şeyimiz yok çünkü hiçbir şey toplamıyoruz. Bağımsız güvenlik auditi desteği.',
+    'feat4-tag': 'Kurulum', 'feat4-title': '60 saniyede hazır. PhD gerekmez.',
+    'feat4-desc': 'Sipar kutusundan çıkar çıkmaz çalışır. Her şey varsayılan olarak güvenli ve hızlıdır. Eski tarayıcından favori sayfalarını import et — hazırsın.',
+    'cmp-title': 'Brave\'den ne farkı var?',
+    'cmp-sub': 'Rakamlar konuşsun — Sipar\'ı diğer tarayıcılarla karşılaştırın.',
+    'cmp-brave-note': '💡 Brave iyi bir tarayıcı — ama kripto reklamları, BAT sistemi ve telemetry içeriyor. Sipar bunların hiçbirini yapmıyor.',
+    'cmp-r1': 'Sıfır telemetry', 'cmp-r2': 'Yerleşik reklam engelleme',
+    'cmp-r3': 'Kripto / BAT sistemi yok', 'cmp-r4': 'Kendi reklam ağı yok',
+    'cmp-r5': 'Varsayılan güvenli DNS', 'cmp-r6': 'Tam açık kaynak',
+    'cmp-r7': 'Haber / içerik akışı yok', 'cmp-r8': 'Google hesabı gerekmez',
+    'cmp-brave-bat': 'BAT var',
+    'dl-title': 'Şimdi indir. Hemen başla.',
+    'dl-sub': 'v0.1.1-alpha yayında. Linux ve Windows için ücretsiz indir.',
+    'dl-linux': '🐧 Linux için İndir',
+    'dl-windows': '🪟 Windows için İndir',
+    'dl-divider-text': 'veya beta bildirimlerine kaydol',
+    'wl-title': '🚀 Beta listesine katıl',
+    'wl-desc': 'Yeni sürümler çıktığında ilk haber alan sen ol. Spam yok — söz.',
+    'wl-btn': 'Katıl →',
+    'wl-msg': '🔒 E-posta adresin asla üçüncü taraflarla paylaşılmaz.',
+    'faq-title': 'Sıkça sorulanlar',
+    'faq-sub': 'Merak ettiklerini bulamadın mı? <a href="https://github.com/huseyinbzkrt/sipar-browser/issues" style="color:var(--accent);text-decoration:none;">GitHub\'da sor.</a>',
+    'faq-q1': 'Brave varken neden Sipar?',
+    'faq-a1': 'Brave harika bir tarayıcı — ama kendi kripto sistemi (BAT), kendi reklam ağı (Brave Ads), haber akışı (Brave News) ve telemetry içeriyor. Sipar bunların hiçbirini yapmıyor. Sadece bloke eder, takip etmez, sana reklam satmaz. Tam anlamıyla tarayıcı.',
+    'faq-q2': 'Sipar güvenli mi?', 'faq-a2': 'Evet. Sipar, Google bağımlılıkları temizlenmiş Chromium üzerine inşa edilmiştir. Tüm kaynak kodu GitHub\'da açık ve denetlenebilir. Varsayılan olarak tracker engelleme, güvenli DNS (Quad9) ve sıfır telemetry ile gelir.',
+    'faq-q3': 'Hangi platformlarda çalışacak?', 'faq-a3': 'v0.1.1-alpha\'da Windows ve Linux mevcut. macOS desteği geliştiriliyor. Mobil (Android) ise ilerleyen versiyonlarda gelecek.',
+    'faq-q4': 'Ücretsiz mi?', 'faq-a4': 'Temel tarayıcı tamamen ücretsiz ve açık kaynak. İleride senkronizasyon ve VPN gibi premium özellikler için isteğe bağlı ücretli planlar gelebilir — ama asıl tarayıcı her zaman ücretsiz kalacak.',
+    'faq-q5': 'Chrome uzantılarımı kullanabilir miyim?', 'faq-a5': 'Evet. Sipar Chromium tabanlı olduğu için Chrome Web Store uzantılarının büyük çoğunluğu çalışır.',
+    'faq-q6': 'Alpha sürüm ne kadar kararlı?', 'faq-a6': 'v0.1.1-alpha günlük kullanım için yeterince kararlı. Ancak alpha olduğu için beklenmedik hatalar olabilir. Karşılaştığın sorunları GitHub Issues\'dan bildirirsen çok yardımcı olursun!',
+    'nav-features': 'Özellikler', 'nav-compare': 'Karşılaştırma', 'nav-download': 'İndir →',
+    'proof-opensource': '100% Açık kaynak', 'proof-speed': '2× daha hızlı', 'proof-zero': 'Sıfır telemetry',
+    'badge1-text': 'Tracker engellendi', 'badge2-text': 'DNS: Quad9', 'badge3-text': 'Sıfır telemetry',
+    'footer-col1-title': 'Ürün', 'footer-col2-title': 'Geliştiriciler', 'footer-col3-title': 'Topluluk',
+    'footer-features': 'Özellikler', 'footer-compare': 'Karşılaştırma', 'footer-download': 'İndir', 'footer-waitlist': 'Waitlist',
+    'footer-copy': '© 2026 Sipar Browser',
+    'footer-mit': '<a href="https://github.com/huseyinbzkrt/sipar-browser/blob/main/LICENSE" target="_blank">MIT Lisansı</a> — Açık kaynak, özgür yazılım',
+  },
+  en: {
+    'eyebrow-text': 'v0.1.1-alpha — Download & start now',
+    'hero-h1': 'Purer than Brave.<br>Free from <span class="line-accent">Chrome.</span><br><span class="line-green">Just a browser.</span>',
+    'hero-sub': 'Zero telemetry. Zero BAT crypto push. Zero data sales. Just fast, clean, private browsing.',
+    'hero-dl-label': 'DOWNLOAD NOW — FREE',
+    'hero-dl-linux': '🐧 Linux',
+    'hero-dl-win': '🪟 Windows',
+    'trust1': 'Zero ad revenue', 'trust2': 'No crypto', 'trust3': 'uBlock Origin built-in', 'trust4': 'MIT License', 'trust5': 'Chrome extensions work',
+    'num1-label': 'Telemetry — none, ever',
+    'num2-label': 'Crypto / BAT push',
+    'num3-label': 'Open source — MIT',
+    'num4-label': 'Faster page loading',
+    'feat1-tag': 'Privacy', 'feat1-title': 'Ads. Trackers. All blocked.',
+    'feat1-desc': 'uBlock Origin comes pre-installed. No setup needed. From first launch, every ad, tracker, and fingerprinting attempt is blocked.',
+    'feat2-tag': 'Performance', 'feat2-title': 'We stripped everything unnecessary. Only speed remains.',
+    'feat2-desc': 'No ads loading means no data wasted. No trackers means your CPU is happy. Pages load on average 2× faster.',
+    'feat3-tag': 'Transparency', 'feat3-title': 'Saying "we don\'t track you" is easy. We prove it.',
+    'feat3-desc': 'Every line of code is on GitHub. Open it, read it, audit it. We have nothing to hide because we collect nothing. Independent security audit support.',
+    'feat4-tag': 'Setup', 'feat4-title': 'Ready in 60 seconds. No PhD required.',
+    'feat4-desc': 'Sipar works right out of the box. Everything is secure and fast by default. Import bookmarks from your old browser — done.',
+    'cmp-title': 'What\'s different from Brave?',
+    'cmp-sub': 'Let the numbers speak — compare Sipar to other browsers.',
+    'cmp-brave-note': '💡 Brave is a good browser — but it has crypto ads, the BAT system, and telemetry. Sipar does none of those things.',
+    'cmp-r1': 'Zero telemetry', 'cmp-r2': 'Built-in ad blocking',
+    'cmp-r3': 'No crypto / BAT system', 'cmp-r4': 'No own ad network',
+    'cmp-r5': 'Secure DNS by default', 'cmp-r6': 'Fully open source',
+    'cmp-r7': 'No news / content feed', 'cmp-r8': 'No Google account needed',
+    'cmp-brave-bat': 'Has BAT',
+    'dl-title': 'Download now. Start immediately.',
+    'dl-sub': 'v0.1.1-alpha is live. Free download for Linux and Windows.',
+    'dl-linux': '🐧 Download for Linux',
+    'dl-windows': '🪟 Download for Windows',
+    'dl-divider-text': 'or sign up for beta notifications',
+    'wl-title': '🚀 Join the beta list',
+    'wl-desc': 'Be the first to know when new releases drop. No spam — promise.',
+    'wl-btn': 'Join →',
+    'wl-msg': '🔒 Your email will never be shared with third parties.',
+    'faq-title': 'Frequently asked questions',
+    'faq-sub': 'Can\'t find what you\'re looking for? <a href="https://github.com/huseyinbzkrt/sipar-browser/issues" style="color:var(--accent);text-decoration:none;">Ask on GitHub.</a>',
+    'faq-q1': 'Why Sipar when Brave exists?',
+    'faq-a1': 'Brave is a great browser — but it has its own crypto system (BAT), its own ad network (Brave Ads), a news feed (Brave News), and telemetry. Sipar does none of those. It just blocks, doesn\'t track, doesn\'t sell you ads. A pure browser.',
+    'faq-q2': 'Is Sipar safe?', 'faq-a2': 'Yes. Sipar is built on Chromium with all Google dependencies removed. All source code is on GitHub, open and auditable. It comes with tracker blocking, secure DNS (Quad9) and zero telemetry by default.',
+    'faq-q3': 'Which platforms does it support?', 'faq-a3': 'Windows and Linux in v0.1.1-alpha. macOS support is being developed. Mobile (Android) will come in future versions.',
+    'faq-q4': 'Is it free?', 'faq-a4': 'The core browser is completely free and open source. Optional paid plans for premium features like sync and VPN may come later — but the core browser will always be free.',
+    'faq-q5': 'Can I use my Chrome extensions?', 'faq-a5': 'Yes. Since Sipar is Chromium-based, the vast majority of Chrome Web Store extensions will work.',
+    'faq-q6': 'How stable is the alpha?', 'faq-a6': 'v0.1.1-alpha is stable enough for daily use. But as an alpha, unexpected bugs may occur. Please report any issues on GitHub Issues — it helps a lot!',
+    'nav-features': 'Features', 'nav-compare': 'Compare', 'nav-download': 'Download →',
+    'proof-opensource': '100% Open source', 'proof-speed': '2× faster', 'proof-zero': 'Zero telemetry',
+    'badge1-text': 'Tracker blocked', 'badge2-text': 'DNS: Quad9', 'badge3-text': 'Zero telemetry',
+    'footer-col1-title': 'Product', 'footer-col2-title': 'Developers', 'footer-col3-title': 'Community',
+    'footer-features': 'Features', 'footer-compare': 'Compare', 'footer-download': 'Download', 'footer-waitlist': 'Waitlist',
+    'footer-copy': '© 2026 Sipar Browser',
+    'footer-mit': '<a href="https://github.com/huseyinbzkrt/sipar-browser/blob/main/LICENSE" target="_blank">MIT License</a> — Open source, free software',
+  }
+};
+
+function setLang(lang) {
+  currentLang = lang;
+  document.querySelectorAll('.lang-btn').forEach(b => b.classList.toggle('active', b.textContent === lang.toUpperCase()));
+  const t = translations[lang];
+  const set = (id, html) => { const el = document.getElementById(id); if (el) el.innerHTML = html; };
+  Object.keys(t).forEach(k => set(k, t[k]));
+  // Update alpha banner language
+  const banner = document.getElementById('alpha-banner');
+  if (banner) {
+    if (lang === 'en') {
+      banner.innerHTML = '<span class="alpha-pill">NEW</span> <strong>v0.1.1-alpha is out!</strong> Download for Linux and Windows — <a href="https://github.com/huseyinbzkrt/sipar-browser/releases/tag/v0.1.1-alpha" target="_blank">View release notes ↗</a>';
+    } else {
+      banner.innerHTML = '<span class="alpha-pill">YENİ</span> <strong>v0.1.1-alpha çıktı!</strong> Linux ve Windows için indirin — <a href="https://github.com/huseyinbzkrt/sipar-browser/releases/tag/v0.1.1-alpha" target="_blank">Sürüm notlarını gör ↗</a>';
+    }
+  }
+  document.documentElement.lang = lang;
+  localStorage.setItem('sipar-lang', lang);
+}
+
+// Init
+window.addEventListener('DOMContentLoaded', () => {
+  const saved = localStorage.getItem('sipar-lang') || (navigator.language.startsWith('tr') ? 'tr' : 'en');
+  setLang(saved);
+  loadGithubStars();
+  loadWaitlistCount();
+  lucide.createIcons();
+});
 </script>
 </body>
 </html>
