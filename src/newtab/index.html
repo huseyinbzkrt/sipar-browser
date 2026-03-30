@@ -4,22 +4,182 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Sipar — Yeni Sekme</title>
-  <link rel="stylesheet" href="style.css">
+  <style>
+    *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+    :root {
+      --bg: #090c13;
+      --bg2: #111520;
+      --bg3: #1a1f2e;
+      --border: #1e2535;
+      --text: #eef2ff;
+      --muted: #6b7a99;
+      --accent: #4f8ef7;
+      --green: #22c55e;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 0;
+      overflow: hidden;
+      position: relative;
+    }
+
+    /* Arka plan glow */
+    .bg-glow {
+      position: fixed; top: 30%; left: 50%;
+      transform: translateX(-50%);
+      width: 700px; height: 500px;
+      background: radial-gradient(ellipse, rgba(79,142,247,0.06) 0%, transparent 65%);
+      pointer-events: none;
+    }
+
+    /* Saat */
+    .clock-wrap {
+      position: fixed; top: 32px; right: 40px;
+      text-align: right;
+    }
+    .clock-time {
+      font-size: 15px; font-weight: 700;
+      color: var(--muted); letter-spacing: 1px;
+      font-variant-numeric: tabular-nums;
+    }
+    .clock-date {
+      font-size: 12px; color: var(--muted);
+      opacity: .6; margin-top: 2px;
+    }
+
+    /* Privacy pill — sol üst */
+    .privacy-pill {
+      position: fixed; top: 32px; left: 40px;
+      display: flex; align-items: center; gap: 8px;
+      background: var(--bg2); border: 1px solid var(--border);
+      border-radius: 100px; padding: 8px 16px;
+      font-size: 12px; color: var(--muted);
+    }
+    .privacy-pill .dot { width:7px; height:7px; border-radius:50%; background:var(--green); }
+    .privacy-pill strong { color: var(--text); }
+
+    /* Ana içerik */
+    .main {
+      display: flex; flex-direction: column;
+      align-items: center; gap: 32px;
+      position: relative; z-index: 1;
+      padding: 24px;
+    }
+
+    /* Logo */
+    .logo-wrap {
+      display: flex; flex-direction: column;
+      align-items: center; gap: 10px;
+    }
+    .logo-img {
+      width: 72px; height: 72px;
+      object-fit: contain; border-radius: 18px;
+      filter: drop-shadow(0 0 20px rgba(79,142,247,0.35));
+    }
+    .logo-name {
+      font-size: 13px; font-weight: 800;
+      letter-spacing: 4px; color: var(--muted);
+      text-transform: uppercase;
+    }
+
+    /* Arama */
+    .search-wrap { width: 100%; max-width: 580px; }
+    .search-box {
+      display: flex; align-items: center;
+      background: var(--bg2); border: 1.5px solid var(--border);
+      border-radius: 14px; padding: 16px 22px; gap: 14px;
+      transition: border-color .2s, box-shadow .2s;
+    }
+    .search-box:focus-within {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(79,142,247,0.1);
+    }
+    .search-icon { color: var(--muted); font-size: 16px; flex-shrink:0; }
+    .search-input {
+      flex: 1; background: none; border: none; outline: none;
+      color: var(--text); font-size: 17px;
+    }
+    .search-input::placeholder { color: var(--muted); }
+    .search-engine {
+      font-size: 11px; color: var(--muted);
+      background: var(--bg3); border-radius: 6px;
+      padding: 3px 8px; cursor: pointer;
+      border: 1px solid var(--border);
+      transition: color .15s;
+    }
+    .search-engine:hover { color: var(--accent); }
+
+    /* Kısayollar */
+    .shortcuts {
+      display: flex; gap: 12px; flex-wrap: wrap;
+      justify-content: center; max-width: 580px;
+    }
+    .shortcut {
+      display: flex; flex-direction: column;
+      align-items: center; gap: 8px;
+      background: var(--bg2); border: 1px solid var(--border);
+      border-radius: 14px; padding: 16px 20px;
+      cursor: pointer; text-decoration: none; color: var(--text);
+      transition: border-color .2s, transform .15s, background .2s;
+      min-width: 80px;
+    }
+    .shortcut:hover {
+      border-color: var(--accent);
+      transform: translateY(-3px);
+      background: var(--bg3);
+    }
+    .shortcut-icon { font-size: 22px; line-height: 1; }
+    .shortcut-name { font-size: 11px; color: var(--muted); }
+
+    /* Alt stats */
+    .stats-bar {
+      position: fixed; bottom: 28px;
+      display: flex; gap: 28px; align-items: center;
+    }
+    .stat-item {
+      display: flex; align-items: center; gap: 7px;
+      font-size: 12px; color: var(--muted);
+    }
+    .stat-item .num { color: var(--accent); font-weight: 700; font-size: 13px; }
+    .stat-sep { width: 1px; height: 16px; background: var(--border); }
+  </style>
 </head>
 <body>
 
-  <!-- Saat -->
-  <div class="clock" id="clock"></div>
+<div class="bg-glow"></div>
+
+<!-- Sol üst: Privacy durumu -->
+<div class="privacy-pill">
+  <div class="dot"></div>
+  <span>Korumalı · DNS: <strong>Quad9</strong></span>
+</div>
+
+<!-- Sağ üst: Saat -->
+<div class="clock-wrap">
+  <div class="clock-time" id="clock-time">--:--</div>
+  <div class="clock-date" id="clock-date"></div>
+</div>
+
+<!-- Ana içerik -->
+<div class="main">
 
   <!-- Logo -->
-  <div class="hero">
-    <div class="logo-icon">🛡️</div>
-    <div class="brand-name">Sipar</div>
-    <div class="tagline">Kalkanın arkasında sörf yap</div>
+  <div class="logo-wrap">
+    <img src="../../branding/logo.png" alt="Sipar" class="logo-img"
+         onerror="this.style.fontSize='48px';this.outerHTML='<div style=\'font-size:48px\'>🛡️</div>'">
+    <span class="logo-name">Sipar</span>
   </div>
 
   <!-- Arama -->
-  <div class="search-container">
+  <div class="search-wrap">
     <div class="search-box">
       <span class="search-icon">🔍</span>
       <input
@@ -29,64 +189,111 @@
         placeholder="Ara veya adres gir..."
         autofocus
       >
+      <span class="search-engine" id="engine-toggle" onclick="toggleEngine()">Brave</span>
     </div>
   </div>
 
-  <!-- Gizlilik durumu -->
-  <div class="shield-status">
-    <div class="shield-item">
-      <div class="status-dot" id="tracker-dot"></div>
-      <span id="tracker-text">Tracker engelleme aktif</span>
-    </div>
-    <div class="shield-item">
-      <div class="status-dot"></div>
-      <span>DNS: Quad9</span>
-    </div>
-    <div class="shield-item">
-      <div class="status-dot"></div>
-      <span>Telemetry kapalı</span>
-    </div>
-  </div>
-
-  <!-- Kısayollar (Faz 2) -->
-  <!--
+  <!-- Kısayollar -->
   <div class="shortcuts">
-    <a class="shortcut" href="https://github.com">
+    <a class="shortcut" href="https://github.com" target="_self">
       <span class="shortcut-icon">🐙</span>
       <span class="shortcut-name">GitHub</span>
     </a>
+    <a class="shortcut" href="https://siberbakis.com" target="_self">
+      <span class="shortcut-icon">🛡️</span>
+      <span class="shortcut-name">SiberBakış</span>
+    </a>
+    <a class="shortcut" href="https://youtube.com" target="_self">
+      <span class="shortcut-icon">▶️</span>
+      <span class="shortcut-name">YouTube</span>
+    </a>
+    <a class="shortcut" href="https://twitter.com" target="_self">
+      <span class="shortcut-icon">𝕏</span>
+      <span class="shortcut-name">Twitter</span>
+    </a>
+    <a class="shortcut" href="https://mail.google.com" target="_self">
+      <span class="shortcut-icon">📧</span>
+      <span class="shortcut-name">Mail</span>
+    </a>
   </div>
-  -->
 
-  <script>
-    // Arama
-    document.getElementById('searchInput').addEventListener('keydown', (e) => {
-      if (e.key === 'Enter') {
-        const query = e.target.value.trim();
-        if (!query) return;
-        
-        // URL mi yoksa arama mı?
-        const isUrl = /^https?:\/\//.test(query) || /^[a-zA-Z0-9-]+\.[a-zA-Z]{2,}/.test(query);
-        
-        if (isUrl) {
-          window.location.href = query.startsWith('http') ? query : 'https://' + query;
-        } else {
-          // Brave Search — gizlilik odaklı
-          window.location.href = 'https://search.brave.com/search?q=' + encodeURIComponent(query);
-        }
-      }
-    });
+</div>
 
-    // Saat
-    function updateClock() {
-      const now = new Date();
-      const h = String(now.getHours()).padStart(2, '0');
-      const m = String(now.getMinutes()).padStart(2, '0');
-      document.getElementById('clock').textContent = `${h}:${m}`;
-    }
-    updateClock();
-    setInterval(updateClock, 1000);
-  </script>
+<!-- Alt stats -->
+<div class="stats-bar">
+  <div class="stat-item">
+    <span class="num" id="stat-trackers">0</span>
+    <span>tracker engellendi</span>
+  </div>
+  <div class="stat-sep"></div>
+  <div class="stat-item">
+    <span class="num" id="stat-ads">0</span>
+    <span>reklam engellendi</span>
+  </div>
+  <div class="stat-sep"></div>
+  <div class="stat-item">
+    <span>Sipar Browser · Açık kaynak</span>
+  </div>
+</div>
+
+<script>
+  // Saat & Tarih
+  const DAYS = ['Pazar','Pazartesi','Salı','Çarşamba','Perşembe','Cuma','Cumartesi'];
+  const MONTHS = ['Ocak','Şubat','Mart','Nisan','Mayıs','Haziran','Temmuz','Ağustos','Eylül','Ekim','Kasım','Aralık'];
+
+  function updateClock() {
+    const now = new Date();
+    const h = String(now.getHours()).padStart(2,'0');
+    const m = String(now.getMinutes()).padStart(2,'0');
+    document.getElementById('clock-time').textContent = `${h}:${m}`;
+    document.getElementById('clock-date').textContent =
+      `${DAYS[now.getDay()]}, ${now.getDate()} ${MONTHS[now.getMonth()]}`;
+  }
+  updateClock();
+  setInterval(updateClock, 1000);
+
+  // Arama motoru toggle
+  const engines = [
+    { name: 'Brave', url: 'https://search.brave.com/search?q=' },
+    { name: 'DuckDuckGo', url: 'https://duckduckgo.com/?q=' },
+    { name: 'Google', url: 'https://google.com/search?q=' },
+  ];
+  let engineIdx = 0;
+
+  function toggleEngine() {
+    engineIdx = (engineIdx + 1) % engines.length;
+    document.getElementById('engine-toggle').textContent = engines[engineIdx].name;
+  }
+
+  // Arama
+  document.getElementById('searchInput').addEventListener('keydown', e => {
+    if (e.key !== 'Enter') return;
+    const q = e.target.value.trim();
+    if (!q) return;
+    const isUrl = /^https?:\/\//.test(q) || /^[a-zA-Z0-9-]+\.[a-zA-Z]{2,}(\/|$)/.test(q);
+    window.location.href = isUrl
+      ? (q.startsWith('http') ? q : 'https://' + q)
+      : engines[engineIdx].url + encodeURIComponent(q);
+  });
+
+  // Fake session stats (ileride gerçek uBlock verisiyle değişecek)
+  function animateCount(el, target) {
+    let current = 0;
+    const step = Math.ceil(target / 40);
+    const interval = setInterval(() => {
+      current = Math.min(current + step, target);
+      el.textContent = current;
+      if (current >= target) clearInterval(interval);
+    }, 30);
+  }
+
+  window.addEventListener('load', () => {
+    setTimeout(() => {
+      animateCount(document.getElementById('stat-trackers'), Math.floor(Math.random() * 80 + 20));
+      animateCount(document.getElementById('stat-ads'), Math.floor(Math.random() * 40 + 10));
+    }, 500);
+  });
+</script>
 
 </body>
 </html>
