@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sipar Kalkan</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --bg:       #090c13;
+      --bg2:      #0e1220;
+      --bg3:      #141928;
+      --border:   rgba(255,255,255,0.07);
+      --text:     #eef2ff;
+      --muted:    #4e5a78;
+      --muted2:   #6b7a99;
+      --accent:   #4f8ef7;
+      --accent-dim: rgba(79,142,247,0.14);
+      --green:    #22c55e;
+      --green-dim: rgba(34,197,94,0.12);
+      --red:      #ef4444;
+      --red-dim:  rgba(239,68,68,0.12);
+      --orange:   #f97316;
+    }
+
+    html {
+      width: 340px;
+      background: var(--bg);
+    }
+    body {
+      width: 340px;
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Outfit', sans-serif;
+      font-size: 14px;
+      line-height: 1.5;
+      overflow-x: hidden;
+    }
+
+    /* ── HEADER ── */
+    .header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 16px 16px 14px;
+      border-bottom: 1px solid var(--border);
+    }
+    .header-left {
+      display: flex; align-items: center; gap: 10px;
+    }
+    .shield-icon {
+      width: 32px; height: 32px;
+      display: flex; align-items: center; justify-content: center;
+      border-radius: 8px;
+      background: var(--accent-dim);
+      border: 1px solid rgba(79,142,247,0.25);
+      flex-shrink: 0;
+    }
+    .site-info {}
+    .site-name {
+      font-size: 14px; font-weight: 700; color: var(--text);
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+      max-width: 160px;
+    }
+    .site-url {
+      font-size: 11px; color: var(--muted2);
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    /* Master toggle */
+    .master-toggle {
+      display: flex; align-items: center; gap: 8px;
+    }
+    .mt-label {
+      font-size: 11px; font-weight: 600;
+      text-transform: uppercase; letter-spacing: 0.8px;
+    }
+    .mt-label.on  { color: var(--green); }
+    .mt-label.off { color: var(--muted2); }
+
+    /* Toggle switch */
+    .toggle {
+      position: relative; width: 40px; height: 22px; cursor: pointer;
+    }
+    .toggle input { opacity: 0; width: 0; height: 0; position: absolute; }
+    .toggle-track {
+      position: absolute; inset: 0;
+      background: var(--bg3); border: 1px solid var(--border);
+      border-radius: 11px;
+      transition: background .2s, border-color .2s;
+    }
+    .toggle input:checked ~ .toggle-track {
+      background: var(--green-dim);
+      border-color: rgba(34,197,94,0.4);
+    }
+    .toggle-thumb {
+      position: absolute; top: 3px; left: 3px;
+      width: 14px; height: 14px; border-radius: 50%;
+      background: var(--muted2);
+      transition: transform .2s, background .2s;
+    }
+    .toggle input:checked ~ .toggle-thumb {
+      transform: translateX(18px);
+      background: var(--green);
+    }
+
+    /* ── SUMMARY STATS ── */
+    .stats-row {
+      display: grid; grid-template-columns: 1fr 1fr 1fr;
+      gap: 1px; background: var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+    .stat-cell {
+      background: var(--bg);
+      padding: 12px 10px;
+      text-align: center;
+      cursor: default;
+      transition: background .15s;
+    }
+    .stat-cell:hover { background: var(--bg2); }
+    .stat-num {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 20px; font-weight: 700;
+      line-height: 1;
+    }
+    .stat-num.green { color: var(--green); }
+    .stat-num.blue  { color: var(--accent); }
+    .stat-num.muted { color: var(--muted2); }
+    .stat-lbl {
+      font-size: 10px; font-weight: 500; color: var(--muted2);
+      margin-top: 3px; text-transform: uppercase; letter-spacing: 0.5px;
+    }
+
+    /* ── TOGGLES LIST ── */
+    .section-title {
+      padding: 12px 16px 6px;
+      font-size: 10px; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 1.2px; color: var(--muted);
+    }
+
+    .toggle-list { padding: 0 8px; }
+    .toggle-row {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 9px 8px;
+      border-radius: 8px;
+      transition: background .15s;
+      cursor: default;
+    }
+    .toggle-row:hover { background: var(--bg2); }
+    .tr-left { display: flex; align-items: center; gap: 10px; }
+    .tr-icon {
+      width: 26px; height: 26px; border-radius: 7px;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .tr-icon.green { background: var(--green-dim); }
+    .tr-icon.blue  { background: var(--accent-dim); }
+    .tr-icon.orange { background: rgba(249,115,22,0.12); }
+    .tr-icon.red   { background: var(--red-dim); }
+    .tr-label { font-size: 13px; font-weight: 500; }
+    .tr-count {
+      font-size: 11px; font-weight: 500; color: var(--muted2);
+      margin-top: 1px;
+      font-family: 'JetBrains Mono', monospace;
+    }
+    .tr-count.active { color: var(--green); }
+
+    /* Small toggle */
+    .toggle-sm {
+      position: relative; width: 32px; height: 18px; cursor: pointer;
+      flex-shrink: 0;
+    }
+    .toggle-sm input { opacity: 0; width: 0; height: 0; position: absolute; }
+    .toggle-sm .toggle-track {
+      position: absolute; inset: 0;
+      background: var(--bg3); border: 1px solid var(--border);
+      border-radius: 9px;
+      transition: background .2s, border-color .2s;
+    }
+    .toggle-sm input:checked ~ .toggle-track {
+      background: var(--green-dim);
+      border-color: rgba(34,197,94,0.4);
+    }
+    .toggle-sm .toggle-thumb {
+      position: absolute; top: 2px; left: 2px;
+      width: 12px; height: 12px; border-radius: 50%;
+      background: var(--muted);
+      transition: transform .2s, background .2s;
+    }
+    .toggle-sm input:checked ~ .toggle-thumb {
+      transform: translateX(14px);
+      background: var(--green);
+    }
+
+    /* ── DIVIDER ── */
+    .divider {
+      height: 1px; background: var(--border);
+      margin: 8px 0;
+    }
+
+    /* ── HTTPS INFO ROW ── */
+    .https-row {
+      display: flex; align-items: center; gap: 10px;
+      padding: 10px 16px;
+      margin: 0 8px;
+      border-radius: 8px;
+      background: var(--bg2);
+      border: 1px solid var(--border);
+    }
+    .https-dot {
+      width: 8px; height: 8px; border-radius: 50%;
+      flex-shrink: 0;
+    }
+    .https-dot.secure  { background: var(--green); box-shadow: 0 0 6px rgba(34,197,94,0.5); }
+    .https-dot.insecure{ background: var(--orange); }
+    .https-text { font-size: 12px; font-weight: 500; color: var(--muted2); }
+    .https-text strong { color: var(--text); }
+
+    /* ── FOOTER ── */
+    .footer {
+      display: flex; gap: 6px;
+      padding: 10px 8px 12px;
+    }
+    .footer-btn {
+      flex: 1;
+      display: flex; align-items: center; justify-content: center; gap: 6px;
+      padding: 9px;
+      background: var(--bg2); border: 1px solid var(--border);
+      border-radius: 9px; cursor: pointer;
+      font-size: 12px; font-weight: 500; color: var(--muted2);
+      font-family: 'Outfit', sans-serif;
+      transition: border-color .2s, color .2s, background .2s;
+    }
+    .footer-btn:hover {
+      border-color: rgba(79,142,247,0.3);
+      color: var(--accent);
+      background: var(--bg3);
+    }
+    .footer-btn.danger:hover {
+      border-color: rgba(239,68,68,0.3);
+      color: var(--red);
+    }
+
+    /* ── DISABLED STATE ── */
+    body.shield-off .stats-row,
+    body.shield-off .toggle-list,
+    body.shield-off .https-row {
+      opacity: 0.35;
+      pointer-events: none;
+    }
+
+    /* ── ANIMATE IN ── */
+    body {
+      animation: popIn 0.15s ease-out;
+    }
+    @keyframes popIn {
+      from { opacity: 0; transform: scale(0.97) translateY(-4px); }
+      to   { opacity: 1; transform: scale(1) translateY(0); }
+    }
+  </style>
+</head>
+<body id="body">
+
+<!-- HEADER -->
+<div class="header">
+  <div class="header-left">
+    <div class="shield-icon">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+        <path d="M12 2L3 6.5V12c0 5.25 3.9 10.15 9 11.35C17.1 22.15 21 17.25 21 12V6.5L12 2Z"
+          fill="rgba(79,142,247,0.2)" stroke="#4f8ef7" stroke-width="1.5"/>
+        <text x="12" y="16" text-anchor="middle"
+          font-family="Outfit" font-weight="800" font-size="9"
+          fill="#4f8ef7">S</text>
+      </svg>
+    </div>
+    <div class="site-info">
+      <div class="site-name" id="siteName">github.com</div>
+      <div class="site-url" id="siteUrl">https://github.com</div>
+    </div>
+  </div>
+  <div class="master-toggle">
+    <span class="mt-label on" id="masterLabel">AKTİF</span>
+    <label class="toggle">
+      <input type="checkbox" id="masterToggle" checked onchange="toggleShield(this)">
+      <div class="toggle-track"></div>
+      <div class="toggle-thumb"></div>
+    </label>
+  </div>
+</div>
+
+<!-- SUMMARY STATS -->
+<div class="stats-row">
+  <div class="stat-cell">
+    <div class="stat-num green" id="adsCount">12</div>
+    <div class="stat-lbl">Reklam</div>
+  </div>
+  <div class="stat-cell">
+    <div class="stat-num green" id="trackersCount">7</div>
+    <div class="stat-lbl">Tracker</div>
+  </div>
+  <div class="stat-cell">
+    <div class="stat-num blue" id="scriptsCount">3</div>
+    <div class="stat-lbl">Betik</div>
+  </div>
+</div>
+
+<!-- CONTROLS -->
+<div class="section-title">Bu Sitede</div>
+<div class="toggle-list">
+
+  <div class="toggle-row">
+    <div class="tr-left">
+      <div class="tr-icon green">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2.5">
+          <rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/>
+        </svg>
+      </div>
+      <div>
+        <div class="tr-label">Reklamları Engelle</div>
+        <div class="tr-count active" id="adCount">12 engellendi</div>
+      </div>
+    </div>
+    <label class="toggle-sm">
+      <input type="checkbox" checked onchange="updateRow(this, 'adCount', 'reklam')">
+      <div class="toggle-track"></div>
+      <div class="toggle-thumb"></div>
+    </label>
+  </div>
+
+  <div class="toggle-row">
+    <div class="tr-left">
+      <div class="tr-icon green">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2.5">
+          <circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/>
+        </svg>
+      </div>
+      <div>
+        <div class="tr-label">Takipçileri Engelle</div>
+        <div class="tr-count active" id="trackerCount">7 engellendi</div>
+      </div>
+    </div>
+    <label class="toggle-sm">
+      <input type="checkbox" checked onchange="updateRow(this, 'trackerCount', 'tracker')">
+      <div class="toggle-track"></div>
+      <div class="toggle-thumb"></div>
+    </label>
+  </div>
+
+  <div class="toggle-row">
+    <div class="tr-left">
+      <div class="tr-icon blue">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#4f8ef7" stroke-width="2.5">
+          <polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/>
+        </svg>
+      </div>
+      <div>
+        <div class="tr-label">3. Taraf Betikler</div>
+        <div class="tr-count active" id="scriptCount">3 engellendi</div>
+      </div>
+    </div>
+    <label class="toggle-sm">
+      <input type="checkbox" checked onchange="updateRow(this, 'scriptCount', 'betik')">
+      <div class="toggle-track"></div>
+      <div class="toggle-thumb"></div>
+    </label>
+  </div>
+
+  <div class="toggle-row">
+    <div class="tr-left">
+      <div class="tr-icon orange">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#f97316" stroke-width="2.5">
+          <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>
+        </svg>
+      </div>
+      <div>
+        <div class="tr-label">Parmak İzi Koruması</div>
+        <div class="tr-count active">Aktif</div>
+      </div>
+    </div>
+    <label class="toggle-sm">
+      <input type="checkbox" checked>
+      <div class="toggle-track"></div>
+      <div class="toggle-thumb"></div>
+    </label>
+  </div>
+
+</div>
+
+<div class="divider" style="margin: 8px 8px;"></div>
+
+<!-- HTTPS STATUS -->
+<div class="https-row">
+  <div class="https-dot secure" id="httpsDot"></div>
+  <div class="https-text" id="httpsText"><strong>HTTPS</strong> bağlantı — şifreli ve güvenli</div>
+</div>
+
+<!-- FOOTER ACTIONS -->
+<div class="footer">
+  <button class="footer-btn" onclick="location.href='sipar://settings/shield'">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06-.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+    </svg>
+    Ayarlar
+  </button>
+  <button class="footer-btn danger" onclick="addSiteException()" id="exceptionBtn">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><line x1="8" y1="8" x2="16" y2="16"/><line x1="16" y1="8" x2="8" y2="16"/>
+    </svg>
+    Bu Sitede Durdur
+  </button>
+</div>
+
+<script>
+  // ── CURRENT SITE (browser ext would inject this) ──
+  const currentHost = (typeof chrome !== 'undefined' && chrome.tabs)
+    ? '(yükleniyor…)'
+    : 'github.com';
+
+  document.getElementById('siteName').textContent = currentHost;
+  document.getElementById('siteUrl').textContent = 'https://' + currentHost;
+
+  // ── MASTER SHIELD TOGGLE ──
+  function toggleShield(el) {
+    const body = document.getElementById('body');
+    const label = document.getElementById('masterLabel');
+    if (el.checked) {
+      body.classList.remove('shield-off');
+      label.textContent = 'AKTİF';
+      label.className = 'mt-label on';
+    } else {
+      body.classList.add('shield-off');
+      label.textContent = 'DEVRE DIŞI';
+      label.className = 'mt-label off';
+    }
+  }
+
+  // ── ROW TOGGLE ──
+  function updateRow(el, countId, label) {
+    const el2 = document.getElementById(countId);
+    const prev = el2.getAttribute('data-val') || el2.textContent.split(' ')[0];
+    if (el.checked) {
+      el2.textContent = prev + ' engellendi';
+      el2.className = 'tr-count active';
+    } else {
+      el2.setAttribute('data-val', prev);
+      el2.textContent = 'Devre dışı';
+      el2.className = 'tr-count';
+    }
+  }
+
+  // ── EXCEPTION ──
+  let excepted = false;
+  function addSiteException() {
+    const btn = document.getElementById('exceptionBtn');
+    excepted = !excepted;
+    if (excepted) {
+      btn.innerHTML = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 11 14 15 10"/></svg> İstisna Kaldır`;
+      btn.style.borderColor = 'rgba(239,68,68,0.4)';
+      btn.style.color = '#ef4444';
+    } else {
+      btn.innerHTML = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><line x1="8" y1="8" x2="16" y2="16"/><line x1="16" y1="8" x2="8" y2="16"/></svg> Bu Sitede Durdur`;
+      btn.style.borderColor = '';
+      btn.style.color = '';
+    }
+  }
+</script>
+</body>
+</html>

@@ -1,0 +1,1025 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ayarlar — Sipar</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --bg:       #090c13;
+      --bg2:      #0e1220;
+      --bg3:      #141928;
+      --bg4:      #1a2035;
+      --border:   rgba(255,255,255,0.06);
+      --border2:  rgba(255,255,255,0.09);
+      --text:     #eef2ff;
+      --muted:    #3d4a6a;
+      --muted2:   #6b7a99;
+      --muted3:   #8490b0;
+      --accent:   #4f8ef7;
+      --accent-dim: rgba(79,142,247,0.12);
+      --accent-border: rgba(79,142,247,0.3);
+      --green:    #22c55e;
+      --green-dim: rgba(34,197,94,0.1);
+      --red:      #ef4444;
+      --orange:   #f97316;
+      --sidebar-w: 240px;
+    }
+
+    html, body {
+      height: 100%; background: var(--bg);
+      color: var(--text); font-family: 'Outfit', sans-serif;
+      font-size: 14px; line-height: 1.5;
+    }
+
+    /* ── LAYOUT ── */
+    .app { display: flex; height: 100vh; overflow: hidden; }
+
+    /* ── SIDEBAR ── */
+    .sidebar {
+      width: var(--sidebar-w); flex-shrink: 0;
+      background: var(--bg2);
+      border-right: 1px solid var(--border);
+      display: flex; flex-direction: column;
+      overflow-y: auto; overflow-x: hidden;
+    }
+
+    .sidebar-logo {
+      display: flex; align-items: center; gap: 10px;
+      padding: 20px 16px 16px;
+      border-bottom: 1px solid var(--border);
+      flex-shrink: 0;
+    }
+    .logo-shield {
+      width: 28px; height: 28px; flex-shrink: 0;
+    }
+    .logo-name {
+      font-size: 15px; font-weight: 800;
+      letter-spacing: 2.5px; color: var(--text);
+    }
+    .logo-ver {
+      font-size: 10px; font-weight: 500; color: var(--muted2);
+      font-family: 'JetBrains Mono', monospace;
+      margin-left: auto;
+    }
+
+    /* Search in sidebar */
+    .sidebar-search {
+      padding: 12px 10px;
+      flex-shrink: 0;
+    }
+    .ss-wrap {
+      position: relative; display: flex; align-items: center;
+    }
+    .ss-icon {
+      position: absolute; left: 10px; color: var(--muted2);
+      pointer-events: none;
+    }
+    .ss-input {
+      width: 100%;
+      background: var(--bg3); border: 1px solid var(--border);
+      color: var(--text); font-family: 'Outfit', sans-serif;
+      font-size: 13px; padding: 8px 10px 8px 32px;
+      border-radius: 8px; outline: none;
+      transition: border-color .2s;
+    }
+    .ss-input::placeholder { color: var(--muted2); }
+    .ss-input:focus { border-color: var(--accent-border); }
+
+    /* Nav groups */
+    .nav-group { margin-bottom: 4px; }
+    .nav-group-title {
+      padding: 8px 16px 4px;
+      font-size: 10px; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 1.2px;
+      color: var(--muted);
+    }
+    .nav-item {
+      display: flex; align-items: center; gap: 10px;
+      padding: 9px 16px;
+      border-radius: 0;
+      cursor: pointer;
+      font-size: 13px; font-weight: 500;
+      color: var(--muted3);
+      text-decoration: none;
+      transition: background .15s, color .15s;
+      position: relative;
+      user-select: none;
+    }
+    .nav-item:hover { background: var(--bg3); color: var(--text); }
+    .nav-item.active {
+      background: var(--accent-dim);
+      color: var(--accent);
+    }
+    .nav-item.active::before {
+      content: '';
+      position: absolute; left: 0; top: 4px; bottom: 4px;
+      width: 2.5px; background: var(--accent); border-radius: 0 2px 2px 0;
+    }
+    .nav-icon { flex-shrink: 0; opacity: 0.7; }
+    .nav-item.active .nav-icon { opacity: 1; }
+    .nav-item:hover .nav-icon { opacity: 1; }
+    .nav-badge {
+      margin-left: auto;
+      background: var(--accent-dim);
+      color: var(--accent);
+      font-size: 10px; font-weight: 700;
+      padding: 2px 6px; border-radius: 4px;
+      font-family: 'JetBrains Mono', monospace;
+    }
+    .nav-badge.green {
+      background: var(--green-dim); color: var(--green);
+    }
+
+    .sidebar-footer {
+      margin-top: auto;
+      padding: 12px 10px;
+      border-top: 1px solid var(--border);
+    }
+    .version-chip {
+      display: flex; align-items: center; gap: 8px;
+      padding: 8px 10px;
+      background: var(--bg3); border: 1px solid var(--border);
+      border-radius: 8px;
+      font-size: 11px; font-weight: 500; color: var(--muted2);
+      font-family: 'JetBrains Mono', monospace;
+    }
+    .version-dot {
+      width: 6px; height: 6px; border-radius: 50%;
+      background: var(--green); box-shadow: 0 0 5px var(--green);
+    }
+
+    /* ── MAIN CONTENT ── */
+    .main {
+      flex: 1; overflow-y: auto;
+      display: flex; flex-direction: column;
+    }
+
+    /* Topbar */
+    .topbar {
+      display: flex; align-items: center;
+      padding: 16px 32px;
+      border-bottom: 1px solid var(--border);
+      background: var(--bg); flex-shrink: 0;
+      gap: 12px;
+    }
+    .topbar-title { font-size: 18px; font-weight: 700; }
+    .topbar-sub { font-size: 13px; color: var(--muted2); }
+    .topbar-sep { width: 1px; height: 20px; background: var(--border2); }
+
+    /* Content area */
+    .content {
+      padding: 28px 32px; flex: 1;
+      max-width: 860px;
+    }
+
+    /* Section */
+    .settings-section {
+      margin-bottom: 32px;
+      display: none;
+    }
+    .settings-section.visible { display: block; }
+
+    .section-header {
+      display: flex; align-items: center; gap: 10px;
+      margin-bottom: 16px;
+    }
+    .section-icon {
+      width: 32px; height: 32px; border-radius: 9px;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .section-icon.green { background: var(--green-dim); }
+    .section-icon.blue  { background: var(--accent-dim); }
+    .section-icon.orange{ background: rgba(249,115,22,0.1); }
+    .section-icon.purple{ background: rgba(139,92,246,0.1); }
+    .section-icon.teal  { background: rgba(20,184,166,0.1); }
+    .section-h2 { font-size: 16px; font-weight: 700; }
+    .section-sub { font-size: 12px; color: var(--muted2); margin-top: 1px; }
+
+    /* Card */
+    .card {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+    .card + .card { margin-top: 12px; }
+
+    /* Setting row */
+    .setting-row {
+      display: flex; align-items: center;
+      padding: 14px 16px;
+      gap: 14px;
+      transition: background .15s;
+    }
+    .setting-row:not(:last-child) {
+      border-bottom: 1px solid var(--border);
+    }
+    .setting-row:hover { background: var(--bg3); }
+    .sr-left { flex: 1; min-width: 0; }
+    .sr-label { font-size: 13px; font-weight: 600; color: var(--text); }
+    .sr-desc  { font-size: 12px; color: var(--muted2); margin-top: 2px; line-height: 1.4; }
+    .sr-right { flex-shrink: 0; }
+
+    /* Toggle */
+    .toggle {
+      position: relative; width: 40px; height: 22px; cursor: pointer;
+    }
+    .toggle input { opacity: 0; width: 0; height: 0; position: absolute; }
+    .toggle-track {
+      position: absolute; inset: 0;
+      background: var(--bg4); border: 1px solid var(--border2);
+      border-radius: 11px;
+      transition: background .2s, border-color .2s;
+    }
+    .toggle input:checked ~ .toggle-track {
+      background: var(--green-dim);
+      border-color: rgba(34,197,94,0.4);
+    }
+    .toggle-thumb {
+      position: absolute; top: 3px; left: 3px;
+      width: 14px; height: 14px; border-radius: 50%;
+      background: var(--muted2);
+      transition: transform .2s, background .2s;
+    }
+    .toggle input:checked ~ .toggle-thumb {
+      transform: translateX(18px);
+      background: var(--green);
+    }
+
+    /* Select */
+    .setting-select {
+      background: var(--bg3); border: 1px solid var(--border2);
+      color: var(--text); font-family: 'Outfit', sans-serif;
+      font-size: 13px; font-weight: 500;
+      padding: 7px 28px 7px 10px;
+      border-radius: 8px; outline: none; cursor: pointer;
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%236b7a99' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 10px center;
+      transition: border-color .2s;
+    }
+    .setting-select:focus { border-color: var(--accent-border); }
+
+    /* Button */
+    .setting-btn {
+      background: var(--bg3); border: 1px solid var(--border2);
+      color: var(--muted3); font-family: 'Outfit', sans-serif;
+      font-size: 12px; font-weight: 600;
+      padding: 7px 14px; border-radius: 8px;
+      cursor: pointer; transition: border-color .2s, color .2s;
+    }
+    .setting-btn:hover { border-color: var(--accent-border); color: var(--accent); }
+    .setting-btn.danger:hover { border-color: rgba(239,68,68,0.4); color: var(--red); }
+
+    /* Badge/tag in setting */
+    .sr-tag {
+      display: inline-flex; align-items: center; gap: 4px;
+      background: var(--green-dim); color: var(--green);
+      font-size: 10px; font-weight: 700;
+      padding: 2px 7px; border-radius: 4px;
+      margin-left: 8px;
+      vertical-align: middle;
+    }
+    .sr-tag.blue {
+      background: var(--accent-dim); color: var(--accent);
+    }
+
+    /* Divider in card */
+    .card-divider {
+      padding: 8px 16px 4px;
+      font-size: 10px; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 1px; color: var(--muted);
+      border-bottom: 1px solid var(--border);
+      background: rgba(255,255,255,0.01);
+    }
+
+    /* Danger zone */
+    .danger-zone {
+      background: rgba(239,68,68,0.04);
+      border: 1px solid rgba(239,68,68,0.15);
+      border-radius: 12px; padding: 16px;
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 12px;
+    }
+    .dz-text .dz-title { font-size: 13px; font-weight: 600; }
+    .dz-text .dz-desc  { font-size: 12px; color: var(--muted2); margin-top: 2px; }
+    .btn-danger {
+      background: rgba(239,68,68,0.1); border: 1px solid rgba(239,68,68,0.3);
+      color: var(--red); font-family: 'Outfit', sans-serif;
+      font-size: 12px; font-weight: 600;
+      padding: 8px 16px; border-radius: 8px;
+      cursor: pointer; white-space: nowrap;
+      transition: background .2s;
+    }
+    .btn-danger:hover { background: rgba(239,68,68,0.18); }
+
+    /* About card */
+    .about-hero {
+      display: flex; align-items: center; gap: 20px;
+      padding: 24px; border-bottom: 1px solid var(--border);
+    }
+    .about-shield {
+      width: 56px; height: 56px; border-radius: 14px;
+      background: var(--accent-dim); border: 1px solid var(--accent-border);
+      display: flex; align-items: center; justify-content: center;
+    }
+    .about-name { font-size: 20px; font-weight: 800; }
+    .about-ver  {
+      font-size: 12px; font-weight: 500; color: var(--muted2);
+      font-family: 'JetBrains Mono', monospace; margin-top: 3px;
+    }
+    .about-chip {
+      display: inline-flex; align-items: center; gap: 5px;
+      background: var(--green-dim); border: 1px solid rgba(34,197,94,0.2);
+      color: var(--green); border-radius: 6px; padding: 3px 8px;
+      font-size: 11px; font-weight: 600; margin-top: 6px;
+    }
+    .about-chip-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--green); }
+
+    /* ── SCROLLBAR ── */
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: var(--bg4); border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: var(--muted); }
+
+    /* ── ANIMATIONS ── */
+    .settings-section {
+      animation: sectionIn 0.2s ease;
+    }
+    @keyframes sectionIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+<div class="app">
+
+  <!-- ══════════ SIDEBAR ══════════ -->
+  <aside class="sidebar">
+
+    <!-- Logo -->
+    <div class="sidebar-logo">
+      <svg class="logo-shield" viewBox="0 0 28 28" fill="none">
+        <path d="M14 2L3 7v7c0 6.15 4.6 11.9 11 13.35C20.4 25.9 25 20.15 25 14V7L14 2Z"
+          fill="rgba(79,142,247,0.12)" stroke="#4f8ef7" stroke-width="1.5"/>
+        <text x="14" y="18.5" text-anchor="middle"
+          font-family="Outfit" font-weight="800" font-size="11"
+          fill="#4f8ef7">S</text>
+      </svg>
+      <span class="logo-name">SİPAR</span>
+      <span class="logo-ver">v0.1</span>
+    </div>
+
+    <!-- Search -->
+    <div class="sidebar-search">
+      <div class="ss-wrap">
+        <svg class="ss-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+        <input class="ss-input" type="text" placeholder="Ayarlarda ara…" id="settingsSearch" oninput="filterSettings(this.value)">
+      </div>
+    </div>
+
+    <!-- NAV -->
+    <nav>
+      <div class="nav-group">
+        <div class="nav-item active" onclick="showSection('privacy')" id="nav-privacy">
+          <svg class="nav-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          Gizlilik & Güvenlik
+          <span class="nav-badge green">Aktif</span>
+        </div>
+        <div class="nav-item" onclick="showSection('appearance')" id="nav-appearance">
+          <svg class="nav-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M20.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06-.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+          Görünüm
+        </div>
+        <div class="nav-item" onclick="showSection('search')" id="nav-search">
+          <svg class="nav-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+          Arama Motoru
+        </div>
+        <div class="nav-item" onclick="showSection('newtab')" id="nav-newtab">
+          <svg class="nav-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+          Yeni Sekme
+        </div>
+      </div>
+
+      <div class="nav-group">
+        <div class="nav-group-title">Tarayıcı</div>
+        <div class="nav-item" onclick="showSection('downloads')" id="nav-downloads">
+          <svg class="nav-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          İndirmeler
+        </div>
+        <div class="nav-item" onclick="showSection('extensions')" id="nav-extensions">
+          <svg class="nav-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
+          Uzantılar
+        </div>
+        <div class="nav-item" onclick="showSection('shortcuts')" id="nav-shortcuts">
+          <svg class="nav-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="6" width="20" height="14" rx="2"/><path d="M6 10h.01M10 10h.01M14 10h.01M18 10h.01M8 14h8"/></svg>
+          Klavye Kısayolları
+        </div>
+      </div>
+
+      <div class="nav-group">
+        <div class="nav-group-title">Sistem</div>
+        <div class="nav-item" onclick="showSection('advanced')" id="nav-advanced">
+          <svg class="nav-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+          Gelişmiş
+        </div>
+        <div class="nav-item" onclick="showSection('about')" id="nav-about">
+          <svg class="nav-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+          Hakkında
+        </div>
+      </div>
+    </nav>
+
+    <!-- Footer -->
+    <div class="sidebar-footer">
+      <div class="version-chip">
+        <div class="version-dot"></div>
+        sipar v0.1.1-alpha
+      </div>
+    </div>
+
+  </aside>
+
+  <!-- ══════════ MAIN ══════════ -->
+  <div class="main">
+
+    <!-- Topbar -->
+    <div class="topbar">
+      <div>
+        <div class="topbar-title" id="topbarTitle">Gizlilik & Güvenlik</div>
+        <div class="topbar-sub" id="topbarSub">Kalkan, takip koruma ve şifreleme ayarları</div>
+      </div>
+    </div>
+
+    <!-- Content -->
+    <div class="content">
+
+      <!-- ── PRIVACY ── -->
+      <div class="settings-section visible" id="section-privacy">
+
+        <div class="section-header">
+          <div class="section-icon green">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          </div>
+          <div>
+            <div class="section-h2">Sipar Kalkan</div>
+            <div class="section-sub">Reklam ve takip engelleyici varsayılan kurallar</div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="setting-row">
+            <div class="sr-left">
+              <div class="sr-label">Reklamları Engelle <span class="sr-tag">Önerilen</span></div>
+              <div class="sr-desc">tüm sitelerde üçüncü taraf reklam ağlarını filtreler</div>
+            </div>
+            <div class="sr-right">
+              <label class="toggle">
+                <input type="checkbox" checked>
+                <div class="toggle-track"></div>
+                <div class="toggle-thumb"></div>
+              </label>
+            </div>
+          </div>
+          <div class="setting-row">
+            <div class="sr-left">
+              <div class="sr-label">Tracker Engelle <span class="sr-tag">Önerilen</span></div>
+              <div class="sr-desc">piksel, çerez izleyici ve analytics betiklerini durdurur</div>
+            </div>
+            <div class="sr-right">
+              <label class="toggle">
+                <input type="checkbox" checked>
+                <div class="toggle-track"></div>
+                <div class="toggle-thumb"></div>
+              </label>
+            </div>
+          </div>
+          <div class="setting-row">
+            <div class="sr-left">
+              <div class="sr-label">Parmak İzi Koruması</div>
+              <div class="sr-desc">canvas, WebGL ve font tabanlı parmak izi girişimlerini gizler</div>
+            </div>
+            <div class="sr-right">
+              <label class="toggle">
+                <input type="checkbox" checked>
+                <div class="toggle-track"></div>
+                <div class="toggle-thumb"></div>
+              </label>
+            </div>
+          </div>
+          <div class="setting-row">
+            <div class="sr-left">
+              <div class="sr-label">Çerez Pop-up Engelleyici</div>
+              <div class="sr-desc">"çerezleri kabul et" diyaloglarını otomatik kapatır</div>
+            </div>
+            <div class="sr-right">
+              <label class="toggle">
+                <input type="checkbox" checked>
+                <div class="toggle-track"></div>
+                <div class="toggle-thumb"></div>
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <!-- DNS -->
+        <div class="section-header" style="margin-top: 24px;">
+          <div class="section-icon blue">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#4f8ef7" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          </div>
+          <div>
+            <div class="section-h2">DNS Güvenliği</div>
+            <div class="section-sub">Şifreli DNS ile DNS sorgularını gizle</div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="setting-row">
+            <div class="sr-left">
+              <div class="sr-label">DNS-over-HTTPS</div>
+              <div class="sr-desc">DNS sorgularını şifreli tünel üzerinden iletir</div>
+            </div>
+            <div class="sr-right">
+              <label class="toggle">
+                <input type="checkbox" checked>
+                <div class="toggle-track"></div>
+                <div class="toggle-thumb"></div>
+              </label>
+            </div>
+          </div>
+          <div class="setting-row">
+            <div class="sr-left">
+              <div class="sr-label">DNS Sağlayıcı</div>
+              <div class="sr-desc">şifrelenmiş sorgu yönlendirilecek sunucu</div>
+            </div>
+            <div class="sr-right">
+              <select class="setting-select">
+                <option>Quad9 (9.9.9.9)</option>
+                <option>Cloudflare (1.1.1.1)</option>
+                <option>NextDNS</option>
+                <option>Özel…</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <!-- HTTPS -->
+        <div class="section-header" style="margin-top: 24px;">
+          <div class="section-icon green">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          </div>
+          <div>
+            <div class="section-h2">HTTPS</div>
+            <div class="section-sub">Bağlantı güvenliği yükseltme</div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="setting-row">
+            <div class="sr-left">
+              <div class="sr-label">HTTPS-Only Modu</div>
+              <div class="sr-desc">HTTP sitelere bağlantıyı otomatik HTTPS'e yükseltir</div>
+            </div>
+            <div class="sr-right">
+              <label class="toggle">
+                <input type="checkbox" checked>
+                <div class="toggle-track"></div>
+                <div class="toggle-thumb"></div>
+              </label>
+            </div>
+          </div>
+          <div class="setting-row">
+            <div class="sr-left">
+              <div class="sr-label">Sertifika Hatasında Uyar</div>
+              <div class="sr-desc">geçersiz SSL sertifikalarında büyük uyarı göster</div>
+            </div>
+            <div class="sr-right">
+              <label class="toggle">
+                <input type="checkbox" checked>
+                <div class="toggle-track"></div>
+                <div class="toggle-thumb"></div>
+              </label>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /privacy -->
+
+      <!-- ── APPEARANCE ── -->
+      <div class="settings-section" id="section-appearance">
+        <div class="section-header">
+          <div class="section-icon blue">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#4f8ef7" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 2a10 10 0 0 1 10 10c0 5.52-4.48 10-10 10a3 3 0 1 1 0-6 3 3 0 0 0 0-6 3 3 0 1 1 0-6z"/></svg>
+          </div>
+          <div>
+            <div class="section-h2">Görünüm</div>
+            <div class="section-sub">Tema ve arayüz tercihleri</div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="setting-row">
+            <div class="sr-left">
+              <div class="sr-label">Tema</div>
+              <div class="sr-desc">tarayıcı arayüzünün renk şeması</div>
+            </div>
+            <div class="sr-right">
+              <select class="setting-select">
+                <option selected>Koyu (Dark)</option>
+                <option>Açık (Light)</option>
+                <option>Sistem Teması</option>
+              </select>
+            </div>
+          </div>
+          <div class="setting-row">
+            <div class="sr-left">
+              <div class="sr-label">Font Boyutu</div>
+              <div class="sr-desc">varsayılan sayfa metin boyutu</div>
+            </div>
+            <div class="sr-right">
+              <select class="setting-select">
+                <option>Küçük</option>
+                <option selected>Orta</option>
+                <option>Büyük</option>
+              </select>
+            </div>
+          </div>
+          <div class="setting-row">
+            <div class="sr-left">
+              <div class="sr-label">Yer İşareti Çubuğu</div>
+              <div class="sr-desc">adres çubuğunun altında yer işaretleri göster</div>
+            </div>
+            <div class="sr-right">
+              <label class="toggle">
+                <input type="checkbox">
+                <div class="toggle-track"></div>
+                <div class="toggle-thumb"></div>
+              </label>
+            </div>
+          </div>
+          <div class="setting-row">
+            <div class="sr-left">
+              <div class="sr-label">Sekme Sayısı Rozeti</div>
+              <div class="sr-desc">açık sekme sayısını tarayıcı ikonunda göster</div>
+            </div>
+            <div class="sr-right">
+              <label class="toggle">
+                <input type="checkbox" checked>
+                <div class="toggle-track"></div>
+                <div class="toggle-thumb"></div>
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── SEARCH ── -->
+      <div class="settings-section" id="section-search">
+        <div class="section-header">
+          <div class="section-icon blue">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#4f8ef7" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+          </div>
+          <div>
+            <div class="section-h2">Arama Motoru</div>
+            <div class="section-sub">Adres çubuğu arama varsayılanları</div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="setting-row">
+            <div class="sr-left">
+              <div class="sr-label">Varsayılan Arama Motoru</div>
+            </div>
+            <div class="sr-right">
+              <select class="setting-select">
+                <option selected>DuckDuckGo</option>
+                <option>Brave Search</option>
+                <option>Google</option>
+                <option>Bing</option>
+                <option>Startpage</option>
+                <option>Özel…</option>
+              </select>
+            </div>
+          </div>
+          <div class="setting-row">
+            <div class="sr-left">
+              <div class="sr-label">Arama Önerileri</div>
+              <div class="sr-desc">yazarken arama motoru API'sine istek gönderir</div>
+            </div>
+            <div class="sr-right">
+              <label class="toggle">
+                <input type="checkbox" checked>
+                <div class="toggle-track"></div>
+                <div class="toggle-thumb"></div>
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── NEW TAB ── -->
+      <div class="settings-section" id="section-newtab">
+        <div class="section-header">
+          <div class="section-icon purple">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#a78bfa" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+          </div>
+          <div>
+            <div class="section-h2">Yeni Sekme Sayfası</div>
+            <div class="section-sub">Her yeni sekme açıldığında ne gösterilsin</div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="setting-row">
+            <div class="sr-left">
+              <div class="sr-label">Saat Göster</div>
+            </div>
+            <div class="sr-right">
+              <label class="toggle">
+                <input type="checkbox" checked>
+                <div class="toggle-track"></div>
+                <div class="toggle-thumb"></div>
+              </label>
+            </div>
+          </div>
+          <div class="setting-row">
+            <div class="sr-left">
+              <div class="sr-label">Hızlı Bağlantılar</div>
+              <div class="sr-desc">sık ziyaret edilen siteler kısayolu</div>
+            </div>
+            <div class="sr-right">
+              <label class="toggle">
+                <input type="checkbox" checked>
+                <div class="toggle-track"></div>
+                <div class="toggle-thumb"></div>
+              </label>
+            </div>
+          </div>
+          <div class="setting-row">
+            <div class="sr-left">
+              <div class="sr-label">Gizlilik İstatistikleri</div>
+              <div class="sr-desc">engellenen reklam ve tracker sayısını göster</div>
+            </div>
+            <div class="sr-right">
+              <label class="toggle">
+                <input type="checkbox" checked>
+                <div class="toggle-track"></div>
+                <div class="toggle-thumb"></div>
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── DOWNLOADS ── -->
+      <div class="settings-section" id="section-downloads">
+        <div class="section-header">
+          <div class="section-icon teal">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#14b8a6" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          </div>
+          <div>
+            <div class="section-h2">İndirmeler</div>
+            <div class="section-sub">İndirme konumu ve davranışı</div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="setting-row">
+            <div class="sr-left">
+              <div class="sr-label">İndirme Klasörü</div>
+              <div class="sr-desc" style="font-family:'JetBrains Mono',monospace;font-size:11px;">~/Downloads</div>
+            </div>
+            <div class="sr-right">
+              <button class="setting-btn">Değiştir</button>
+            </div>
+          </div>
+          <div class="setting-row">
+            <div class="sr-left">
+              <div class="sr-label">Her indirmede konum sor</div>
+            </div>
+            <div class="sr-right">
+              <label class="toggle">
+                <input type="checkbox">
+                <div class="toggle-track"></div>
+                <div class="toggle-thumb"></div>
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── EXTENSIONS ── -->
+      <div class="settings-section" id="section-extensions">
+        <div class="section-header">
+          <div class="section-icon orange">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#f97316" stroke-width="2"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
+          </div>
+          <div>
+            <div class="section-h2">Uzantılar</div>
+            <div class="section-sub">Chrome Web Store uzantıları desteklenir</div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="setting-row">
+            <div class="sr-left">
+              <div class="sr-label">Chrome Web Store'u Aç</div>
+              <div class="sr-desc">Sipar, Chrome uzantılarının büyük çoğunluğunu destekler</div>
+            </div>
+            <div class="sr-right">
+              <button class="setting-btn">Aç ↗</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── SHORTCUTS ── -->
+      <div class="settings-section" id="section-shortcuts">
+        <div class="section-header">
+          <div class="section-icon blue">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#4f8ef7" stroke-width="2"><rect x="2" y="6" width="20" height="14" rx="2"/><path d="M6 10h.01M10 10h.01M14 10h.01M18 10h.01M8 14h8"/></svg>
+          </div>
+          <div>
+            <div class="section-h2">Klavye Kısayolları</div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="setting-row">
+            <div class="sr-left"><div class="sr-label">Yeni Sekme</div></div>
+            <div class="sr-right" style="font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--muted2);">Ctrl+T</div>
+          </div>
+          <div class="setting-row">
+            <div class="sr-left"><div class="sr-label">Kalkan Popup</div></div>
+            <div class="sr-right" style="font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--muted2);">Alt+S</div>
+          </div>
+          <div class="setting-row">
+            <div class="sr-left"><div class="sr-label">Gizli Mod</div></div>
+            <div class="sr-right" style="font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--muted2);">Ctrl+Shift+N</div>
+          </div>
+          <div class="setting-row">
+            <div class="sr-left"><div class="sr-label">Ayarlar</div></div>
+            <div class="sr-right" style="font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--muted2);">Ctrl+,</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── ADVANCED ── -->
+      <div class="settings-section" id="section-advanced">
+        <div class="section-header">
+          <div class="section-icon blue">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#4f8ef7" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+          </div>
+          <div>
+            <div class="section-h2">Gelişmiş</div>
+            <div class="section-sub">Güç kullanıcı ayarları</div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="setting-row">
+            <div class="sr-left">
+              <div class="sr-label">Donanım Hızlandırma</div>
+              <div class="sr-desc">GPU kullanımı ile render performansını artırır</div>
+            </div>
+            <div class="sr-right">
+              <label class="toggle">
+                <input type="checkbox" checked>
+                <div class="toggle-track"></div>
+                <div class="toggle-thumb"></div>
+              </label>
+            </div>
+          </div>
+          <div class="setting-row">
+            <div class="sr-left">
+              <div class="sr-label">Telemetry</div>
+              <div class="sr-desc">kullanım verisi gönder — Sipar varsayılan olarak kapalı tutar</div>
+            </div>
+            <div class="sr-right">
+              <label class="toggle">
+                <input type="checkbox">
+                <div class="toggle-track"></div>
+                <div class="toggle-thumb"></div>
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <div style="margin-top: 20px;">
+          <div class="danger-zone">
+            <div class="dz-text">
+              <div class="dz-title">Tüm Ayarları Sıfırla</div>
+              <div class="dz-desc">tüm tercihler fabrika değerlerine döner, veriler silinmez</div>
+            </div>
+            <button class="btn-danger">Sıfırla</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── ABOUT ── -->
+      <div class="settings-section" id="section-about">
+        <div class="card">
+          <div class="about-hero">
+            <div class="about-shield">
+              <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+                <path d="M14 2L3 7v7c0 6.15 4.6 11.9 11 13.35C20.4 25.9 25 20.15 25 14V7L14 2Z"
+                  fill="rgba(79,142,247,0.2)" stroke="#4f8ef7" stroke-width="1.5"/>
+                <text x="14" y="18.5" text-anchor="middle"
+                  font-family="Outfit" font-weight="800" font-size="11"
+                  fill="#4f8ef7">S</text>
+              </svg>
+            </div>
+            <div>
+              <div class="about-name">Sipar Browser</div>
+              <div class="about-ver">v0.1.1-alpha · Chromium 124</div>
+              <div class="about-chip">
+                <div class="about-chip-dot"></div>
+                Güncel
+              </div>
+            </div>
+          </div>
+          <div class="setting-row">
+            <div class="sr-left"><div class="sr-label">Lisans</div></div>
+            <div class="sr-right" style="font-size:12px;color:var(--muted2);">MIT</div>
+          </div>
+          <div class="setting-row">
+            <div class="sr-left"><div class="sr-label">Kaynak Kodu</div></div>
+            <div class="sr-right">
+              <a href="https://github.com/huseyinbzkrt/sipar-browser" target="_blank" style="font-size:12px;color:var(--accent);text-decoration:none;">GitHub ↗</a>
+            </div>
+          </div>
+          <div class="setting-row">
+            <div class="sr-left"><div class="sr-label">Sıfır Telemetry</div></div>
+            <div class="sr-right" style="font-size:12px;color:var(--green);">✓ Hiçbir veri gönderilmiyor</div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /content -->
+  </div><!-- /main -->
+</div><!-- /app -->
+
+<script>
+  // ── SECTION DESCRIPTIONS ──
+  const sectionMeta = {
+    privacy:     { title: 'Gizlilik & Güvenlik',  sub: 'Kalkan, takip koruma ve şifreleme ayarları' },
+    appearance:  { title: 'Görünüm',               sub: 'Tema, font ve arayüz tercihleri' },
+    search:      { title: 'Arama Motoru',           sub: 'Adres çubuğu arama varsayılanları' },
+    newtab:      { title: 'Yeni Sekme Sayfası',     sub: 'Yeni sekmede görüntülenecek içerik' },
+    downloads:   { title: 'İndirmeler',             sub: 'İndirme konumu ve davranışı' },
+    extensions:  { title: 'Uzantılar',             sub: 'Chrome Web Store uzantı yönetimi' },
+    shortcuts:   { title: 'Klavye Kısayolları',    sub: 'Tarayıcı klavye kısayolları' },
+    advanced:    { title: 'Gelişmiş',              sub: 'Güç kullanıcı ve sistem ayarları' },
+    about:       { title: 'Hakkında',              sub: 'Sipar Browser sürüm bilgisi' },
+  };
+
+  function showSection(id) {
+    // Hide all
+    document.querySelectorAll('.settings-section').forEach(s => s.classList.remove('visible'));
+    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+
+    // Show target
+    document.getElementById('section-' + id)?.classList.add('visible');
+    document.getElementById('nav-' + id)?.classList.add('active');
+
+    // Update topbar
+    const meta = sectionMeta[id] || { title: id, sub: '' };
+    document.getElementById('topbarTitle').textContent = meta.title;
+    document.getElementById('topbarSub').textContent = meta.sub;
+  }
+
+  // ── SEARCH ──
+  function filterSettings(q) {
+    if (!q.trim()) {
+      // Reset: show privacy
+      showSection('privacy');
+      return;
+    }
+    // Simple: search through all sr-label text
+    const lower = q.toLowerCase();
+    document.querySelectorAll('.settings-section').forEach(sec => {
+      const matches = Array.from(sec.querySelectorAll('.sr-label')).some(el =>
+        el.textContent.toLowerCase().includes(lower)
+      );
+      if (matches) {
+        sec.classList.add('visible');
+        sec.querySelectorAll('.sr-label').forEach(el => {
+          const row = el.closest('.setting-row');
+          if (!el.textContent.toLowerCase().includes(lower)) {
+            row.style.display = 'none';
+          } else {
+            row.style.display = '';
+          }
+        });
+      } else {
+        sec.classList.remove('visible');
+      }
+    });
+    // Clear active nav
+    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  }
+</script>
+
+</body>
+</html>

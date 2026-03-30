@@ -3,304 +3,446 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Sipar — Yeni Sekme</title>
-  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <title>Yeni Sekme — Sipar</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
   <style>
-    *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
     :root {
-      --bg: #090c13;
-      --bg2: #111520;
-      --bg3: #1a1f2e;
-      --border: #1e2535;
-      --text: #eef2ff;
-      --muted: #6b7a99;
-      --accent: #4f8ef7;
-      --green: #22c55e;
+      --bg:       #090c13;
+      --bg2:      #0e1220;
+      --bg3:      #141928;
+      --border:   rgba(255,255,255,0.06);
+      --text:     #eef2ff;
+      --muted:    #5a6585;
+      --accent:   #4f8ef7;
+      --accent-dim: rgba(79,142,247,0.12);
+      --green:    #22c55e;
+      --green-dim: rgba(34,197,94,0.12);
+      --red:      #ef4444;
     }
 
-    body {
+    html, body {
+      width: 100%; height: 100%;
       background: var(--bg);
       color: var(--text);
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 0;
+      font-family: 'Outfit', sans-serif;
       overflow: hidden;
-      position: relative;
     }
 
-    /* Arka plan glow */
+    /* ── ANIMATED BACKGROUND ── */
+    .bg-layer {
+      position: fixed; inset: 0; z-index: 0; pointer-events: none;
+    }
+    .bg-grid {
+      position: absolute; inset: 0;
+      background-image:
+        linear-gradient(rgba(79,142,247,0.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(79,142,247,0.025) 1px, transparent 1px);
+      background-size: 48px 48px;
+    }
     .bg-glow {
-      position: fixed; top: 30%; left: 50%;
-      transform: translateX(-50%);
-      width: 700px; height: 500px;
-      background: radial-gradient(ellipse, rgba(79,142,247,0.06) 0%, transparent 65%);
-      pointer-events: none;
+      position: absolute;
+      top: -20%; left: 50%; transform: translateX(-50%);
+      width: 900px; height: 600px;
+      background: radial-gradient(ellipse at center, rgba(79,142,247,0.07) 0%, transparent 65%);
+      animation: pulseGlow 8s ease-in-out infinite;
+    }
+    @keyframes pulseGlow {
+      0%, 100% { opacity: 0.6; transform: translateX(-50%) scale(1); }
+      50% { opacity: 1; transform: translateX(-50%) scale(1.05); }
     }
 
-    /* Saat */
-    .clock-wrap {
-      position: fixed; top: 32px; right: 40px;
-      text-align: right;
-    }
-    .clock-time {
-      font-size: 15px; font-weight: 700;
-      color: var(--muted); letter-spacing: 1px;
-      font-variant-numeric: tabular-nums;
-    }
-    .clock-date {
-      font-size: 12px; color: var(--muted);
-      opacity: .6; margin-top: 2px;
-    }
-
-    /* Privacy pill — sol üst */
-    .privacy-pill {
-      position: fixed; top: 32px; left: 40px;
-      display: flex; align-items: center; gap: 8px;
-      background: var(--bg2); border: 1px solid var(--border);
-      border-radius: 100px; padding: 8px 16px;
-      font-size: 12px; color: var(--muted);
-    }
-    .privacy-pill .dot { width:7px; height:7px; border-radius:50%; background:var(--green); }
-    .privacy-pill strong { color: var(--text); }
-
-    /* Ana içerik */
-    .main {
-      display: flex; flex-direction: column;
-      align-items: center; gap: 32px;
+    /* ── LAYOUT ── */
+    .page {
       position: relative; z-index: 1;
+      width: 100%; height: 100vh;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      gap: 0;
       padding: 24px;
     }
 
-    /* Logo */
-    .logo-wrap {
-      display: flex; flex-direction: column;
-      align-items: center; gap: 10px;
+    /* ── TOP STATUS BAR ── */
+    .status-bar {
+      position: fixed; top: 20px; right: 24px;
+      display: flex; align-items: center; gap: 8px;
     }
-    .logo-img {
-      width: 72px; height: 72px;
-      object-fit: contain; border-radius: 18px;
-      filter: drop-shadow(0 0 20px rgba(79,142,247,0.35));
+    .status-pill {
+      display: flex; align-items: center; gap: 6px;
+      background: var(--bg2); border: 1px solid var(--border);
+      border-radius: 20px; padding: 6px 12px;
+      font-size: 12px; font-weight: 500; color: var(--muted);
+      font-family: 'JetBrains Mono', monospace;
+      cursor: default;
+      transition: border-color .2s;
     }
-    .logo-name {
-      font-size: 13px; font-weight: 800;
-      letter-spacing: 4px; color: var(--muted);
-      text-transform: uppercase;
+    .status-pill:hover { border-color: rgba(79,142,247,0.3); }
+    .status-dot {
+      width: 6px; height: 6px; border-radius: 50%;
+      background: var(--green);
+      box-shadow: 0 0 6px var(--green);
+      animation: blink 3s ease-in-out infinite;
+    }
+    @keyframes blink {
+      0%, 100% { opacity: 1; } 50% { opacity: 0.4; }
     }
 
-    /* Arama */
-    .search-wrap { width: 100%; max-width: 580px; }
+    /* ── LOGO ── */
+    .logo-mark {
+      width: 48px; height: 48px; margin-bottom: 32px;
+      opacity: 0; animation: fadeUp 0.6s ease forwards 0.1s;
+    }
+    .logo-svg { width: 48px; height: 48px; }
+
+    /* ── CLOCK ── */
+    .clock-wrap {
+      text-align: center; margin-bottom: 40px;
+      opacity: 0; animation: fadeUp 0.6s ease forwards 0.2s;
+    }
+    .clock {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: clamp(64px, 8vw, 96px);
+      font-weight: 700; letter-spacing: -2px;
+      line-height: 1;
+      background: linear-gradient(135deg, var(--text) 0%, rgba(238,242,255,0.6) 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .date {
+      margin-top: 8px;
+      font-size: 15px; font-weight: 400; color: var(--muted);
+      letter-spacing: 0.5px;
+    }
+
+    /* ── SEARCH ── */
+    .search-wrap {
+      width: 100%; max-width: 600px; margin-bottom: 40px;
+      opacity: 0; animation: fadeUp 0.6s ease forwards 0.3s;
+    }
     .search-box {
-      display: flex; align-items: center;
-      background: var(--bg2); border: 1.5px solid var(--border);
-      border-radius: 14px; padding: 16px 22px; gap: 14px;
-      transition: border-color .2s, box-shadow .2s;
+      position: relative; display: flex; align-items: center;
     }
-    .search-box:focus-within {
-      border-color: var(--accent);
-      box-shadow: 0 0 0 3px rgba(79,142,247,0.1);
+    .search-icon {
+      position: absolute; left: 18px;
+      color: var(--muted); flex-shrink: 0;
+      pointer-events: none;
     }
-    .search-icon { color: var(--muted); flex-shrink:0; }
     .search-input {
-      flex: 1; background: none; border: none; outline: none;
-      color: var(--text); font-size: 17px;
+      width: 100%;
+      background: var(--bg2);
+      border: 1.5px solid var(--border);
+      color: var(--text);
+      font-family: 'Outfit', sans-serif;
+      font-size: 17px; font-weight: 400;
+      padding: 18px 18px 18px 52px;
+      border-radius: 14px;
+      outline: none;
+      transition: border-color .2s, background .2s, box-shadow .2s;
     }
     .search-input::placeholder { color: var(--muted); }
-    .search-engine {
-      font-size: 11px; color: var(--muted);
-      background: var(--bg3); border-radius: 6px;
-      padding: 3px 8px; cursor: pointer;
-      border: 1px solid var(--border);
-      transition: color .15s;
-    }
-    .search-engine:hover { color: var(--accent); }
-
-    /* Kısayollar */
-    .shortcuts {
-      display: flex; gap: 12px; flex-wrap: wrap;
-      justify-content: center; max-width: 580px;
-    }
-    .shortcut {
-      display: flex; flex-direction: column;
-      align-items: center; gap: 8px;
-      background: var(--bg2); border: 1px solid var(--border);
-      border-radius: 14px; padding: 16px 20px;
-      cursor: pointer; text-decoration: none; color: var(--text);
-      transition: border-color .2s, transform .15s, background .2s;
-      min-width: 80px;
-    }
-    .shortcut:hover {
+    .search-input:focus {
       border-color: var(--accent);
-      transform: translateY(-3px);
       background: var(--bg3);
+      box-shadow: 0 0 0 3px rgba(79,142,247,0.12), 0 8px 32px rgba(0,0,0,0.4);
     }
-    .shortcut-icon { font-size: 22px; line-height: 1; }
-    .shortcut-name { font-size: 11px; color: var(--muted); }
+    .search-engine-btn {
+      position: absolute; right: 12px;
+      background: var(--accent-dim); border: 1px solid rgba(79,142,247,0.2);
+      color: var(--accent); border-radius: 8px; padding: 6px 12px;
+      font-size: 12px; font-weight: 600; font-family: 'Outfit', sans-serif;
+      cursor: pointer; transition: background .2s;
+    }
+    .search-engine-btn:hover { background: rgba(79,142,247,0.2); }
 
-    /* Alt stats */
-    .stats-bar {
-      position: fixed; bottom: 28px;
-      display: flex; gap: 28px; align-items: center;
+    /* Search suggestions (static demo) */
+    .search-suggestions {
+      display: none;
+      position: absolute; top: calc(100% + 8px); left: 0; right: 0;
+      background: var(--bg2); border: 1px solid var(--border);
+      border-radius: 12px; overflow: hidden;
+      box-shadow: 0 16px 48px rgba(0,0,0,0.5);
+      z-index: 10;
     }
-    .stat-item {
-      display: flex; align-items: center; gap: 7px;
-      font-size: 12px; color: var(--muted);
+    .search-wrap:focus-within .search-suggestions { display: block; }
+    .suggestion-item {
+      display: flex; align-items: center; gap: 12px;
+      padding: 12px 16px; cursor: pointer;
+      font-size: 14px; color: var(--muted);
+      transition: background .15s;
     }
-    .stat-item .num { color: var(--accent); font-weight: 700; font-size: 13px; }
-    .stat-sep { width: 1px; height: 16px; background: var(--border); }
+    .suggestion-item:hover { background: rgba(255,255,255,0.03); color: var(--text); }
+    .suggestion-icon { color: var(--muted); flex-shrink: 0; }
+
+    /* ── QUICK LINKS ── */
+    .quicklinks {
+      display: flex; gap: 12px; flex-wrap: wrap; justify-content: center;
+      max-width: 600px;
+      opacity: 0; animation: fadeUp 0.6s ease forwards 0.4s;
+    }
+    .ql-item {
+      display: flex; flex-direction: column; align-items: center; gap: 8px;
+      padding: 14px 18px;
+      background: var(--bg2); border: 1px solid var(--border);
+      border-radius: 12px; cursor: pointer;
+      text-decoration: none; color: var(--text);
+      transition: border-color .2s, transform .2s, background .2s;
+      min-width: 76px;
+    }
+    .ql-item:hover {
+      border-color: rgba(79,142,247,0.3);
+      background: var(--bg3);
+      transform: translateY(-2px);
+    }
+    .ql-favicon {
+      width: 28px; height: 28px; border-radius: 8px;
+      background: var(--bg3);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 15px;
+    }
+    .ql-label { font-size: 11px; font-weight: 500; color: var(--muted); white-space: nowrap; }
+    .ql-add {
+      border-style: dashed;
+      border-color: rgba(255,255,255,0.04);
+    }
+    .ql-add .ql-favicon { color: var(--muted); font-size: 18px; font-weight: 300; }
+
+    /* ── PRIVACY STATS ── */
+    .privacy-stats {
+      position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
+      display: flex; align-items: center; gap: 2px;
+      opacity: 0; animation: fadeUp 0.6s ease forwards 0.6s;
+    }
+    .stat-chip {
+      display: flex; align-items: center; gap: 8px;
+      padding: 8px 16px;
+      background: var(--bg2); border: 1px solid var(--border);
+      font-size: 12px; font-weight: 500;
+      color: var(--muted);
+      font-family: 'JetBrains Mono', monospace;
+      cursor: default; white-space: nowrap;
+      transition: border-color .2s;
+    }
+    .stat-chip:hover { border-color: rgba(79,142,247,0.2); }
+    .stat-chip:first-child { border-radius: 10px 0 0 10px; }
+    .stat-chip:last-child  { border-radius: 0 10px 10px 0; }
+    .stat-chip:not(:first-child) { border-left: none; }
+    .stat-val { color: var(--green); font-weight: 700; }
+    .stat-val.blue { color: var(--accent); }
+
+    /* ── SETTINGS SHORTCUT ── */
+    .settings-btn {
+      position: fixed; bottom: 24px; right: 24px;
+      width: 36px; height: 36px; border-radius: 10px;
+      background: var(--bg2); border: 1px solid var(--border);
+      color: var(--muted); cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: border-color .2s, color .2s;
+      opacity: 0; animation: fadeIn 0.6s ease forwards 0.8s;
+    }
+    .settings-btn:hover { border-color: rgba(79,142,247,0.3); color: var(--accent); }
+
+    /* ── ANIMATIONS ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(16px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; } to { opacity: 1; }
+    }
   </style>
 </head>
 <body>
 
-<div class="bg-glow"></div>
-
-<!-- Sol üst: Privacy durumu -->
-<div class="privacy-pill">
-  <div class="dot"></div>
-  <i data-lucide="shield-check" style="width:13px;height:13px;color:var(--green)"></i>
-  <span>Korumalı · DNS: <strong>Quad9</strong></span>
+<!-- Background -->
+<div class="bg-layer">
+  <div class="bg-grid"></div>
+  <div class="bg-glow"></div>
 </div>
 
-<!-- Sağ üst: Saat -->
-<div class="clock-wrap">
-  <div class="clock-time" id="clock-time">--:--</div>
-  <div class="clock-date" id="clock-date"></div>
+<!-- Top Status Bar -->
+<div class="status-bar">
+  <div class="status-pill">
+    <div class="status-dot"></div>
+    Kalkan Aktif
+  </div>
 </div>
 
-<!-- Ana içerik -->
-<div class="main">
+<!-- Main -->
+<div class="page">
 
   <!-- Logo -->
-  <div class="logo-wrap">
-    <img src="../../branding/logo.png" alt="Sipar" class="logo-img"
-         onerror="this.style.fontSize='48px';this.outerHTML='<div style=\'font-size:48px\'>🛡️</div>'">
-    <span class="logo-name">Sipar</span>
+  <div class="logo-mark">
+    <svg class="logo-svg" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M24 4L6 12V24C6 34.5 14 43 24 46C34 43 42 34.5 42 24V12L24 4Z"
+        fill="rgba(79,142,247,0.12)" stroke="#4f8ef7" stroke-width="1.5"/>
+      <text x="24" y="31" text-anchor="middle"
+        font-family="Outfit, sans-serif" font-weight="800" font-size="18"
+        fill="#4f8ef7">S</text>
+    </svg>
   </div>
 
-  <!-- Arama -->
+  <!-- Clock -->
+  <div class="clock-wrap">
+    <div class="clock" id="clock">00:00</div>
+    <div class="date" id="date-str">—</div>
+  </div>
+
+  <!-- Search -->
   <div class="search-wrap">
     <div class="search-box">
-      <i data-lucide="search" class="search-icon" style="width:18px;height:18px;flex-shrink:0"></i>
+      <svg class="search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/>
+      </svg>
       <input
-        type="text"
         class="search-input"
         id="searchInput"
-        placeholder="Ara veya adres gir..."
+        type="text"
+        placeholder="Ara veya adres gir…"
+        autocomplete="off"
         autofocus
       >
-      <span class="search-engine" id="engine-toggle" onclick="toggleEngine()">Brave</span>
+      <button class="search-engine-btn" id="engineBtn">DuckDuckGo</button>
+    </div>
+    <!-- Suggestions hint (no real engine needed in demo) -->
+    <div class="search-suggestions" id="suggestions">
+      <div class="suggestion-item">
+        <svg class="suggestion-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+        <span id="sug-text">Arama yap…</span>
+      </div>
+      <div class="suggestion-item">
+        <svg class="suggestion-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+        <span>Geçmişte ara…</span>
+      </div>
     </div>
   </div>
 
-  <!-- Kısayollar -->
-  <div class="shortcuts">
-    <a class="shortcut" href="https://github.com" target="_self">
-      <i data-lucide="github" class="shortcut-icon" style="width:22px;height:22px"></i>
-      <span class="shortcut-name">GitHub</span>
+  <!-- Quick Links -->
+  <div class="quicklinks">
+    <a href="#" class="ql-item">
+      <div class="ql-favicon">🐦</div>
+      <span class="ql-label">Twitter</span>
     </a>
-    <a class="shortcut" href="https://siberbakis.com" target="_self">
-      <i data-lucide="shield" class="shortcut-icon" style="width:22px;height:22px;color:var(--accent)"></i>
-      <span class="shortcut-name">SiberBakış</span>
+    <a href="#" class="ql-item">
+      <div class="ql-favicon">▶</div>
+      <span class="ql-label">YouTube</span>
     </a>
-    <a class="shortcut" href="https://youtube.com" target="_self">
-      <i data-lucide="youtube" class="shortcut-icon" style="width:22px;height:22px;color:#ff4444"></i>
-      <span class="shortcut-name">YouTube</span>
+    <a href="#" class="ql-item">
+      <div class="ql-favicon">📧</div>
+      <span class="ql-label">Mail</span>
     </a>
-    <a class="shortcut" href="https://twitter.com" target="_self">
-      <i data-lucide="twitter" class="shortcut-icon" style="width:22px;height:22px"></i>
-      <span class="shortcut-name">Twitter</span>
+    <a href="#" class="ql-item">
+      <div class="ql-favicon">📰</div>
+      <span class="ql-label">Haberler</span>
     </a>
-    <a class="shortcut" href="https://mail.google.com" target="_self">
-      <i data-lucide="mail" class="shortcut-icon" style="width:22px;height:22px"></i>
-      <span class="shortcut-name">Mail</span>
+    <a href="#" class="ql-item">
+      <div class="ql-favicon">💻</div>
+      <span class="ql-label">GitHub</span>
+    </a>
+    <a href="#" class="ql-item ql-add">
+      <div class="ql-favicon">+</div>
+      <span class="ql-label">Ekle</span>
     </a>
   </div>
 
 </div>
 
-<!-- Alt stats -->
-<div class="stats-bar">
-  <div class="stat-item">
-    <i data-lucide="shield-off" style="width:13px;height:13px;color:var(--accent)"></i>
-    <span class="num" id="stat-trackers">0</span>
-    <span>tracker engellendi</span>
+<!-- Privacy Stats Bottom Bar -->
+<div class="privacy-stats">
+  <div class="stat-chip">
+    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+    <span class="stat-val" id="stat-ads">247</span> reklam engellendi
   </div>
-  <div class="stat-sep"></div>
-  <div class="stat-item">
-    <i data-lucide="ban" style="width:13px;height:13px;color:var(--accent)"></i>
-    <span class="num" id="stat-ads">0</span>
-    <span>reklam engellendi</span>
+  <div class="stat-chip">
+    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2.5"><circle cx="12" cy="12" r="3"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/></svg>
+    <span class="stat-val" id="stat-trackers">89</span> tracker engellendi
   </div>
-  <div class="stat-sep"></div>
-  <div class="stat-item">
-    <i data-lucide="lock" style="width:13px;height:13px;color:var(--green)"></i>
-    <span>Sipar Browser · Açık kaynak</span>
+  <div class="stat-chip">
+    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#4f8ef7" stroke-width="2.5"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+    <span class="stat-val blue" id="stat-speed">1.4s</span> kazanılan süre
   </div>
 </div>
+
+<!-- Settings shortcut -->
+<button class="settings-btn" onclick="location.href='sipar://settings'" title="Ayarlar">
+  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <circle cx="12" cy="12" r="3"/>
+    <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+  </svg>
+</button>
 
 <script>
-  lucide.createIcons();
+  // ── CLOCK ──
+  const DAYS_TR = ['Pazar','Pazartesi','Salı','Çarşamba','Perşembe','Cuma','Cumartesi'];
+  const MONTHS_TR = ['Ocak','Şubat','Mart','Nisan','Mayıs','Haziran','Temmuz','Ağustos','Eylül','Ekim','Kasım','Aralık'];
 
-  // Saat & Tarih
-  const DAYS = ['Pazar','Pazartesi','Salı','Çarşamba','Perşembe','Cuma','Cumartesi'];
-  const MONTHS = ['Ocak','Şubat','Mart','Nisan','Mayıs','Haziran','Temmuz','Ağustos','Eylül','Ekim','Kasım','Aralık'];
+  function pad(n) { return String(n).padStart(2, '0'); }
 
   function updateClock() {
     const now = new Date();
-    const h = String(now.getHours()).padStart(2,'0');
-    const m = String(now.getMinutes()).padStart(2,'0');
-    document.getElementById('clock-time').textContent = `${h}:${m}`;
-    document.getElementById('clock-date').textContent =
-      `${DAYS[now.getDay()]}, ${now.getDate()} ${MONTHS[now.getMonth()]}`;
+    document.getElementById('clock').textContent = `${pad(now.getHours())}:${pad(now.getMinutes())}`;
+    document.getElementById('date-str').textContent =
+      `${DAYS_TR[now.getDay()]}, ${now.getDate()} ${MONTHS_TR[now.getMonth()]} ${now.getFullYear()}`;
   }
   updateClock();
   setInterval(updateClock, 1000);
 
-  // Arama motoru toggle
-  const engines = [
-    { name: 'Brave', url: 'https://search.brave.com/search?q=' },
+  // ── SEARCH ──
+  const input = document.getElementById('searchInput');
+  const sugText = document.getElementById('sug-text');
+  const ENGINES = [
     { name: 'DuckDuckGo', url: 'https://duckduckgo.com/?q=' },
-    { name: 'Google', url: 'https://google.com/search?q=' },
+    { name: 'Google',     url: 'https://google.com/search?q=' },
+    { name: 'Brave',      url: 'https://search.brave.com/search?q=' },
+    { name: 'Bing',       url: 'https://bing.com/search?q=' },
   ];
   let engineIdx = 0;
 
-  function toggleEngine() {
-    engineIdx = (engineIdx + 1) % engines.length;
-    document.getElementById('engine-toggle').textContent = engines[engineIdx].name;
-  }
-
-  // Arama
-  document.getElementById('searchInput').addEventListener('keydown', e => {
-    if (e.key !== 'Enter') return;
-    const q = e.target.value.trim();
-    if (!q) return;
-    const isUrl = /^https?:\/\//.test(q) || /^[a-zA-Z0-9-]+\.[a-zA-Z]{2,}(\/|$)/.test(q);
-    window.location.href = isUrl
-      ? (q.startsWith('http') ? q : 'https://' + q)
-      : engines[engineIdx].url + encodeURIComponent(q);
+  document.getElementById('engineBtn').addEventListener('click', () => {
+    engineIdx = (engineIdx + 1) % ENGINES.length;
+    document.getElementById('engineBtn').textContent = ENGINES[engineIdx].name;
   });
 
-  // Fake session stats (ileride gerçek uBlock verisiyle değişecek)
-  function animateCount(el, target) {
-    let current = 0;
-    const step = Math.ceil(target / 40);
-    const interval = setInterval(() => {
-      current = Math.min(current + step, target);
-      el.textContent = current;
-      if (current >= target) clearInterval(interval);
-    }, 30);
+  input.addEventListener('input', () => {
+    sugText.textContent = input.value ? `"${input.value}" için ara` : 'Arama yap…';
+  });
+
+  input.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' && input.value.trim()) {
+      const q = input.value.trim();
+      // URL check
+      if (/^https?:\/\//.test(q) || /^[\w-]+\.[a-z]{2,}/.test(q)) {
+        location.href = q.startsWith('http') ? q : 'https://' + q;
+      } else {
+        location.href = ENGINES[engineIdx].url + encodeURIComponent(q);
+      }
+    }
+  });
+
+  // ── STATS COUNTER ANIMATION ──
+  function countUp(el, target, suffix = '') {
+    let start = 0;
+    const dur = 1200;
+    const step = (timestamp) => {
+      if (!start) start = timestamp;
+      const progress = Math.min((timestamp - start) / dur, 1);
+      const eased = 1 - Math.pow(1 - progress, 3);
+      el.textContent = Math.floor(eased * target) + suffix;
+      if (progress < 1) requestAnimationFrame(step);
+    };
+    requestAnimationFrame(step);
   }
 
-  window.addEventListener('load', () => {
-    setTimeout(() => {
-      animateCount(document.getElementById('stat-trackers'), Math.floor(Math.random() * 80 + 20));
-      animateCount(document.getElementById('stat-ads'), Math.floor(Math.random() * 40 + 10));
-    }, 500);
-  });
+  // Simulate persisted stats (in real browser: read from native API)
+  const adsBlocked = parseInt(localStorage.getItem('sipar_ads') || '247');
+  const trackersBlocked = parseInt(localStorage.getItem('sipar_trackers') || '89');
+
+  setTimeout(() => {
+    countUp(document.getElementById('stat-ads'), adsBlocked);
+    countUp(document.getElementById('stat-trackers'), trackersBlocked);
+  }, 700);
 </script>
-
 </body>
 </html>
