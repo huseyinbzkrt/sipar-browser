@@ -261,7 +261,7 @@ def install_newtab(chrome_dir):
 def main():
     plat = detect_platform()
     print(f"🛡️  Sipar Browser Setup — Platform: {plat}")
-    print(f"📌 Ungoogled-Chromium: v{UNGOOGLED_VERSION}")
+    print(f"📌 Chromium base: v{CHROMIUM_VERSION}")
     print("=" * 55)
 
     os.makedirs(CACHE_DIR, exist_ok=True)
