@@ -14,22 +14,21 @@ import tarfile
 import platform
 
 # --- Config ---
-UNGOOGLED_VERSION = "134.0.6998.35-1"
-CHROMIUM_VERSION = "134.0.6998.35"
+CHROMIUM_VERSION = "146.0.7680.164"
 
 DOWNLOADS = {
     "windows": {
-        "url": f"https://github.com/ungoogled-software/ungoogled-chromium-windows/releases/download/{UNGOOGLED_VERSION}/ungoogled-chromium_{UNGOOGLED_VERSION}_windows_x64.zip",
-        "filename": f"ungoogled-chromium_{UNGOOGLED_VERSION}_windows_x64.zip",
+        "url": "https://github.com/ungoogled-software/ungoogled-chromium-windows/releases/download/146.0.7680.164-1.1/ungoogled-chromium_146.0.7680.164-1.1_windows_x64.zip",
+        "filename": "ungoogled-chromium_146.0.7680.164-1.1_windows_x64.zip",
     },
     "linux": {
-        "url": f"https://github.com/ungoogled-software/ungoogled-chromium-portablelinux/releases/download/{UNGOOGLED_VERSION}/ungoogled-chromium_{UNGOOGLED_VERSION}_linux.tar.xz",
-        "filename": f"ungoogled-chromium_{UNGOOGLED_VERSION}_linux.tar.xz",
+        "url": "https://github.com/ungoogled-software/ungoogled-chromium-portablelinux/releases/download/146.0.7680.164-1/ungoogled-chromium-146.0.7680.164-1-x86_64_linux.tar.xz",
+        "filename": "ungoogled-chromium-146.0.7680.164-1-x86_64_linux.tar.xz",
     },
 }
 
-# uBlock Origin latest
-UBLOCK_URL = "https://github.com/nicedoc/nicedoc.io/raw/refs/heads/master/assets/uBlock0.chromium.zip"
+# uBlock Origin latest (gorhill/uBlock official release)
+UBLOCK_URL = "https://github.com/gorhill/uBlock/releases/download/1.70.0/uBlock0_1.70.0.chromium.zip"
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 BUILD_DIR = os.path.join(ROOT, "build")
