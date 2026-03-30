@@ -112,15 +112,15 @@
     .feat-title { font-size: clamp(26px,3vw,38px); font-weight:800; line-height:1.2; margin-bottom:20px; }
     .feat-desc { font-size:17px; color:var(--muted); line-height:1.8; }
     .feat-visual {
-      background: var(--bg2); border:1px solid var(--border);
       border-radius:20px; overflow:hidden;
-      aspect-ratio:4/3; display:flex; align-items:center; justify-content:center;
-      font-size:80px; position:relative;
+      aspect-ratio:4/3; position:relative;
     }
-    .feat-visual::after {
-      content:''; position:absolute; inset:0;
-      background: radial-gradient(circle at center, rgba(79,142,247,0.06) 0%, transparent 70%);
+    .feat-visual img {
+      width:100%; height:100%; object-fit:cover;
+      display:block; border-radius:20px;
+      transition: transform .4s ease;
     }
+    .feat-visual:hover img { transform: scale(1.03); }
 
     /* NUMBERS */
     .numbers-section {
@@ -282,7 +282,7 @@
       <h2 class="feat-title" id="feat1-title">Reklamlar. İzleyiciler. Hepsi engellendi.</h2>
       <p class="feat-desc" id="feat1-desc">uBlock Origin fabrikadan kurulu gelir. Kurmana, ayarlamana gerek yok. İlk açılıştan itibaren her reklam, her tracker, her parmak izi denemesi engellenir.<br><br>Ve o sinir bozucu "çerezleri kabul et" pop-up'ları? Evet, onlar da.</p>
     </div>
-    <div class="feat-visual">🚫</div>
+    <div class="feat-visual"><img src="assets/features/feat1-ads.jpg" alt="Reklam engelleme"></div>
   </div>
 
   <div class="sep"></div>
@@ -293,7 +293,7 @@
       <h2 class="feat-title" id="feat2-title">Gereksiz her şeyi attık. Sadece hız kaldı.</h2>
       <p class="feat-desc" id="feat2-desc">Reklam yüklenmeyince veri harcamıyorsun. Tracker çalışmayınca CPU'n rahat ediyor. Siteler 2 kat daha hızlı açılıyor.<br><br>Daha az bekleme = daha çok zaman.</p>
     </div>
-    <div class="feat-visual">⚡</div>
+    <div class="feat-visual"><img src="assets/features/feat2-speed.jpg" alt="Performans"></div>
   </div>
 
   <div class="sep"></div>
@@ -304,7 +304,7 @@
       <h2 class="feat-title" id="feat3-title">"Sizi izlemiyoruz" demek kolay. Biz bunu kanıtlıyoruz.</h2>
       <p class="feat-desc" id="feat3-desc">Her satır kod GitHub'da. İstediğin zaman aç, oku, denetle. Gizleyecek bir şeyimiz yok çünkü hiçbir şey toplamıyoruz.<br><br>Bağımsız güvenlik auditi desteği. MIT lisansı.</p>
     </div>
-    <div class="feat-visual">🔍</div>
+    <div class="feat-visual"><img src="assets/features/feat3-code.jpg" alt="Şeffaflık"></div>
   </div>
 
   <div class="sep"></div>
@@ -315,7 +315,7 @@
       <h2 class="feat-title" id="feat4-title">Hiç diyalı yok. Hiç uzantı kurman gerekmiyor.</h2>
       <p class="feat-desc" id="feat4-desc">Sipar kutusundan çıkar çıkmaz çalışır. Her şey varsayılan olarak güvenli ve hızlıdır. Eski tarayıcından favori sayfalarını import et ve hazırsın.<br><br>60 saniyeden az sürer.</p>
     </div>
-    <div class="feat-visual">📦</div>
+    <div class="feat-visual"><img src="assets/features/feat4-setup.jpg" alt="Kurulum"></div>
   </div>
 
 </div>
