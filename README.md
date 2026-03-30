@@ -15,14 +15,6 @@ Sipar, gizlilik, performans ve şeffaflığı ön planda tutan açık kaynaklı 
 - 📊 Şeffaf kaynak kodu — herkes denetleyebilir
 - ⚡ Şişirilmemiş, performans öncelikli
 
-## 💰 Fiyatlandırma
-
-| Plan | Fiyat | İçerik |
-|------|-------|--------|
-| Temel | Ücretsiz | Tam tarayıcı |
-| Sync | 10$/yıl | E2E şifreli senkronizasyon |
-| Pro | 20$/yıl | VPN + Sync |
-| Aile | 30$/yıl | 5 cihaz, tüm özellikler |
 
 ## 🏗️ Mimarî
 
