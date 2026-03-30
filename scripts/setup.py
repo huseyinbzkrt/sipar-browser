@@ -177,17 +177,7 @@ def apply_policies(chrome_dir, plat):
         "UrlKeyedAnonymizedDataCollectionEnabled": False,
     }
 
-    if plat == "windows":
-        policies_dir = os.path.join(chrome_dir, "policies", "managed")
-    else:
-        policies_dir = "/etc/chromium/policies/managed"
-        # Linux'da local build için de yazalım
-        local_policies = os.path.join(chrome_dir, "policies", "managed")
-        os.makedirs(local_policies, exist_ok=True)
-        with open(os.path.join(local_policies, "sipar_privacy.json"), "w") as f:
-            json.dump(policies, f, indent=2)
-        print(f"  ✅ Local policies yazıldı")
-
+    policies_dir = os.path.join(chrome_dir, "policies", "managed")
     os.makedirs(policies_dir, exist_ok=True)
     with open(os.path.join(policies_dir, "sipar_privacy.json"), "w") as f:
         json.dump(policies, f, indent=2)
