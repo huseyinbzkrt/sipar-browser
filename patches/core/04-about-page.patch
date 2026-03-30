@@ -1,0 +1,114 @@
+Description: Rebrand chrome://version and chrome://about pages for Sipar Browser
+Author: Sipar Browser Team <dev@sipar.app>
+Bug: None
+
+This patch modifies the version/about WebUI pages to display Sipar branding
+instead of Chromium. It also registers "sipar://" as an alias scheme that
+redirects to "chrome://" internally, so users can type sipar://settings etc.
+---
+ chrome/browser/ui/webui/version/version_handler.cc |  6 +--
+ chrome/browser/ui/webui/version/version_ui.cc      | 20 +++-----
+ components/version_ui/version_ui_constants.cc      |  8 +--
+ chrome/common/url_constants.cc                     | 10 ++++
+ chrome/common/url_constants.h                      |  4 ++
+ content/browser/webui/url_data_source.cc           |  8 ++-
+
+--- a/components/version_ui/version_ui_constants.cc
++++ b/components/version_ui/version_ui_constants.cc
+@@ -10,11 +10,11 @@ namespace version_ui {
+ 
+ const char kKeyCommandLineName[] = "command_line";
+ const char kKeyCompany[] = "company";
+-const char kKeyCompanyName[] = "The Chromium Authors";
++const char kKeyCompanyName[] = "Sipar Browser Developers";
+ const char kKeyCopyright[] = "copyright";
+ const char kKeyExecutablePath[] = "executable_path";
+ const char kKeyGoogleUpdateIsMachine[] = "google_update_is_machine";
+ const char kKeyLinksTitle[] = "links_title";
+-const char kKeyLinksTitle_value[] = "Chromium Links";
++const char kKeyLinksTitle_value[] = "Sipar Links";
+ const char kKeyOfficialBuild[] = "official";
+ const char kKeyOfficial_value[] = "Official Build";
+ const char kKeyRevision[] = "revision";
+
+--- a/chrome/browser/ui/webui/version/version_ui.cc
++++ b/chrome/browser/ui/webui/version/version_ui.cc
+@@ -45,7 +45,7 @@ void VersionUI::SetVersionDetailsData(content::WebUIDataSource* html_source) {
+   // Product name and version
+   html_source->AddString(version_ui::kKeyProduct,
+-      l10n_util::GetStringFUTF16(IDS_PRODUCT_NAME, kVersionStringUTF16));
++      base::UTF8ToUTF16("Sipar " + version_info::GetVersionNumber()));
+ 
+   // Company name
+-  html_source->AddLocalizedString(version_ui::kKeyCompany,
+-                                  IDS_ABOUT_VERSION_COMPANY_NAME);
++  html_source->AddString(version_ui::kKeyCompany, "Sipar Browser Developers");
+ 
+   // Copyright
+   html_source->AddString(
+       version_ui::kKeyCopyright,
+-      l10n_util::GetStringFUTF16(
+-          IDS_ABOUT_VERSION_COPYRIGHT,
+-          base::TimeFormatYear(base::Time::Now())));
++      base::UTF8ToUTF16("Copyright 2024 Sipar Browser Developers. All rights reserved."));
+
+--- a/chrome/common/url_constants.cc
++++ b/chrome/common/url_constants.cc
+@@ -10,6 +10,7 @@
+ #include "chrome/common/url_constants.h"
+ 
++// Sipar Browser: custom scheme alias for chrome://
++const char kSiparScheme[] = "sipar";
++const char kSiparUIScheme[] = "sipar";
++
+ namespace chrome {
+ 
+ // Add any new chrome:// URLs that are (or might be) exposed to the Internet
+@@ -20,6 +21,8 @@ const char kAboutBlankURL[] = "about:blank";
+ const char kAboutVersionURL[] = "chrome://version/";
++const char kSiparAboutVersionURL[] = "sipar://version/";
++const char kSiparSettingsURL[] = "sipar://settings/";
+ 
+ }  // namespace chrome
+
+--- a/chrome/common/url_constants.h
++++ b/chrome/common/url_constants.h
+@@ -10,6 +10,11 @@
+ #ifndef CHROME_COMMON_URL_CONSTANTS_H_
+ #define CHROME_COMMON_URL_CONSTANTS_H_
+ 
++// Sipar Browser custom URL scheme
++extern const char kSiparScheme[];
++extern const char kSiparUIScheme[];
++
+ namespace chrome {
+ 
++extern const char kSiparAboutVersionURL[];
++extern const char kSiparSettingsURL[];
++
+ }  // namespace chrome
+ 
+ #endif  // CHROME_COMMON_URL_CONSTANTS_H_
+
+--- a/chrome/browser/profiles/profile_manager.cc
++++ b/chrome/browser/profiles/profile_manager.cc
+@@ -85,7 +85,7 @@ void ProfileManager::RegisterSchemes() {
+   // Register the sipar:// scheme so users can type sipar://settings etc.
+   // We handle it by mapping to chrome:// internally.
++  url::AddStandardScheme(kSiparScheme, url::SCHEME_WITH_HOST);
+ 
+-  // Original chrome scheme registration
++  // sipar:// acts as alias - redirect handled in SiparURLRequestJob
+ }
+
+--- a/components/version_ui/resources/about_version.html
++++ b/components/version_ui/resources/about_version.html
+@@ -5,7 +5,7 @@
+ <head>
+ <meta charset="utf-8">
+-<title>About Version</title>
++<title>About Sipar</title>
+ </head>
+ <body>
+-  <div id="logo"><img alt="Chromium" src="product_logo.png"></div>
++  <div id="logo"><img alt="Sipar Browser" src="product_logo.png"></div>

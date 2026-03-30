@@ -1,0 +1,47 @@
+Description: Change user profile directory from ~/.config/chromium to ~/.config/sipar
+Author: Sipar Browser Team <dev@sipar.app>
+Bug: None
+
+Chromium on Linux stores user data in ~/.config/chromium by default.
+This patch changes the directory name to "sipar" so the profile is
+stored in ~/.config/sipar instead.
+
+The directory name is set in chrome/common/chrome_paths_linux.cc in
+the GetDefaultUserDataDirectory() function, in the fallback #else branch
+(i.e., when not building as official Google Chrome).
+---
+ chrome/common/chrome_paths_linux.cc | 8 +++-----
+
+--- a/chrome/common/chrome_paths_linux.cc
++++ b/chrome/common/chrome_paths_linux.cc
+@@ -56,7 +56,7 @@ bool GetDefaultUserDataDirectory(base::FilePath* result) {
+ // This returns <config-home>/<product>, where
+ //   <config-home> is:
+ //     $CHROME_CONFIG_HOME if set
+ //     otherwise $XDG_CONFIG_HOME if set
+ //     otherwise ~/.config
+ //   and <product> is:
+-//     "chromium" for Chromium
++//     "sipar" for Sipar Browser
+ //     "google-chrome" for stable channel official build
+ //     "google-chrome-beta" for beta channel official build
+ //     "google-chrome-unstable" for dev channel official build
+@@ -78,7 +78,7 @@ bool GetDefaultUserDataDirectory(base::FilePath* result) {
+ #if BUILDFLAG(GOOGLE_CHROME_FOR_TESTING_BRANDING)
+   std::string data_dir_basename = "google-chrome-for-testing";
+ #elif BUILDFLAG(GOOGLE_CHROME_BRANDING)
+   std::string data_dir_basename = "google-chrome";
+ #else
+-  std::string data_dir_basename = "chromium";
++  std::string data_dir_basename = "sipar";
+ #endif
+   *result = config_dir.Append(data_dir_basename + GetChannelSuffixForDataDir());
+   return true;
+@@ -92,8 +92,8 @@ void GetUserCacheDirectory(const base::FilePath& profile_dir,
+ //  - if the user-data-dir in the standard place,
+ //     use same subdirectory of the cache directory.
+-//     (this maps ~/.config/google-chrome to ~/.cache/google-chrome as well
+-//      as the same thing for ~/.config/chromium)
++//     (this maps ~/.config/google-chrome to ~/.cache/google-chrome as well
++//      as the same thing for ~/.config/sipar)
+   //  - otherwise, use the profile dir directly.

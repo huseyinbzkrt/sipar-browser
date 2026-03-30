@@ -1,39 +1,205 @@
-Description: Sipar Browser branding — replaces Chromium/Chrome references
-Author: Sipar Browser Team
+Description: Sipar Browser branding — replaces Chromium name/title across core files
+Author: Sipar Browser Team <dev@sipar.app>
+Bug: None
 ---
+ chrome/app/theme/chromium/BRANDING |  8 +++----
+ chrome/app/chromium_strings.grd    | 38 ++++++++++++++++---------------
+
+--- a/chrome/app/theme/chromium/BRANDING
++++ b/chrome/app/theme/chromium/BRANDING
+@@ -1,9 +1,9 @@
+-COMPANY_FULLNAME=The Chromium Authors
+-COMPANY_SHORTNAME=The Chromium Authors
+-PRODUCT_FULLNAME=Chromium
+-PRODUCT_SHORTNAME=Chromium
+-PRODUCT_INSTALLER_FULLNAME=Chromium Installer
+-PRODUCT_INSTALLER_SHORTNAME=Chromium Installer
+-COPYRIGHT=Copyright 2017 The Chromium Authors. All rights reserved.
+-MAC_BUNDLE_ID=org.chromium.Chromium
+-MAC_CREATOR_CODE=Cr24
++COMPANY_FULLNAME=Sipar Browser Developers
++COMPANY_SHORTNAME=Sipar
++PRODUCT_FULLNAME=Sipar Browser
++PRODUCT_SHORTNAME=Sipar
++PRODUCT_INSTALLER_FULLNAME=Sipar Browser Installer
++PRODUCT_INSTALLER_SHORTNAME=Sipar Installer
++COPYRIGHT=Copyright 2024 Sipar Browser Developers. All rights reserved.
++MAC_BUNDLE_ID=app.sipar.browser
++MAC_CREATOR_CODE=Sp24
 
 --- a/chrome/app/chromium_strings.grd
 +++ b/chrome/app/chromium_strings.grd
-@@ -1,6 +1,6 @@
--  <message name="IDS_PRODUCT_NAME" desc="The name of the product">
--    Chromium
-+  <message name="IDS_PRODUCT_NAME" desc="The name of the product">
-+    Sipar
-   </message>
--  <message name="IDS_SHORT_PRODUCT_NAME" desc="The short name of the product">
--    Chromium
-+  <message name="IDS_SHORT_PRODUCT_NAME" desc="The short name of the product">
-+    Sipar
-   </message>
+@@ -1,4 +1,4 @@
+-      <message name="IDS_PRODUCT_NAME" desc="The Chrome application name" translateable="false">
+-          Chromium
+-        </message>
+-        <message name="IDS_SHORT_PRODUCT_NAME" desc="The Chrome application short name." translateable="false">
+-          Chromium
+-        </message>
++      <message name="IDS_PRODUCT_NAME" desc="The Chrome application name" translateable="false">
++          Sipar
++        </message>
++        <message name="IDS_SHORT_PRODUCT_NAME" desc="The Chrome application short name." translateable="false">
++          Sipar
++        </message>
+@@ -1,3 +1,3 @@
+-      <message name="IDS_PRODUCT_DESCRIPTION" desc="Browser description">
+-          Chromium is a web browser that runs webpages and applications with lightning speed. It's fast, stable, and easy to use. Browse the web more safely with malware and phishing protection built into Chromium.
++      <message name="IDS_PRODUCT_DESCRIPTION" desc="Browser description">
++          Sipar is a fast, private, and secure web browser. Browse the web freely without tracking or surveillance.
+         </message>
+@@ -1,3 +1,3 @@
+-      <message name="IDS_WELCOME_TO_CHROME" desc="Welcoming text announced via screen readers the first time Chrome is launched at the conclusion of installation.">
+-          Welcome to Chromium; new browser window opened
++      <message name="IDS_WELCOME_TO_CHROME" desc="Welcoming text announced via screen readers the first time Chrome is launched at the conclusion of installation.">
++          Welcome to Sipar; new browser window opened
+         </message>
+@@ -1,3 +1,3 @@
+-      <message name="IDS_FIRST_RUN_DIALOG_WINDOW_TITLE" desc="Window title of First Run dialog on Mac and Linux, displayed in title bar">
+-          Welcome to Chromium
++      <message name="IDS_FIRST_RUN_DIALOG_WINDOW_TITLE" desc="Window title of First Run dialog on Mac and Linux, displayed in title bar">
++          Welcome to Sipar
+         </message>
+@@ -1,3 +1,3 @@
+-      <message name="IDS_TERMS_DIALOG_TITLE" desc="Window title for the Terms of Service dialog">
+-          Chromium Additional Terms of Service
++      <message name="IDS_TERMS_DIALOG_TITLE" desc="Window title for the Terms of Service dialog">
++          Sipar Browser Terms of Service
+         </message>
+@@ -1,3 +1,3 @@
+-      <message name="IDS_TERMS_DIALOG_ACCESSIBILITY_LABEL" desc="Accessibility label for the Terms of Service in the dialog. The actual terms text is just a placeholder for branded builds.">
+-          Chromium Additional Terms of Service
++      <message name="IDS_TERMS_DIALOG_ACCESSIBILITY_LABEL" desc="Accessibility label for the Terms of Service in the dialog. The actual terms text is just a placeholder for branded builds.">
++          Sipar Browser Terms of Service
+         </message>
+@@ -2,4 +2,4 @@
+-        <message name="IDS_BROWSER_WINDOW_TITLE_FORMAT" desc="The format for titles displayed in tabs and popup windows">
+-            <ph name="PAGE_TITLE">$1<ex>Google</ex></ph> - Chromium
+-          </message>
++        <message name="IDS_BROWSER_WINDOW_TITLE_FORMAT" desc="The format for titles displayed in tabs and popup windows">
++            <ph name="PAGE_TITLE">$1<ex>Google</ex></ph> - Sipar
++          </message>
+@@ -2,4 +2,4 @@
+-      <message name="IDS_CAPTIVE_PORTAL_BROWSER_WINDOW_TITLE_FORMAT" desc="The format for titles displayed in captive portal popup windows">
+-          <ph name="PAGE_TITLE">$1<ex>Google</ex></ph> - Network Sign-in - Chromium
++      <message name="IDS_CAPTIVE_PORTAL_BROWSER_WINDOW_TITLE_FORMAT" desc="The format for titles displayed in captive portal popup windows">
++          <ph name="PAGE_TITLE">$1<ex>Google</ex></ph> - Network Sign-in - Sipar
+         </message>
+@@ -2,4 +2,4 @@
+-          <message name="IDS_ACCESSIBLE_BROWSER_WINDOW_TITLE_FORMAT" desc="The format for the accessible name of a tabbed browser window">
+-            <ph name="PAGE_TITLE">$1<ex>Google</ex></ph> - Chromium
+-          </message>
++          <message name="IDS_ACCESSIBLE_BROWSER_WINDOW_TITLE_FORMAT" desc="The format for the accessible name of a tabbed browser window">
++            <ph name="PAGE_TITLE">$1<ex>Google</ex></ph> - Sipar
++          </message>
+@@ -1,3 +1,3 @@
+-      <message name="IDS_ACCESSIBLE_BETA_BROWSER_WINDOW_TITLE_FORMAT" desc="The format for the accessible name of a tabbed browser window for the beta channel version of the browser">
+-        <ph name="PAGE_TITLE">$1<ex>Google</ex></ph> - Chromium Beta
++      <message name="IDS_ACCESSIBLE_BETA_BROWSER_WINDOW_TITLE_FORMAT" desc="The format for the accessible name of a tabbed browser window for the beta channel version of the browser">
++        <ph name="PAGE_TITLE">$1<ex>Google</ex></ph> - Sipar Beta
+       </message>
+@@ -1,3 +1,3 @@
+-      <message name="IDS_ACCESSIBLE_DEV_BROWSER_WINDOW_TITLE_FORMAT" desc="The format for the accessible name of a tabbed browser window for the developer (dev) channel version of the browser">
+-        <ph name="PAGE_TITLE">$1<ex>Google</ex></ph> - Chromium Dev
++      <message name="IDS_ACCESSIBLE_DEV_BROWSER_WINDOW_TITLE_FORMAT" desc="The format for the accessible name of a tabbed browser window for the developer (dev) channel version of the browser">
++        <ph name="PAGE_TITLE">$1<ex>Google</ex></ph> - Sipar Dev
+       </message>
+@@ -1,3 +1,3 @@
+-          <message name="IDS_ABOUT_VERSION_COMPANY_NAME" desc="Company name on the about pages">
+-            The Chromium Authors
++          <message name="IDS_ABOUT_VERSION_COMPANY_NAME" desc="Company name on the about pages">
++            Sipar Browser Developers
+           </message>
+@@ -2,4 +2,4 @@
+-          <message name="IDS_ABOUT_VERSION_COPYRIGHT" desc="Copyright information on the about pages">
+-            Copyright <ph name="YEAR">{0,date,y}<ex>2016</ex></ph> The Chromium Authors. All rights reserved.
++          <message name="IDS_ABOUT_VERSION_COPYRIGHT" desc="Copyright information on the about pages">
++            Copyright <ph name="YEAR">{0,date,y}<ex>2016</ex></ph> Sipar Browser Developers. All rights reserved.
+           </message>
+@@ -1,3 +1,3 @@
+-      <message name="IDS_TASK_MANAGER_TITLE" desc="The title of the Task Manager window">
+-          Task Manager - Chromium
++      <message name="IDS_TASK_MANAGER_TITLE" desc="The title of the Task Manager window">
++          Task Manager - Sipar
+         </message>
+@@ -1,3 +1,3 @@
+-      <message name="IDS_SESSION_CRASHED_VIEW_UMA_OPTIN" desc="Text besides the checkbox to let users optin to UMA in the restore from previous crash bubble.">
+-        Help make Chromium better by sending crash reports and <ph name="UMA_LINK">$1<ex>usage statistics</ex></ph> to Google
++      <message name="IDS_SESSION_CRASHED_VIEW_UMA_OPTIN" desc="Text besides the checkbox to let users optin to UMA in the restore from previous crash bubble.">
++        Help improve Sipar by sending anonymous crash reports
+       </message>
+@@ -1,3 +1,3 @@
+-      <message name="IDS_RESET_PROFILE_SETTINGS_EXPLANATION_IN_BULLET_POINTS" desc="A label formatted with bullet points describing the consequences of the 'reset profile settings' feature">
+-        This action will:
+-        <ph name="LINE_BREAKS">&lt;br&gt;&lt;br&gt;</ph>
+-         • Reset some Chromium settings and Chromium shortcuts
++      <message name="IDS_RESET_PROFILE_SETTINGS_EXPLANATION_IN_BULLET_POINTS" desc="A label formatted with bullet points describing the consequences of the 'reset profile settings' feature">
++        This action will:
++        <ph name="LINE_BREAKS">&lt;br&gt;&lt;br&gt;</ph>
++         • Reset some Sipar settings and Sipar shortcuts
 
 --- a/chrome/app/generated_resources.grd
 +++ b/chrome/app/generated_resources.grd
-@@ -1,4 +1,4 @@
--  <message name="IDS_BROWSER_NAME">Chrome</message>
-+  <message name="IDS_BROWSER_NAME">Sipar</message>
+@@ -1,3 +1,3 @@
+-  <message name="IDS_BROWSER_NAME" desc="The product name">
+-    Chromium
++  <message name="IDS_BROWSER_NAME" desc="The product name">
++    Sipar
+   </message>
+
+--- a/chrome/app/settings_chromium_strings.grdp
++++ b/chrome/app/settings_chromium_strings.grdp
+@@ -1,3 +1,3 @@
+-  <message name="IDS_SETTINGS_ABOUT_PROGRAM" desc="The label for the button that opens the About Chrome page from Chrome settings.">
+-    About Chromium
++  <message name="IDS_SETTINGS_ABOUT_PROGRAM" desc="The label for the button that opens the About Chrome page from Chrome settings.">
++    About Sipar
+   </message>
+@@ -1,3 +1,3 @@
+-  <message name="IDS_SETTINGS_PRODUCT_NAME" desc="Product name used in strings throughout settings">
+-    Chromium
++  <message name="IDS_SETTINGS_PRODUCT_NAME" desc="Product name used in strings throughout settings">
++    Sipar
+   </message>
+
+--- a/build/linux/chrome.info
++++ b/build/linux/chrome.info
+@@ -1,3 +1,3 @@
+-[BROWSER]
+-Name=Chromium Web Browser
+-GenericName=Web Browser
+-Comment=Access the Internet
+-Exec=chromium %U
+-Icon=chromium
+-Categories=Network;WebBrowser;
+-StartupNotify=true
+-Terminal=false
+-Type=Application
+-MimeType=text/html;text/xml;application/xhtml_xml;image/webp;x-scheme-handler/http;x-scheme-handler/https;x-scheme-handler/ftp;
++[BROWSER]
++Name=Sipar Browser
++GenericName=Web Browser
++Comment=Fast, private and secure internet browser
++Exec=sipar %U
++Icon=sipar
++Categories=Network;WebBrowser;
++StartupNotify=true
++Terminal=false
++Type=Application
++MimeType=text/html;text/xml;application/xhtml_xml;image/webp;x-scheme-handler/http;x-scheme-handler/https;x-scheme-handler/ftp;
 
 --- a/chrome/common/chrome_constants.cc
 +++ b/chrome/common/chrome_constants.cc
-@@ -1,3 +1,3 @@
--const char kBrowserProcessExecutableName[] = "chrome";
-+const char kBrowserProcessExecutableName[] = "sipar";
-
---- a/chrome/installer/util/browser_distribution.cc
-+++ b/chrome/installer/util/browser_distribution.cc
-@@ -1,5 +1,5 @@
--  return "Chromium";
-+  return "Sipar Browser";
-
-# Not: Bu patch sembolik bir örnektir.
-# Gerçek patch'ler Chromium kaynak koduna göre güncellenmeli.
-# Tam branding için: chrome/app/theme/chromium/ klasöründeki ikonlar değiştirilmeli
+@@ -23,7 +23,7 @@
+ #elif BUILDFLAG(IS_MAC)
+ const base::FilePath::CharType kBrowserProcessExecutableName[] =
+     FILE_PATH_LITERAL("Chromium");
+-const base::FilePath::CharType kHelperProcessExecutableName[] =
+-    FILE_PATH_LITERAL("Chromium Helper");
++const base::FilePath::CharType kHelperProcessExecutableName[] =
++    FILE_PATH_LITERAL("Sipar Helper");
+ #elif BUILDFLAG(IS_POSIX)
+-const base::FilePath::CharType kBrowserProcessExecutableName[] =
+-    FILE_PATH_LITERAL("chrome");
++const base::FilePath::CharType kBrowserProcessExecutableName[] =
++    FILE_PATH_LITERAL("sipar");
