@@ -73,17 +73,17 @@ StartupWMClass=chromium-browser
     with open(desktop_path, "w") as f:
         f.write(desktop)
 
-    # Wrapper script
-    wrapper = f"""#!/bin/bash
+    # Wrapper script — --load-extension ile New Tab extension'ı yükle
+    wrapper = """#!/bin/bash
 # Sipar Browser Launcher
 SIPAR_DIR="$(dirname "$(readlink -f "$0")")"
 exec "$SIPAR_DIR/chrome" \\
     --no-default-browser-check \\
     --no-first-run \\
-    --flag-switches-begin \\
-    --disable-features=MediaRouter \\
+    --load-extension="$SIPAR_DIR/Extensions/sipar-newtab" \\
+    --disable-features=MediaRouter,ChromeWhatsNewUI \\
     --enable-features=GlobalPrivacyControl \\
-    --flag-switches-end \\
+    --class=Sipar \\
     "$@"
 """
 
@@ -91,6 +91,26 @@ exec "$SIPAR_DIR/chrome" \\
     with open(wrapper_path, "w") as f:
         f.write(wrapper)
     os.chmod(wrapper_path, 0o755)
+
+    # Logo kopyala (desktop icon için)
+    logo = os.path.join(ROOT, "branding", "logo.png")
+    if os.path.exists(logo):
+        shutil.copy2(logo, os.path.join(chrome_dir, "sipar_logo.png"))
+
+    # .desktop güncelle — sipar wrapper'ı kullan
+    desktop = f"""[Desktop Entry]
+Name=Sipar Browser
+Comment=Gizlilik odakli acik kaynak tarayici
+Exec={chrome_dir}/sipar %U
+Terminal=false
+Icon={chrome_dir}/sipar_logo.png
+Type=Application
+Categories=Network;WebBrowser;
+MimeType=text/html;text/xml;application/xhtml+xml;x-scheme-handler/http;x-scheme-handler/https;
+StartupWMClass=Sipar
+"""
+    with open(os.path.join(chrome_dir, "sipar-browser.desktop"), "w") as f:
+        f.write(desktop)
 
     print("  ✅ .desktop + launcher yazıldı")
 
