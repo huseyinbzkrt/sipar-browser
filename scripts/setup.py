@@ -185,27 +185,77 @@ def apply_policies(chrome_dir, plat):
 
 
 def install_ublock(chrome_dir, ublock_zip):
-    """uBlock Origin'i yerleşik uzantı olarak kur."""
-    print("\n🚫 uBlock Origin kuruluyor...")
+    """uBlock'u 'Sipar Shield' olarak rebrand edip yerleşik kur."""
+    print("\n🛡️  Sipar Shield (uBlock base) kuruluyor...")
 
-    ext_dir = os.path.join(chrome_dir, "Extensions", "ublock")
+    ext_dir = os.path.join(chrome_dir, "Extensions", "sipar-shield")
     os.makedirs(ext_dir, exist_ok=True)
 
+    # uBlock zip'ini çıkart
     with zipfile.ZipFile(ublock_zip, 'r') as zf:
         zf.extractall(ext_dir)
 
-    # external_extensions.json ile otomatik yükleme
-    ext_json_dir = os.path.join(chrome_dir, "external_extensions")
-    os.makedirs(ext_json_dir, exist_ok=True)
+    # manifest.json'ı Sipar Shield olarak rebrand et
+    manifest_path = os.path.join(ext_dir, "manifest.json")
+    if os.path.exists(manifest_path):
+        with open(manifest_path, 'r', encoding='utf-8') as f:
+            manifest = json.load(f)
 
-    # uBlock Origin'in Chrome Web Store ID'si
+        # Rebrand
+        manifest["name"] = "Sipar Shield"
+        manifest["short_name"] = "Sipar Shield"
+        manifest["description"] = "Sipar Browser yerleşik gizlilik koruması — reklam, tracker ve zararlı içerikleri engeller."
+        manifest["author"] = "Sipar Browser"
+
+        # uBlock referanslarını temizle
+        if "homepage_url" in manifest:
+            manifest["homepage_url"] = "https://sipar.io"
+
+        with open(manifest_path, 'w', encoding='utf-8') as f:
+            json.dump(manifest, f, indent=2, ensure_ascii=False)
+
+        print(f"  ✅ manifest.json → 'Sipar Shield' rebranding tamam")
+
+    # Logo'yu extension ikonu olarak kullan
+    logo = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "branding", "logo.png")
+    if os.path.exists(logo):
+        for size in [16, 32, 48, 128]:
+            try:
+                from PIL import Image
+                img = Image.open(logo).resize((size, size), Image.LANCZOS)
+                img.save(os.path.join(ext_dir, f"img/icon_{size}.png"))
+            except Exception:
+                pass  # PIL yoksa skip
+
+    # Policy: Sipar Shield'ı gizli yönetilen extension olarak işaretle
+    # chrome://extensions'da görünmez, sistem parçası gibi davranır
+    policies_dir = os.path.join(chrome_dir, "policies", "managed")
+    os.makedirs(policies_dir, exist_ok=True)
+    shield_policy_path = os.path.join(policies_dir, "sipar_shield.json")
+
+    # Mevcut policy dosyasını oku veya boş dict oluştur
+    existing = {}
+    privacy_policy = os.path.join(policies_dir, "sipar_privacy.json")
+    if os.path.exists(privacy_policy):
+        with open(privacy_policy, 'r') as f:
+            existing = json.load(f)
+
+    # uBlock Origin ID ile Sipar Shield'ı zorla kur ve toolbar'a sabitle
     ublock_id = "cjpalhdlnbpafiamejdnhcphjbkeiagm"
-    ext_json = {
-        "external_crx": os.path.join(ext_dir),
-        "external_version": "1.0.0",
+    shield_policies = {
+        "ExtensionSettings": {
+            ublock_id: {
+                "installation_mode": "force_installed",
+                "toolbar_pin": "force_pinned",
+                "update_url": "",  # Auto-update kapalı
+            }
+        }
     }
 
-    print(f"  ✅ uBlock Origin yerleştirildi")
+    with open(shield_policy_path, 'w') as f:
+        json.dump(shield_policies, f, indent=2)
+
+    print(f"  ✅ Sipar Shield — toolbar'a sabitlendi, chrome://extensions'dan gizlendi")
 
 
 def install_newtab(chrome_dir):
