@@ -192,6 +192,12 @@
     .footer-links a:hover { color:var(--text); }
     .footer-copy { font-size:12px; color:var(--muted); }
 
+    /* Lang toggle */
+    .lang-toggle { display:flex; gap:4px; margin-left:20px; }
+    .lang-btn { background:none; border:1px solid var(--border); color:var(--muted); padding:5px 11px; border-radius:6px; font-size:12px; font-weight:600; cursor:pointer; transition:all .15s; }
+    .lang-btn.active { border-color:var(--accent); color:var(--accent); background:rgba(79,142,247,0.08); }
+    .lang-btn:hover { border-color:var(--accent); color:var(--text); }
+
     @media(max-width:900px) {
       nav { padding:16px 20px; }
       nav a.nav-link { display:none; }
@@ -217,20 +223,24 @@
     <a href="#features" class="nav-link">Özellikler</a>
     <a href="#compare" class="nav-link">Karşılaştırma</a>
     <a href="https://github.com/huseyinbzkrt/sipar-browser" class="nav-link" target="_blank">GitHub</a>
-    <a href="#waitlist" class="btn-nav">Erken Erişim →</a>
+    <a href="#waitlist" class="btn-nav" id="nav-early">Erken Erişim →</a>
+    <div class="lang-toggle">
+      <button class="lang-btn active" onclick="setLang('tr')">TR</button>
+      <button class="lang-btn" onclick="setLang('en')">EN</button>
+    </div>
   </div>
 </nav>
 
 <!-- HERO -->
 <div class="hero">
   <div class="hero-left">
-    <h1>Reklamları engelle.<br>Verini koru.<br><span>Sadece sörf yap.</span></h1>
-    <p>Sipar, seni izlemeyen, verini satmayan ve ne yaptığını kimseye söylemeyen bir tarayıcıdır. Sadece tarayıcı değiştirerek.</p>
+    <h1 id="hero-h1">Reklamları engelle.<br>Verini koru.<br><span>Sadece sörf yap.</span></h1>
+    <p id="hero-p">Sipar, seni izlemeyen, verini satmayan ve ne yaptığını kimseye söylemeyen bir tarayıcıdır. Sadece tarayıcı değiştirerek.</p>
     <div class="hero-btns">
-      <a href="#waitlist" class="btn-primary">Erken Erişime Katıl</a>
+      <a href="#waitlist" class="btn-primary" id="hero-btn1">Erken Erişime Katıl</a>
       <a href="https://github.com/huseyinbzkrt/sipar-browser" target="_blank" class="btn-outline">GitHub ↗</a>
     </div>
-    <p class="hero-note">Açık kaynak · MIT Lisansı · <a href="https://github.com/huseyinbzkrt/sipar-browser">Kaynak kodunu incele</a></p>
+    <p class="hero-note" id="hero-note">Açık kaynak · MIT Lisansı · <a href="https://github.com/huseyinbzkrt/sipar-browser">Kaynak kodunu incele</a></p>
   </div>
   <div class="hero-right">
     <div class="shield-wrap">
@@ -250,15 +260,15 @@
   <div class="numbers-inner">
     <div>
       <div class="num-val">0</div>
-      <div class="num-label">Telemetry — hiç, hiçbir zaman</div>
+      <div class="num-label" id="num1-label">Telemetry — hiç, hiçbir zaman</div>
     </div>
     <div>
       <div class="num-val">100%</div>
-      <div class="num-label">Açık kaynak kod</div>
+      <div class="num-label">Open source</div>
     </div>
     <div>
       <div class="num-val">2×</div>
-      <div class="num-label">Daha hızlı sayfa yüklemesi</div>
+      <div class="num-label" id="num3-label">Daha hızlı sayfa yüklemesi</div>
     </div>
   </div>
 </div>
@@ -268,9 +278,9 @@
 
   <div class="feature-block">
     <div>
-      <p class="feat-tag">Gizlilik</p>
-      <h2 class="feat-title">Reklamlar. İzleyiciler. Hepsi engellendi.</h2>
-      <p class="feat-desc">uBlock Origin fabrikadan kurulu gelir. Kurmana, ayarlamana gerek yok. İlk açılıştan itibaren her reklam, her tracker, her parmak izi denemesi engellenir.<br><br>Ve o sinir bozucu "çerezleri kabul et" pop-up'ları? Evet, onlar da.</p>
+      <p class="feat-tag" id="feat1-tag">Gizlilik</p>
+      <h2 class="feat-title" id="feat1-title">Reklamlar. İzleyiciler. Hepsi engellendi.</h2>
+      <p class="feat-desc" id="feat1-desc">uBlock Origin fabrikadan kurulu gelir. Kurmana, ayarlamana gerek yok. İlk açılıştan itibaren her reklam, her tracker, her parmak izi denemesi engellenir.<br><br>Ve o sinir bozucu "çerezleri kabul et" pop-up'ları? Evet, onlar da.</p>
     </div>
     <div class="feat-visual">🚫</div>
   </div>
@@ -279,9 +289,9 @@
 
   <div class="feature-block reverse">
     <div>
-      <p class="feat-tag">Performans</p>
-      <h2 class="feat-title">Gereksiz her şeyi attık. Sadece hız kaldı.</h2>
-      <p class="feat-desc">Reklam yüklenmeyince veri harcamıyorsun. Tracker çalışmayınca CPU'n rahat ediyor. Siteler 2 kat daha hızlı açılıyor.<br><br>Daha az bekleme = daha çok zaman.</p>
+      <p class="feat-tag" id="feat2-tag">Performans</p>
+      <h2 class="feat-title" id="feat2-title">Gereksiz her şeyi attık. Sadece hız kaldı.</h2>
+      <p class="feat-desc" id="feat2-desc">Reklam yüklenmeyince veri harcamıyorsun. Tracker çalışmayınca CPU'n rahat ediyor. Siteler 2 kat daha hızlı açılıyor.<br><br>Daha az bekleme = daha çok zaman.</p>
     </div>
     <div class="feat-visual">⚡</div>
   </div>
@@ -290,9 +300,9 @@
 
   <div class="feature-block">
     <div>
-      <p class="feat-tag">Şeffaflık</p>
-      <h2 class="feat-title">"Sizi izlemiyoruz" demek kolay. Biz bunu kanıtlıyoruz.</h2>
-      <p class="feat-desc">Her satır kod GitHub'da. İstediğin zaman aç, oku, denetle. Gizleyecek bir şeyimiz yok çünkü hiçbir şey toplamıyoruz.<br><br>Bağımsız güvenlik auditi desteği. MIT lisansı.</p>
+      <p class="feat-tag" id="feat3-tag">Şeffaflık</p>
+      <h2 class="feat-title" id="feat3-title">"Sizi izlemiyoruz" demek kolay. Biz bunu kanıtlıyoruz.</h2>
+      <p class="feat-desc" id="feat3-desc">Her satır kod GitHub'da. İstediğin zaman aç, oku, denetle. Gizleyecek bir şeyimiz yok çünkü hiçbir şey toplamıyoruz.<br><br>Bağımsız güvenlik auditi desteği. MIT lisansı.</p>
     </div>
     <div class="feat-visual">🔍</div>
   </div>
@@ -301,9 +311,9 @@
 
   <div class="feature-block reverse">
     <div>
-      <p class="feat-tag">Kurulum</p>
-      <h2 class="feat-title">Hiç diyalı yok. Hiç uzantı kurman gerekmiyor.</h2>
-      <p class="feat-desc">Sipar kutusundan çıkar çıkmaz çalışır. Her şey varsayılan olarak güvenli ve hızlıdır. Eski tarayıcından favori sayfalarını import et ve hazırsın.<br><br>60 saniyeden az sürer.</p>
+      <p class="feat-tag" id="feat4-tag">Kurulum</p>
+      <h2 class="feat-title" id="feat4-title">Hiç diyalı yok. Hiç uzantı kurman gerekmiyor.</h2>
+      <p class="feat-desc" id="feat4-desc">Sipar kutusundan çıkar çıkmaz çalışır. Her şey varsayılan olarak güvenli ve hızlıdır. Eski tarayıcından favori sayfalarını import et ve hazırsın.<br><br>60 saniyeden az sürer.</p>
     </div>
     <div class="feat-visual">📦</div>
   </div>
@@ -314,8 +324,8 @@
 <div class="sep"></div>
 <div class="compare-section" id="compare">
   <div class="section-header">
-    <h2>Rakamlar konuşsun.</h2>
-    <p>Sipar'ı diğer tarayıcılarla karşılaştırın.</p>
+    <h2 id="cmp-title">Rakamlar konuşsun.</h2>
+    <p id="cmp-sub">Sipar'ı diğer tarayıcılarla karşılaştırın.</p>
   </div>
   <table>
     <thead>
@@ -328,12 +338,12 @@
       </tr>
     </thead>
     <tbody>
-      <tr><td>Sıfır telemetry</td><td><span class="y">✓</span></td><td><span class="n">✗</span></td><td><span class="n">✗</span></td><td><span class="p">Kısmi</span></td></tr>
-      <tr><td>Yerleşik reklam engelleme</td><td><span class="y">✓</span></td><td><span class="n">✗</span></td><td><span class="y">✓</span></td><td><span class="n">✗</span></td></tr>
-      <tr><td>Kendi kripto/reklam sistemi</td><td><span class="y">Yok</span></td><td><span class="y">Yok</span></td><td><span class="n">BAT var</span></td><td><span class="y">Yok</span></td></tr>
-      <tr><td>Varsayılan güvenli DNS</td><td><span class="y">✓</span></td><td><span class="n">✗</span></td><td><span class="p">Kısmi</span></td><td><span class="p">Kısmi</span></td></tr>
-      <tr><td>Tam açık kaynak</td><td><span class="y">✓</span></td><td><span class="n">✗</span></td><td><span class="y">✓</span></td><td><span class="y">✓</span></td></tr>
-      <tr><td>Google hesabı gerektirmez</td><td><span class="y">✓</span></td><td><span class="n">✗</span></td><td><span class="y">✓</span></td><td><span class="y">✓</span></td></tr>
+      <tr><td id="cmp-r1">Sıfır telemetry</td><td><span class="y">✓</span></td><td><span class="n">✗</span></td><td><span class="n">✗</span></td><td><span class="p">Kısmi</span></td></tr>
+      <tr><td id="cmp-r2">Yerleşik reklam engelleme</td><td><span class="y">✓</span></td><td><span class="n">✗</span></td><td><span class="y">✓</span></td><td><span class="n">✗</span></td></tr>
+      <tr><td id="cmp-r3">Kendi kripto/reklam sistemi</td><td><span class="y">Yok</span></td><td><span class="y">Yok</span></td><td><span class="n" id="cmp-brave-no">BAT var</span></td><td><span class="y">Yok</span></td></tr>
+      <tr><td id="cmp-r4">Varsayılan güvenli DNS</td><td><span class="y">✓</span></td><td><span class="n">✗</span></td><td><span class="p">Kısmi</span></td><td><span class="p">Kısmi</span></td></tr>
+      <tr><td id="cmp-r5">Tam açık kaynak</td><td><span class="y">✓</span></td><td><span class="n">✗</span></td><td><span class="y">✓</span></td><td><span class="y">✓</span></td></tr>
+      <tr><td id="cmp-r6">Google hesabı gerektirmez</td><td><span class="y">✓</span></td><td><span class="n">✗</span></td><td><span class="y">✓</span></td><td><span class="y">✓</span></td></tr>
     </tbody>
   </table>
 </div>
@@ -342,8 +352,8 @@
 <div class="sep"></div>
 <div class="dl-section" id="waitlist">
   <div class="dl-inner">
-    <h2>Beta'ya ilk sen gir.</h2>
-    <p>Sipar hazır olduğunda ilk haber alan sen ol. Başka bir şey göndermiyoruz — söz.</p>
+    <h2 id="dl-title">Beta'ya ilk sen gir.</h2>
+    <p id="dl-sub">Sipar hazır olduğunda ilk haber alan sen ol. Başka bir şey göndermiyoruz — söz.</p>
     <form class="wl-form" onsubmit="submit(event)">
       <input type="email" id="emailInput" placeholder="eposta@adresin.com" required>
       <button type="submit" id="wl-btn">Katıl →</button>
@@ -355,31 +365,27 @@
 <!-- FAQ -->
 <div class="sep"></div>
 <div class="faq-section">
-  <h2>Sıkça sorulanlar</h2>
+  <h2 id="faq-title">Sıkça sorulanlar</h2>
 
   <div class="faq-item">
-    <div class="faq-q">Sipar güvenli mi?</div>
-    <div class="faq-a">Evet. Sipar, Google bağımlılıkları temizlenmiş Chromium'un üzerine inşa edilmiştir. Tüm kaynak kodu açık ve denetlenebilir. Varsayılan olarak tracker engelleme, güvenli DNS ve sıfır telemetry ile gelir.</div>
+    <div class="faq-q" id="faq-q1">Sipar güvenli mi?</div>
+    <div class="faq-a" id="faq-a1">Evet. Sipar, Google bağımlılıkları temizlenmiş Chromium'un üzerine inşa edilmiştir. Tüm kaynak kodu açık ve denetlenebilir. Varsayılan olarak tracker engelleme, güvenli DNS ve sıfır telemetry ile gelir.</div>
   </div>
-
   <div class="faq-item">
-    <div class="faq-q">Hangi platformlarda çalışacak?</div>
-    <div class="faq-a">İlk sürümde Windows ve Linux. Ardından macOS. Mobil (Android) ise daha sonra gelecek.</div>
+    <div class="faq-q" id="faq-q2">Hangi platformlarda çalışacak?</div>
+    <div class="faq-a" id="faq-a2">İlk sürümde Windows ve Linux. Ardından macOS. Mobil (Android) ise daha sonra gelecek.</div>
   </div>
-
   <div class="faq-item">
-    <div class="faq-q">Ücretsiz mi?</div>
-    <div class="faq-a">Temel tarayıcı tamamen ücretsiz ve açık kaynak olacak. İleride senkronizasyon ve VPN gibi premium özellikler için isteğe bağlı ücretli planlar gelebilir.</div>
+    <div class="faq-q" id="faq-q3">Ücretsiz mi?</div>
+    <div class="faq-a" id="faq-a3">Temel tarayıcı tamamen ücretsiz ve açık kaynak olacak. İleride senkronizasyon ve VPN gibi premium özellikler için isteğe bağlı ücretli planlar gelebilir.</div>
   </div>
-
   <div class="faq-item">
-    <div class="faq-q">Chrome uzantılarımı kullanabilir miyim?</div>
-    <div class="faq-a">Evet. Sipar Chromium tabanlı olduğu için Chrome Web Store uzantılarının büyük çoğunluğu çalışır.</div>
+    <div class="faq-q" id="faq-q4">Chrome uzantılarımı kullanabilir miyim?</div>
+    <div class="faq-a" id="faq-a4">Evet. Sipar Chromium tabanlı olduğu için Chrome Web Store uzantılarının büyük çoğunluğu çalışır.</div>
   </div>
-
   <div class="faq-item">
-    <div class="faq-q">Ne zaman çıkacak?</div>
-    <div class="faq-a">Aktif geliştirme devam ediyor. Erken erişim listesine katıl, beta hazır olunca ilk sen haber alırsın.</div>
+    <div class="faq-q" id="faq-q5">Ne zaman çıkacak?</div>
+    <div class="faq-a" id="faq-a5">Aktif geliştirme devam ediyor. Erken erişim listesine katıl, beta hazır olunca ilk sen haber alırsın.</div>
   </div>
 </div>
 
@@ -395,6 +401,92 @@
 </footer>
 
 <script>
+// ── DİL DESTEĞİ ──
+const translations = {
+  tr: {
+    'hero-h1': 'Reklamları engelle.<br>Verini koru.<br><span style="color:var(--accent)">Sadece sörf yap.</span>',
+    'hero-p': 'Sipar, seni izlemeyen, verini satmayan ve ne yaptığını kimseye söylemeyen bir tarayıcıdır. Sadece tarayıcı değiştirerek.',
+    'hero-btn1': 'Erken Erişime Katıl',
+    'hero-note': 'Açık kaynak · MIT Lisansı · <a href="https://github.com/huseyinbzkrt/sipar-browser">Kaynak kodunu incele</a>',
+    'num1-label': 'Telemetry — hiç, hiçbir zaman',
+    'num3-label': 'Daha hızlı sayfa yüklemesi',
+    'feat1-tag': 'Gizlilik', 'feat1-title': 'Reklamlar. İzleyiciler. Hepsi engellendi.', 'feat1-desc': 'uBlock Origin fabrikadan kurulu gelir. Kurmana, ayarlamana gerek yok. İlk açılıştan itibaren her reklam, her tracker, her parmak izi denemesi engellenir.<br><br>Ve o sinir bozucu "çerezleri kabul et" pop-up\'ları? Evet, onlar da.',
+    'feat2-tag': 'Performans', 'feat2-title': 'Gereksiz her şeyi attık. Sadece hız kaldı.', 'feat2-desc': 'Reklam yüklenmeyince veri harcamıyorsun. Tracker çalışmayınca CPU\'n rahat ediyor. Siteler 2 kat daha hızlı açılıyor.<br><br>Daha az bekleme = daha çok zaman.',
+    'feat3-tag': 'Şeffaflık', 'feat3-title': '"Sizi izlemiyoruz" demek kolay. Biz bunu kanıtlıyoruz.', 'feat3-desc': 'Her satır kod GitHub\'da. İstediğin zaman aç, oku, denetle. Gizleyecek bir şeyimiz yok çünkü hiçbir şey toplamıyoruz.<br><br>Bağımsız güvenlik auditi desteği. MIT lisansı.',
+    'feat4-tag': 'Kurulum', 'feat4-title': 'Hiç diyalı yok. Hiç uzantı kurman gerekmiyor.', 'feat4-desc': 'Sipar kutusundan çıkar çıkmaz çalışır. Her şey varsayılan olarak güvenli ve hızlıdır. Eski tarayıcından favori sayfalarını import et ve hazırsın.<br><br>60 saniyeden az sürer.',
+    'cmp-title': 'Rakamlar konuşsun.', 'cmp-sub': 'Sipar\'ı diğer tarayıcılarla karşılaştırın.',
+    'cmp-r1': 'Sıfır telemetry', 'cmp-r2': 'Yerleşik reklam engelleme', 'cmp-r3': 'Kendi kripto/reklam sistemi', 'cmp-r4': 'Varsayılan güvenli DNS', 'cmp-r5': 'Tam açık kaynak', 'cmp-r6': 'Google hesabı gerektirmez',
+    'cmp-brave-no': 'BAT var',
+    'dl-title': 'Beta\'ya ilk sen gir.', 'dl-sub': 'Sipar hazır olduğunda ilk haber alan sen ol. Başka bir şey göndermiyoruz — söz.',
+    'wl-placeholder': 'eposta@adresin.com', 'wl-btn': 'Katıl →', 'wl-note': 'E-posta adresin asla üçüncü taraflarla paylaşılmaz.',
+    'faq-title': 'Sıkça sorulanlar',
+    'faq-q1': 'Sipar güvenli mi?', 'faq-a1': 'Evet. Sipar, Google bağımlılıkları temizlenmiş Chromium\'un üzerine inşa edilmiştir. Tüm kaynak kodu açık ve denetlenebilir. Varsayılan olarak tracker engelleme, güvenli DNS ve sıfır telemetry ile gelir.',
+    'faq-q2': 'Hangi platformlarda çalışacak?', 'faq-a2': 'İlk sürümde Windows ve Linux. Ardından macOS. Mobil (Android) ise daha sonra gelecek.',
+    'faq-q3': 'Ücretsiz mi?', 'faq-a3': 'Temel tarayıcı tamamen ücretsiz ve açık kaynak olacak. İleride senkronizasyon ve VPN gibi premium özellikler için isteğe bağlı ücretli planlar gelebilir.',
+    'faq-q4': 'Chrome uzantılarımı kullanabilir miyim?', 'faq-a4': 'Evet. Sipar Chromium tabanlı olduğu için Chrome Web Store uzantılarının büyük çoğunluğu çalışır.',
+    'faq-q5': 'Ne zaman çıkacak?', 'faq-a5': 'Aktif geliştirme devam ediyor. Erken erişim listesine katıl, beta hazır olunca ilk sen haber alırsın.',
+    'nav-early': 'Erken Erişim →',
+  },
+  en: {
+    'hero-h1': 'Block ads.<br>Protect your data.<br><span style="color:var(--accent)">Just browse.</span>',
+    'hero-p': 'Sipar is a browser that doesn\'t track you, doesn\'t sell your data, and doesn\'t tell anyone what you\'re doing. Just by switching browsers.',
+    'hero-btn1': 'Join Early Access',
+    'hero-note': 'Open source · MIT License · <a href="https://github.com/huseyinbzkrt/sipar-browser">View source code</a>',
+    'num1-label': 'Telemetry — none, ever',
+    'num3-label': 'Faster page loading',
+    'feat1-tag': 'Privacy', 'feat1-title': 'Ads. Trackers. All blocked.', 'feat1-desc': 'uBlock Origin comes pre-installed. No setup, no configuration needed. From the very first launch, every ad, every tracker, every fingerprinting attempt is blocked.<br><br>And those annoying "accept cookies" pop-ups? Yeah, those too.',
+    'feat2-tag': 'Performance', 'feat2-title': 'We stripped everything unnecessary. Only speed remains.', 'feat2-desc': 'No ads loading means no data wasted. No trackers running means your CPU is happy. Pages load 2x faster.<br><br>Less waiting = more time.',
+    'feat3-tag': 'Transparency', 'feat3-title': 'Saying "we don\'t track you" is easy. We prove it.', 'feat3-desc': 'Every line of code is on GitHub. Open it, read it, audit it anytime. We have nothing to hide because we collect nothing.<br><br>Independent security audit support. MIT license.',
+    'feat4-tag': 'Setup', 'feat4-title': 'No dials to turn. No extensions to install.', 'feat4-desc': 'Sipar works right out of the box. Everything is secure and fast by default. Import your bookmarks from your old browser and you\'re done.<br><br>Takes less than 60 seconds.',
+    'cmp-title': 'Let the numbers speak.', 'cmp-sub': 'Compare Sipar to other browsers.',
+    'cmp-r1': 'Zero telemetry', 'cmp-r2': 'Built-in ad blocking', 'cmp-r3': 'Own crypto/ad system', 'cmp-r4': 'Secure DNS by default', 'cmp-r5': 'Fully open source', 'cmp-r6': 'No Google account needed',
+    'cmp-brave-no': 'Has BAT',
+    'dl-title': 'Be the first in beta.', 'dl-sub': 'Get notified when Sipar is ready. We won\'t send anything else — promise.',
+    'wl-placeholder': 'your@email.com', 'wl-btn': 'Join →', 'wl-note': 'Your email will never be shared with third parties.',
+    'faq-title': 'Frequently asked questions',
+    'faq-q1': 'Is Sipar safe?', 'faq-a1': 'Yes. Sipar is built on top of Chromium with all Google dependencies removed. All source code is open and auditable. It comes with tracker blocking, secure DNS and zero telemetry by default.',
+    'faq-q2': 'Which platforms will it support?', 'faq-a2': 'Windows and Linux in the first release. macOS next. Mobile (Android) will come later.',
+    'faq-q3': 'Is it free?', 'faq-a3': 'The core browser will be completely free and open source. Optional paid plans for premium features like sync and VPN may come later.',
+    'faq-q4': 'Can I use my Chrome extensions?', 'faq-a4': 'Yes. Since Sipar is Chromium-based, the vast majority of Chrome Web Store extensions will work.',
+    'faq-q5': 'When will it be released?', 'faq-a5': 'Active development is ongoing. Join the early access list and you\'ll be the first to know when beta is ready.',
+    'nav-early': 'Early Access →',
+  }
+};
+
+function setLang(lang) {
+  document.querySelectorAll('.lang-btn').forEach(b => b.classList.toggle('active', b.textContent === lang.toUpperCase()));
+  const t = translations[lang];
+  const set = (id, html) => { const el = document.getElementById(id); if (el) el.innerHTML = html; };
+  const setAttr = (id, attr, val) => { const el = document.getElementById(id); if (el) el[attr] = val; };
+
+  set('hero-h1', t['hero-h1']);
+  set('hero-p', t['hero-p']);
+  set('hero-btn1', t['hero-btn1']);
+  set('hero-note', t['hero-note']);
+  set('num1-label', t['num1-label']);
+  set('num3-label', t['num3-label']);
+  ['feat1','feat2','feat3','feat4'].forEach(f => {
+    set(f+'-tag', t[f+'-tag']); set(f+'-title', t[f+'-title']); set(f+'-desc', t[f+'-desc']);
+  });
+  set('cmp-title', t['cmp-title']); set('cmp-sub', t['cmp-sub']);
+  ['cmp-r1','cmp-r2','cmp-r3','cmp-r4','cmp-r5','cmp-r6'].forEach(r => set(r, t[r]));
+  set('cmp-brave-no', t['cmp-brave-no']);
+  set('dl-title', t['dl-title']); set('dl-sub', t['dl-sub']);
+  setAttr('emailInput', 'placeholder', t['wl-placeholder']);
+  set('wl-btn', t['wl-btn']); set('wl-note', t['wl-note']);
+  set('faq-title', t['faq-title']);
+  ['1','2','3','4','5'].forEach(i => { set('faq-q'+i, t['faq-q'+i]); set('faq-a'+i, t['faq-a'+i]); });
+  set('nav-early', t['nav-early']);
+  document.documentElement.lang = lang;
+  localStorage.setItem('sipar-lang', lang);
+}
+
+// Sayfa açılınca dil tercihini uygula
+window.addEventListener('DOMContentLoaded', () => {
+  const saved = localStorage.getItem('sipar-lang') || (navigator.language.startsWith('tr') ? 'tr' : 'en');
+  setLang(saved);
+});
+
 async function submit(e) {
   e.preventDefault();
   const email = document.getElementById('emailInput').value;
