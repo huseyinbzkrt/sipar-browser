@@ -1,0 +1,156 @@
+# =============================================================================
+# Sipar Browser — GN Build Arguments
+# =============================================================================
+# Apply with:  gn gen out/Sipar --args="$(cat build/sipar.gn.args)"
+# Or copy into: out/Sipar/args.gn
+# =============================================================================
+
+# ---------------------------------------------------------------------------
+# Branding
+# ---------------------------------------------------------------------------
+# Use Chromium branding (not Google Chrome). Sipar patches rename the product.
+is_chrome_branded = false
+is_official_build = true
+chrome_pgo_phase = 0
+
+# ---------------------------------------------------------------------------
+# Target platform
+# ---------------------------------------------------------------------------
+target_os   = "linux"
+target_cpu  = "x64"
+
+# ---------------------------------------------------------------------------
+# Build type
+# Optimized release build (no debug symbols in final binary)
+# ---------------------------------------------------------------------------
+is_debug         = false
+is_component_build = false
+symbol_level     = 0        # No debug symbols → smaller binary, faster build
+blink_symbol_level = 0
+v8_symbol_level  = 0
+
+# Enable LTO for better performance (requires clang with LTO support)
+use_thin_lto     = true
+use_lld          = true
+
+# ---------------------------------------------------------------------------
+# Compiler
+# ---------------------------------------------------------------------------
+is_clang           = true
+clang_use_chrome_plugins = false
+
+# ---------------------------------------------------------------------------
+# Privacy: Disable Google services & telemetry
+# ---------------------------------------------------------------------------
+# Disable Google Update / Safe Browsing reporting
+safe_browsing_mode = 1            # Keep local safe browsing, no Google ping
+
+# Disable crash reporter upload
+enable_crash_reporter_due_to_failure = false
+
+# Disable Google Account sign-in UI in browser toolbar
+enable_dice_support = false
+
+# Disable Chrome Variations / Field Trials (no server-side A/B testing)
+fieldtrial_testing_config = false
+
+# Remove Google API keys (no auth, maps, translate, etc.)
+# Set to empty to prevent accidental API calls
+google_api_key       = "no"
+google_default_client_id     = "no"
+google_default_client_secret = "no"
+
+# Disable Chrome's user metrics / UMA
+enable_reporting = false
+
+# Disable RLZ (Google tracking identifier)
+enable_rlz = false
+
+# Disable background network services
+enable_background_mode = false
+
+# ---------------------------------------------------------------------------
+# Performance optimizations
+# ---------------------------------------------------------------------------
+# Use system libraries where possible (smaller binary, shared cache)
+use_system_zlib    = false   # Keep bundled for security consistency
+use_system_libjpeg = false
+use_system_libpng  = false
+use_system_libwebp = false
+
+# V8 optimizations
+v8_use_external_startup_data = true
+v8_enable_turbofan           = true
+v8_enable_maglev             = true
+
+# Optimize renderer scheduling
+use_allocator = "partition"   # PartitionAlloc — Chrome's fast allocator
+
+# ---------------------------------------------------------------------------
+# Media / Codec support
+# ---------------------------------------------------------------------------
+# Enable proprietary codecs (H.264, AAC) — requires FFmpeg with these codecs
+ffmpeg_branding    = "Chrome"      # Use Chrome FFmpeg with proprietary codecs
+proprietary_codecs = true
+
+# Enable HEVC (H.265) hardware decoding
+enable_hevc_parser_and_hw_decoder = true
+
+# Enable AV1 decoding
+enable_av1_decoder = true
+
+# Widevine DRM (for Netflix, etc.)
+enable_widevine = true
+
+# ---------------------------------------------------------------------------
+# Security hardening
+# ---------------------------------------------------------------------------
+# Enable site isolation (one renderer process per origin)
+enable_site_isolation = true
+
+# Enable sandboxing
+use_seccomp_bpf = true
+enable_plugins  = false       # Disable NPAPI/PPAPI legacy plugins
+
+# Use HTTPS-only mode by default in build
+# (also set via user preference; this is the build-level default)
+
+# ---------------------------------------------------------------------------
+# UI / Features
+# ---------------------------------------------------------------------------
+# Disable Extensions (optional: enable if you want extension support)
+# enable_extensions = false     # Uncomment to completely disable extensions
+
+# Disable printing (reduces attack surface, can be re-enabled)
+# enable_print_preview = false
+
+# Enable PDF viewer
+enable_pdf = true
+enable_printing = true
+
+# Disable Chrome OS specific features
+is_chromeos      = false
+is_chromeos_ash  = false
+is_chromeos_lacros = false
+
+# Disable Android-specific code
+is_android = false
+
+# ---------------------------------------------------------------------------
+# Accessibility
+# ---------------------------------------------------------------------------
+use_accessibility_features = true
+
+# ---------------------------------------------------------------------------
+# Sipar-specific build flags
+# ---------------------------------------------------------------------------
+# These control Sipar's own feature flags (defined in build/config/sipar_features.gni)
+# sipar_enable_privacy_mode = true
+# sipar_enable_custom_ntp   = true
+# sipar_builtin_adblock     = true
+
+# ---------------------------------------------------------------------------
+# ccache / build speed
+# ---------------------------------------------------------------------------
+# Uncomment to use ccache for faster rebuilds:
+# cc_wrapper = "ccache"
