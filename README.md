@@ -1,6 +1,5 @@
 # 🛡️ Sipar Browser
 
-> **Sipar** — Kürtçe "kalkan" anlamına gelir.
 
 Sipar, gizlilik, performans ve şeffaflığı ön planda tutan açık kaynaklı bir web tarayıcısıdır. [Ungoogled-Chromium](https://github.com/ungoogled-software/ungoogled-chromium) üzerine inşa edilmiştir.
 
