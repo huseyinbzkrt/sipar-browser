@@ -464,13 +464,37 @@
 </footer>
 
 <script>
-  function handleSubmit(e) {
+  async function handleSubmit(e) {
     e.preventDefault();
     const email = document.getElementById('emailInput').value;
-    document.getElementById('waitlist-msg').textContent = '✅ Kaydedildi! Beta hazır olunca haber vereceğiz.';
-    document.getElementById('waitlist-msg').style.color = '#3fb950';
-    document.getElementById('emailInput').value = '';
-    // TODO: Backend entegrasyonu
+    const btn = e.target.querySelector('button');
+    const msg = document.getElementById('waitlist-msg');
+
+    btn.textContent = '⏳ Kaydediliyor...';
+    btn.disabled = true;
+
+    try {
+      const formData = new FormData();
+      formData.append('email', email);
+
+      const res = await fetch('/waitlist.php', { method: 'POST', body: formData });
+      const data = await res.json();
+
+      if (data.success) {
+        msg.textContent = '✅ Kaydedildi! Beta hazır olunca haber vereceğiz.';
+        msg.style.color = '#3fb950';
+        document.getElementById('emailInput').value = '';
+      } else {
+        msg.textContent = '❌ ' + (data.error || 'Bir hata oluştu.');
+        msg.style.color = '#f85149';
+      }
+    } catch (err) {
+      msg.textContent = '❌ Bağlantı hatası, tekrar dene.';
+      msg.style.color = '#f85149';
+    }
+
+    btn.textContent = 'Listeye Gir 🛡️';
+    btn.disabled = false;
   }
 </script>
 
