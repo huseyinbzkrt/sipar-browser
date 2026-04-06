@@ -3,6 +3,11 @@
 
 Sipar, gizlilik, performans ve şeffaflığı ön planda tutan açık kaynaklı bir web tarayıcısıdır. [Ungoogled-Chromium](https://github.com/ungoogled-software/ungoogled-chromium) üzerine inşa edilmiştir.
 
+## 📦 Latest stable testing release
+
+- **v0.1.1-alpha** (Windows + Linux)
+- İndir: https://github.com/huseyinbzkrt/sipar-browser/releases/tag/v0.1.1-alpha
+
 ---
 
 ## ✨ Özellikler
